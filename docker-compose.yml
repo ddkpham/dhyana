@@ -1,0 +1,15 @@
+version: "3"
+services:
+  client:
+    container_name: contact-client
+    build: ./cm-client
+    restart: always
+    ports:
+      - "8080:3000"
+    stdin_open: true
+
+  api:
+    container_name: contact-api
+    build: ./cm-backend
+    ports:
+      - "3000:3000"
