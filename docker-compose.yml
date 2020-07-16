@@ -7,6 +7,9 @@ services:
     ports:
       - "8080:3000"
     stdin_open: true
+    volumes:
+      - ./cm-client:/usr/src/client
+      - /usr/src/client/node_modules/
 
   api:
     container_name: dyhana-api
@@ -22,6 +25,9 @@ services:
     command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
     stdin_open: true
     tty: true
+    volumes:
+      - ./cm-backend:/usr/src/api
+      - /usr/src/api/node_modules/
 
   db:
     image: "postgres:latest"
