@@ -1,15 +1,42 @@
 version: "3"
 services:
   client:
-    container_name: contact-client
-    build: ./cm-client
+    container_name: dyhana-client
+    build: ./client
     restart: always
     ports:
       - "8080:3000"
     stdin_open: true
 
   api:
-    container_name: contact-api
-    build: ./cm-backend
+    container_name: dyhana-api
+    build: ./api
     ports:
       - "3000:3000"
+    networks:
+      - dbapi
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: "postgres"
+
+    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
+    stdin_open: true
+    tty: true
+
+  db:
+    image: "postgres:latest"
+    networks:
+      - dbapi
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dhyanadb
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+networks:
+  dbapi:

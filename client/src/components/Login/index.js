@@ -11,7 +11,6 @@ function Login() {
   const login = async (user, name) => {
     const url = `${baseURL}/login`;
     const body = { username, pass };
-    console.log("login -> body", body);
     const response = await fetch(url, {
       method: "post",
       headers: { "Content-Type": "application/json" },

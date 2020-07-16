@@ -25,17 +25,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// const mongoose = require("mongoose");
-// mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
-// mongoose.set("debug", true);
-
-// const db = mongoose.connection;
-// db.on("error", (error) => console.log("error on db connection: ", error));
-// db.once("open", () => console.log("mongoose db connected"));
-
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/users", userRouter);
+var db = require("./config/database");
+
+// test db
+db.authenticate()
+  .then(() => console.log("Database is connected..."))
+  .catch((err) => console.log("Error: " + err));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

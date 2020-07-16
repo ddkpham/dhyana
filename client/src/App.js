@@ -66,17 +66,11 @@ function App(props) {
           <Route
             path="/contact/:first_name/:last_name"
             render={(props) => {
-              console.log("App -> props", props);
               const {
                 match: {
                   params: { first_name, last_name },
                 },
               } = props;
-              console.log(
-                "App -> first_name, last_name",
-                first_name,
-                last_name
-              );
               if (authenticated) {
                 return (
                   <Contact first_name={first_name} last_name={last_name} />
