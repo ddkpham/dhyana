@@ -4,14 +4,13 @@ const Sequelize = require("sequelize");
 console.log("DB Host IP: ", process.env.DB_HOST);
 console.log("process.env.POSTGRES_USER", process.env.POSTGRES_USER);
 module.exports = new Sequelize(
-  process.env.TEST_DB || "dyhana",
-  // "davidpham", // local connection
+  process.env.TEST_DB || "dhyana",
   process.env.POSTGRES_USER || "postgres",
   "postgres",
   {
     host: process.env.DB_HOST || "localhost",
     dialect: "postgres",
-    port: 5432,
+    port: 5433,
 
     pool: {
       max: 5,

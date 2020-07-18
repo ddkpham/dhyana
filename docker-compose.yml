@@ -1,7 +1,7 @@
 version: "3"
 services:
   client:
-    container_name: dyhana-client
+    container_name: dhyana-client
     build: ./client
     restart: always
     ports:
@@ -12,7 +12,7 @@ services:
       - /usr/src/client/node_modules/
 
   api:
-    container_name: dyhana-api
+    container_name: dhyana-api
     build: ./api
     ports:
       - "3000:3000"
@@ -40,7 +40,7 @@ services:
 
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: dyhana
+      POSTGRES_DB: dhyana
       POSTGRES_USER: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
 
