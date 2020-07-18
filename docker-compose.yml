@@ -8,7 +8,7 @@ services:
       - "8080:3000"
     stdin_open: true
     volumes:
-      - ./cm-client:/usr/src/client
+      - ./client:/usr/src/client
       - /usr/src/client/node_modules/
 
   api:
@@ -26,7 +26,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ./cm-backend:/usr/src/api
+      - ./api:/usr/src/api
       - /usr/src/api/node_modules/
 
   db:
