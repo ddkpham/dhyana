@@ -370,8 +370,7 @@ COPY public.teamsusers (team_id, user_id) FROM stdin;
 
 COPY public.users (id, username, password, first_name, last_name) FROM stdin;
 1	tlou2	2uolt	tlo	u2
-2	tlou2	2uolt	tlo	u2
-3	tlou2	2uolt	tlo	u2
+4	123	123	\N	\N
 \.
 
 
@@ -421,7 +420,7 @@ SELECT pg_catalog.setval('public.teams_id_seq', 2, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 
 --
@@ -454,6 +453,14 @@ ALTER TABLE ONLY public.tasks
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users username; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT username UNIQUE (username) INCLUDE (username);
 
 
 --
