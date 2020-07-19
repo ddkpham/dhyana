@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var Contact = require("../models/Contact");
 var loginController = require("../controllers/loginController");
 
 /* Login Attempt */

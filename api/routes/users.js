@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-var Contact = require("../models/Contact");
 var userController = require("../controllers/userController");
 
 router.get("/:first_name/:last_name", userController.get_user_info);
