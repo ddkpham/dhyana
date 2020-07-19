@@ -20,6 +20,7 @@ services:
       - dbapi
     environment:
       DB_HOST: db
+      DB_PORT: 5432
       POSTGRES_USER: "postgres"
 
     command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
