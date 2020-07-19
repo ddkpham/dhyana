@@ -6,12 +6,8 @@ console.log("process.env.POSTGRES_USER", process.env.POSTGRES_USER);
 console.log("process.env.DB_PORT", process.env.DB_PORT);
 module.exports = new Sequelize(
   process.env.TEST_DB || "dhyana",
-<<<<<<< HEAD
-  process.env.POSTGRES_USER || "postgres",
-=======
   // "davidpham", // local connection
   process.env.POSTGRES_USER || "pruthvirajpatel",
->>>>>>> login
   "postgres",
   {
     host: process.env.DB_HOST || "localhost",
