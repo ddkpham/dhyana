@@ -3,9 +3,9 @@ const Sequelize = require("sequelize");
 
 console.log("DB Host IP: ", process.env.DB_HOST);
 module.exports = new Sequelize(
-  process.env.TEST_DB || "dhyanadb",
+  process.env.TEST_DB || "dhyana",
   // "davidpham", // local connection
-  process.env.POSTGRES_USER || "davidpham",
+  process.env.POSTGRES_USER || "pruthvirajpatel",
   "postgres",
   {
     host: process.env.DB_HOST || "localhost",
