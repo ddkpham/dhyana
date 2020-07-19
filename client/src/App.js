@@ -10,6 +10,7 @@ import Home from "./components/Home/index";
 import Login from "./components/Login/index";
 import Contact from "./components/Contact/index";
 import NewContact from "./components/NewContact/index";
+import CreateUser from "./components/CreateUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
 
@@ -29,10 +30,13 @@ function App(props) {
             <Link to="/home">home</Link>
           </li>
           <li>
-            <Link to="/contact/new">new Contact</Link>
+            <Link to="/contact/new">New Contact</Link>
           </li>
           <li>
             <Link to="/contact">contact</Link>
+          </li>
+          <li>
+            <Link to="/createUser">Create User</Link>
           </li>
           <li>
             <Button
@@ -59,6 +63,7 @@ function App(props) {
           <Route exact path="/">
             {authenticated ? <Home /> : <Login />}
           </Route>
+          <Route path="/createUser">{<CreateUser />}</Route>
           <Route path="/home">{authenticated ? <Home /> : <Login />}</Route>
           <Route path="/contact/new">
             {authenticated ? <NewContact /> : <Login />}
