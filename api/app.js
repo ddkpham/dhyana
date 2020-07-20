@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
-app.use("/users", userRouter);
+app.use("/createUser", userRouter);
 var db = require("./config/database");
 
 // test db

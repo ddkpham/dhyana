@@ -1,16 +1,15 @@
-var async = require("async");
-
-// route: /:first_name/:last_name
-exports.get_user_info = function (req, res, next) {
-  const { first_name, last_name } = req.params;
-};
-
-exports.get_all_users = function (req, res, next) {};
+var User = require("../models/User");
 
 exports.create_new_user = function (req, res, next) {
-  const { first_name, last_name, phone_number, email, notes } = req.body;
-};
+  console.log(req.body);
+  const { username, password, first_name, last_name } = req.body;
 
-exports.update_new_user = function (req, res, next) {
-  const { first_name, last_name, phone_number, email, notes } = req.body;
+  User.create({
+    first_name,
+    last_name,
+    username,
+    password,
+  })
+    .then((user) => res.json(user))
+    .catch((err) => console.log("Error : ", err));
 };
