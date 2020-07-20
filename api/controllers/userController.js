@@ -10,6 +10,16 @@ exports.create_new_user = function (req, res, next) {
     username,
     password,
   })
-    .then((user) => res.json(user))
-    .catch((err) => console.log("Error : ", err));
+    .then((user) => {
+      res.json({
+        confirmation: "User created successfully.",
+        data: user,
+      });
+    })
+    .catch((err) => {
+      res.json({
+        confirmation: "User already exists.",
+        err: err,
+      });
+    });
 };
