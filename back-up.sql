@@ -102,37 +102,6 @@ ALTER SEQUENCE public.columnstasks_tasks_id_seq OWNED BY public.columnstasks.tas
 
 
 --
--- Name: projectcolumns; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.projectcolumns (
-    project_id integer NOT NULL,
-    column_id integer NOT NULL,
-    id integer NOT NULL
-);
-
-
---
--- Name: projectcolumns_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.projectcolumns_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: projectcolumns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.projectcolumns_id_seq OWNED BY public.projectcolumns.id;
-
-
---
 -- Name: projects; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -302,13 +271,6 @@ ALTER TABLE ONLY public.pcolumns ALTER COLUMN id SET DEFAULT nextval('public.col
 
 
 --
--- Name: projectcolumns id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projectcolumns ALTER COLUMN id SET DEFAULT nextval('public.projectcolumns_id_seq'::regclass);
-
-
---
 -- Name: projects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -351,32 +313,6 @@ COPY public.columnstasks (column_id, task_id) FROM stdin;
 
 COPY public.pcolumns (id, name, column_order) FROM stdin;
 2	backlog	213
-7	back-log	0
-8	back-log	0
-9	new-column	0
-10	new-new-column	0
-11	new-new-column	0
-12	new-new-column	0
-13	new-new-column	0
-14	new-new-column	0
-15	new-new-column	0
-16	new-new-column	0
-17	new-new-column	0
-18	new-new-column	0
-\.
-
-
---
--- Data for Name: projectcolumns; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.projectcolumns (project_id, column_id, id) FROM stdin;
-7	2	1
-7	12	2
-7	14	3
-7	15	4
-7	16	5
-7	17	6
 \.
 
 
@@ -385,9 +321,8 @@ COPY public.projectcolumns (project_id, column_id, id) FROM stdin;
 --
 
 COPY public.projects (id, name, description, team_id) FROM stdin;
-4	dhyana project	test project	1
-5	brady-6	win 6 superbowls	9
-7	brady-7		9
+1	test	\N	2
+3	test	\N	2
 \.
 
 
@@ -416,10 +351,7 @@ COPY public.taskstasks (story_id, sub_task_id) FROM stdin;
 
 COPY public.teams (id, name) FROM stdin;
 1	dhyana
-4	okay, boomer
-5	post-malone
-8	
-9	brady-bunch
+2	dhyana
 \.
 
 
@@ -446,7 +378,7 @@ COPY public.users (id, username, password, first_name, last_name) FROM stdin;
 -- Name: columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.columns_id_seq', 18, true);
+SELECT pg_catalog.setval('public.columns_id_seq', 3, true);
 
 
 --
@@ -464,17 +396,10 @@ SELECT pg_catalog.setval('public.columnstasks_tasks_id_seq', 1, false);
 
 
 --
--- Name: projectcolumns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.projectcolumns_id_seq', 7, true);
-
-
---
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 8, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 3, true);
 
 
 --
@@ -488,7 +413,7 @@ SELECT pg_catalog.setval('public.tasks_id_seq', 2, true);
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teams_id_seq', 12, true);
+SELECT pg_catalog.setval('public.teams_id_seq', 2, true);
 
 
 --
@@ -531,22 +456,6 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: teams unique_name; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.teams
-    ADD CONSTRAINT unique_name UNIQUE (name);
-
-
---
--- Name: projects unique_project_name; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT unique_project_name UNIQUE (name);
-
-
---
 -- Name: users username; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -568,22 +477,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.columnstasks
     ADD CONSTRAINT column_id FOREIGN KEY (column_id) REFERENCES public.pcolumns(id);
-
-
---
--- Name: projectcolumns column_id FK ; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projectcolumns
-    ADD CONSTRAINT "column_id FK " FOREIGN KEY (column_id) REFERENCES public.pcolumns(id);
-
-
---
--- Name: projectcolumns project_id FK ; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projectcolumns
-    ADD CONSTRAINT "project_id FK " FOREIGN KEY (project_id) REFERENCES public.projects(id);
 
 
 --
