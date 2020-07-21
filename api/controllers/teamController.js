@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const Team = require("../models/Team");
+const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
   console.log(req.body);
@@ -9,19 +10,11 @@ exports.create_team = function (req, res, next) {
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json({
-      confirmation: "failed",
-      data: [],
-      message: "errors in inputted data",
-    });
+    res.json(errorResponse("errors in inputted data"));
   }
 
   if (!name) {
-    res.json({
-      confirmation: "failed",
-      data: [],
-      message: "username or password can't be null",
-    });
+    res.json(errorResponse("missing team name"));
     return;
   }
 
@@ -30,19 +23,10 @@ exports.create_team = function (req, res, next) {
   })
     .then((team) => {
       console.log(team);
-      res.json({
-        confirmation: "success",
-        data: team,
-        message: "Team created successfully.",
-      });
+      res.json(successResponse("Team created successfully", team));
     })
     .catch((err) => {
-      res.json({
-        confirmation: "failed",
-        data: [],
-        err: err,
-        message: "Team already exists.",
-      });
+      res.json(errorResponse("Team exists already.", err));
     });
 };
 
