@@ -11,11 +11,19 @@ exports.create_new_user = function (req, res, next) {
   const errors = validationResult(req.body);
 
   if (!errors.isEmpty()) {
-    res.send("Error(s) in the inputted data or data format.");
+    res.json({
+      confirmation: "failed",
+      data: [],
+      message: "errors in inputted data",
+    });
     res.next();
   } else {
     if (user == "" || pass == "") {
-      res.send("Username/Password can't be null.");
+      res.json({
+        confirmation: "failed",
+        data: [],
+        message: "username or password can't be null",
+      });
       return next();
     }
 
@@ -29,14 +37,17 @@ exports.create_new_user = function (req, res, next) {
     })
       .then((user) => {
         res.json({
-          confirmation: "User created successfully.",
+          confirmation: "success",
           data: user,
+          message: "User created successfully.",
         });
       })
       .catch((err) => {
         res.json({
-          confirmation: "User already exists.",
+          confirmation: "failed",
+          data: [],
           err: err,
+          message: "User already exists.",
         });
       });
   }

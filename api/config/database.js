@@ -7,7 +7,7 @@ console.log("process.env.DB_PORT", process.env.DB_PORT);
 module.exports = new Sequelize(
   process.env.TEST_DB || "dhyana",
   // "davidpham", // local connection
-  process.env.POSTGRES_USER || "pruthvirajpatel",
+  process.env.POSTGRES_USER || "postgres",
   "postgres",
   {
     host: process.env.DB_HOST || "localhost",
