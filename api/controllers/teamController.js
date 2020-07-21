@@ -30,4 +30,35 @@ exports.create_team = function (req, res, next) {
     });
 };
 
-exports.view_team = function (req, res, next) {};
+exports.view_team = function (req, res, next) {
+  console.log(req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const name = req.body.name.trim();
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.json(errorResponse("errors in inputted data"));
+  }
+
+  if (!name) {
+    res.json(errorResponse("missing team name"));
+    return;
+  }
+
+  Team.findAll({
+    where: {
+      name,
+    },
+  })
+    .then((team) => {
+      if (team.length) {
+        res.json(successResponse("Sucessfully found team", team));
+      } else {
+        res.json(errorResponse("Team not found.", err));
+      }
+    })
+    .catch((err) => {
+      res.json(errorResponse("Team not found.", err));
+    });
+};
