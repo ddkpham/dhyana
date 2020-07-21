@@ -12,6 +12,7 @@ var loginRouter = require("./routes/login");
 var userRouter = require("./routes/users");
 var indexRouter = require("./routes/index");
 var teamRouter = require("./routes/team");
+var projectRouter = require("./routes/project");
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
 app.use("/team", teamRouter);
+app.use("/project", projectRouter);
 
 var db = require("./config/database");
 
