@@ -95,7 +95,6 @@ exports.create_project_column = function (req, res, next) {
     column_order: columnOrder,
   })
     .then((col) => {
-      console.log("exports.create_project_column -> col", col);
       const {
         dataValues: { id: columnId },
       } = col;
@@ -106,7 +105,6 @@ exports.create_project_column = function (req, res, next) {
           column_id: columnId,
         })
           .then((result) => {
-            console.log("exports.create_project_column -> result", result);
             res.json(
               successResponse("Sucessfully created column in Project", result)
             );
@@ -142,7 +140,6 @@ exports.view_project_columns = function (req, res, next) {
   console.log(req.body);
 
   const projectId = req.body.projectId;
-  console.log("exports.view_project_columns -> projectId", projectId);
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
@@ -166,17 +163,12 @@ exports.view_project_columns = function (req, res, next) {
         } = val;
         return { id: column_id };
       });
-      console.log("exports.view_project_columns -> columnQuery", columnQuery);
 
       Column.findAll({
         where: {
           [Op.or]: columnQuery,
         },
       }).then((columnResults) => {
-        console.log(
-          "exports.view_project_columns -> columnResults",
-          columnResults
-        );
         res.json(successResponse("Found project columns", columnResults));
       });
     })
