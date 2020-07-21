@@ -14,11 +14,11 @@ exports.create_new_user = function (req, res, next) {
 
   if (!errors.isEmpty()) {
     res.json(errorResponse("errors in inputted data"));
-    res.next();
+    return;
   } else {
     if (user == "" || pass == "") {
       res.json(errorResponse("username or password cannot be null"));
-      res.next();
+      return;
     }
 
     const { username, password, first_name, last_name } = req.body;
