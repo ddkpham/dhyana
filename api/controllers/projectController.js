@@ -3,6 +3,7 @@ const Project = require("../models/Project");
 const Column = require("../models/Column");
 const ProjectColumn = require("../models/ProjectColumn");
 const { errorResponse, successResponse } = require("../utility/response");
+const { Op } = require("sequelize");
 
 exports.create_project = function (req, res, next) {
   console.log(req.body);
@@ -135,4 +136,49 @@ exports.create_project_column = function (req, res, next) {
         )
       );
     });
+};
+
+exports.view_project_columns = function (req, res, next) {
+  console.log(req.body);
+
+  const projectId = req.body.projectId;
+  console.log("exports.view_project_columns -> projectId", projectId);
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.json(errorResponse("errors in inputted data"));
+  }
+
+  if (!projectId) {
+    res.json(errorResponse("missing projectId"));
+    return;
+  }
+
+  ProjectColumn.findAll({
+    where: {
+      project_id: projectId,
+    },
+  })
+    .then((result) => {
+      const columnQuery = result.map((val) => {
+        const {
+          dataValues: { column_id },
+        } = val;
+        return { id: column_id };
+      });
+      console.log("exports.view_project_columns -> columnQuery", columnQuery);
+
+      Column.findAll({
+        where: {
+          [Op.or]: columnQuery,
+        },
+      }).then((columnResults) => {
+        console.log(
+          "exports.view_project_columns -> columnResults",
+          columnResults
+        );
+        res.json(successResponse("Found project columns", columnResults));
+      });
+    })
+    .catch((err) => res.json(errorResponse("no matching project found", err)));
 };
