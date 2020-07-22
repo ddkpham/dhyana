@@ -13,7 +13,7 @@ import NewContact from "./components/NewContact/index";
 import CreateUser from "./components/CreateUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
-
+import NewBoard from "./components/Board/new";
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
 console.log("authenticated", authenticated);
@@ -84,6 +84,9 @@ function App(props) {
               return <Login />;
             }}
           />
+          <Route path="/board/new">
+            {authenticated ? <NewBoard /> : <Login />}
+          </Route>
         </Switch>
       </div>
     </Router>
