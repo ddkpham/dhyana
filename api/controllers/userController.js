@@ -64,10 +64,10 @@ exports.create_new_user = function (req, res, next) {
       password,
     })
       .then((user) => {
-        res.json(successResponse("User created successfully", user));
+        res.json(successResponse("user created successfully", user));
       })
       .catch((err) => {
-        res.json(errorResponse("User already exists.", err));
+        res.json(errorResponse("user already exists", err));
       });
   }
 };

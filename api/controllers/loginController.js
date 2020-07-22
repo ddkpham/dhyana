@@ -17,7 +17,7 @@ exports.login_post = function (req, res, next) {
       });
     } else {
       res.json({
-        confirmation: "Wrong username or password. Login failed.",
+        confirmation: "login failed. wrong username or password",
         data: user,
       });
     }
