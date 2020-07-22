@@ -11,4 +11,6 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
+router.get("/getuser", userController.get_user_info);
+
 module.exports = router;
