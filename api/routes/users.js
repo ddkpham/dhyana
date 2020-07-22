@@ -11,13 +11,6 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
-router.get("/getuser", function (req, res, next) {
-  res.json({
-    confirmation: "success",
-    message: "get user info",
-  });
-});
-
-router.post("/getuser", userController.get_user_info);
+router.get("/getuser", userController.get_user_info);
 
 module.exports = router;
