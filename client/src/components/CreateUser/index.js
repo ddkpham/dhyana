@@ -12,7 +12,7 @@ function CreateUser() {
   const [last_name, setLastName] = useState("");
 
   const login = async (user, name) => {
-    const url = `${baseURL}/users/create`;
+    const url = `${baseURL}/user/create`;
     const body = { username, password, first_name, last_name };
     const response = await fetch(url, {
       method: "post",
@@ -23,8 +23,7 @@ function CreateUser() {
     const data = await response.json();
     const { confirmation } = data;
     alert(confirmation)
-    // const { confirmation } = "success"
-    if (confirmation == "User created successfully.") {
+    if (confirmation == "success") {
       localStorage.setItem("auth-token", "success");
 
       window.location.href = `${clientBaseURL}/home`;
