@@ -5,7 +5,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import { baseURL } from "../../config/settings";
-import ContactLink from "../ContactLink";
 import ProjectCard from "../Project/card";
 
 class Home extends React.Component {
@@ -50,12 +49,6 @@ class Home extends React.Component {
     return (
       <div>
         <h2>Home</h2>
-        {contactInfo.map((contact) => (
-          <ContactLink
-            first_name={contact.first_name}
-            last_name={contact.last_name}
-          />
-        ))}
         <Typography variant="h4">Projects</Typography>
         {projects.map((p) => (
           <ProjectCard project={p} />
