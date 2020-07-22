@@ -7,13 +7,13 @@ import "./index.scss";
 
 function CreateUser() {
   const [username, setUsername] = useState("");
-  const [pass, setPass] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [password, setPass] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
 
   const login = async (user, name) => {
-    const url = `${baseURL}/createUser`;
-    const body = { username, pass, firstName, lastName };
+    const url = `${baseURL}/users/create`;
+    const body = { username, password, first_name, last_name };
     const response = await fetch(url, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -21,9 +21,10 @@ function CreateUser() {
     });
 
     const data = await response.json();
-    // const { confirmation } = data;
-    const { confirmation } = "success"
-    if (confirmation == "success") {
+    const { confirmation } = data;
+    alert(confirmation)
+    // const { confirmation } = "success"
+    if (confirmation == "User created successfully.") {
       localStorage.setItem("auth-token", "success");
 
       window.location.href = `${clientBaseURL}/home`;
