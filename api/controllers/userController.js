@@ -1,4 +1,6 @@
 const { body, validationResult } = require("express-validator");
+const { errorResponse, successResponse } = require("../utility/response");
+
 var User = require("../models/User");
 
 exports.create_new_user = function (req, res, next) {
@@ -11,12 +13,12 @@ exports.create_new_user = function (req, res, next) {
   const errors = validationResult(req.body);
 
   if (!errors.isEmpty()) {
-    res.send("Error(s) in the inputted data or data format.");
-    res.next();
+    res.json(errorResponse("errors in inputted data"));
+    return;
   } else {
     if (user == "" || pass == "") {
-      res.send("Username/Password can't be null.");
-      return next();
+      res.json(errorResponse("username or password cannot be null"));
+      return;
     }
 
     const { username, password, first_name, last_name } = req.body;
@@ -28,16 +30,10 @@ exports.create_new_user = function (req, res, next) {
       password,
     })
       .then((user) => {
-        res.json({
-          confirmation: "User created successfully.",
-          data: user,
-        });
+        res.json(successResponse("User created successfully", user));
       })
       .catch((err) => {
-        res.json({
-          confirmation: "User already exists.",
-          err: err,
-        });
+        res.json(errorResponse("User already exists.", err));
       });
   }
 };
