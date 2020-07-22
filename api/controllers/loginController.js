@@ -12,7 +12,7 @@ exports.login_post = function (req, res, next) {
     console.log(user);
     if (user.length) {
       res.json({
-        confirmation: "Success.",
+        confirmation: "success",
         data: user,
       });
     } else {

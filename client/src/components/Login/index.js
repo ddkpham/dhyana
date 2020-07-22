@@ -6,11 +6,11 @@ import "./index.scss";
 
 function Login() {
   const [username, setUsername] = useState("");
-  const [pass, setPass] = useState("");
+  const [password, setPass] = useState("");
 
   const login = async (user, name) => {
     const url = `${baseURL}/login`;
-    const body = { username, pass };
+    const body = { username, password };
     const response = await fetch(url, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -19,6 +19,7 @@ function Login() {
 
     const data = await response.json();
     const { confirmation } = data;
+    alert(confirmation)
     if (confirmation == "success") {
       localStorage.setItem("auth-token", "success");
 
