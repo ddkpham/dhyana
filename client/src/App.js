@@ -14,6 +14,7 @@ import CreateUser from "./components/CreateUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
 import NewBoard from "./components/Board/new";
+import Board from "./components/Board/index";
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
 console.log("authenticated", authenticated);
@@ -87,6 +88,21 @@ function App(props) {
           <Route path="/board/new">
             {authenticated ? <NewBoard /> : <Login />}
           </Route>
+          <Route
+          path="/board/:id"
+          render={(props) => {
+              const {
+                match: {
+                  params: { id },
+                },
+              } = props;
+              if (authenticated) {
+                return (
+                  <Board id={id} />
+                );
+              }
+              return <Login />;
+            }}/>
         </Switch>
       </div>
     </Router>
