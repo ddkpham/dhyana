@@ -23,21 +23,19 @@ function App(props) {
     <Router>
       <div>
         <ul>
-          <li>
-            <Link to="/">Login</Link>
-          </li>
+          
           <li>
             <Link to="/home">home</Link>
           </li>
-          <li>
-            <Link to="/createUser">Create User</Link>
-          </li>
+          
           { authenticated ?
             <li>
               <Link to="/searchUser">Search User</Link>
             </li>
             :
-            null
+            <li>
+              <Link to="/createUser">Create Account</Link>
+            </li>
           }
           
           <li>

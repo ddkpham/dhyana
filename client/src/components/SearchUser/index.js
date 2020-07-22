@@ -3,16 +3,22 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./index.scss";
+import { Link } from "react-router-dom";
 
-function CreateUser() {
-  const [username, setUsername] = useState("");
-  const [password, setPass] = useState("");
-  const [first_name, setFirstName] = useState("");
-  const [last_name, setLastName] = useState("");
 
-  const login = async (user, name) => {
-    const url = `${baseURL}/user/create`;
-    const body = { username, password, first_name, last_name };
+// for (var contact = 0; contact<contactList.length; contact++) {
+//   <li>
+//     {contact.first_name} {contact.last_name}
+//   </li>
+// }
+
+function SearchUser() {
+  const [contactList, setContacts] = useState("");
+  const [input, setInput] = useState("");
+
+  const search = async (props) => {
+    const url = `${baseURL}/user/search`;
+    const body = { input };
     const response = await fetch(url, {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -20,55 +26,37 @@ function CreateUser() {
     });
 
     const data = await response.json();
-    const { confirmation } = data;
+    const { confirmation: confirmation, data: contacts } = data;
     alert(confirmation)
     if (confirmation == "success") {
-      localStorage.setItem("auth-token", "success");
-
-      window.location.href = `${clientBaseURL}/home`;
+      setContacts({ contacts });
     }
   };
 
   return (
     <div id="mainDiv">
-      <h2>Create New User</h2>
-      <div className="text-input">
-        <TextField
-          label="username"
-          variant="outlined"
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        <TextField
-          label="password"
-          variant="outlined"
-          onChange={(event) => {
-            setPass(event.target.value);
-          }}
-        />
-        <TextField
-          label="firstName"
-          variant="outlined"
-          onChange={(event) => {
-            setFirstName(event.target.value);
-          }}
-        />
-        <TextField
-          label="lastName"
-          variant="outlined"
-          onChange={(event) => {
-            setLastName(event.target.value);
-          }}
-        />
+      <div class="column">
+        <h2>Search User</h2>
+        <div className="text-input">
+          <TextField
+            variant="outlined"
+            onChange={(event) => {
+              setInput(event.target.value);
+            }}
+          />
+        </div>
+        <div>
+          <Button variant="outlined" color="primary" onClick={search}>
+            Search
+          </Button>
+        </div>
       </div>
-      <div>
-        <Button variant="outlined" color="primary" onClick={login}>
-          Create User
-        </Button>
+      <div class="column">
+        <ul>
+        </ul>
       </div>
     </div>
   );
 }
 
-export default CreateUser;
+export default SearchUser;
