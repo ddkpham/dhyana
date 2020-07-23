@@ -5,17 +5,17 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 function ProjectCard(props) {
-	const { project: {id, name, description} } = props;
-  return (
+	const { project: {name, description} } = props;
+	return (
 		<Card raised>
-			<CardActionArea href={"/project/" + id}>
+			<CardActionArea href={"/project/" + name}>
 				<CardContent>
 					<Typography variant="h5" color="textSecondary" gutterBottom>{name}</Typography>
 					<Typography variant="body1">{description}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>
-  );
+	);
 }
 
 export default ProjectCard;

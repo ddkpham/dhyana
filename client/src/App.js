@@ -89,16 +89,16 @@ function App(props) {
             {authenticated ? <NewProject /> : <Login />}
           </Route>
           <Route
-          path="/project/:id"
+          path="/project/:name"
           render={(props) => {
               const {
                 match: {
-                  params: { id },
+                  params: { name },
                 },
               } = props;
               if (authenticated) {
                 return (
-                  <Project id={id} />
+                  <Project name={name} />
                 );
               }
               return <Login />;
