@@ -6,7 +6,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import { baseURL } from "../../config/settings";
+import { baseURL, clientBaseURL } from "../../config/settings";
 
 class NewProject extends React.Component {
     state = {
@@ -30,7 +30,14 @@ class NewProject extends React.Component {
             body: JSON.stringify(body),
         })
         .then(response => response.json())
-        .then(data => console.log("project create success", data)) // TODO: redirect to project page
+        .then(data => {
+            console.log("project create success", data)
+            if(data.confirmation === 'success' && data.data){
+                window.location.href = `${clientBaseURL}/project/${data.data.name}`;
+            } else {
+                console.log("project create error", data.message);
+            }
+        })
         .catch(err => console.log("project create error", err));
     };
 
