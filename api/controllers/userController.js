@@ -44,14 +44,14 @@ exports.search_user = function (req, res, next) {
   last_name = req.body.last_name.trim();
 
   if (!username.length && !first_name.length && !last_name.length) {
-    res.json(errorResponse("no search criteria specified"));
+    res.status(400).json(errorResponse("no search criteria specified"));
     return;
   }
 
   const errors = validationResult(req.body);
 
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
     User.findAll({
@@ -61,14 +61,14 @@ exports.search_user = function (req, res, next) {
     })
       .then((user) => {
         if (user.length > 0) {
-          res.json(successResponse("user(s) found", user));
+          res.status(200).json(successResponse("user(s) found", user));
           return;
         }
 
         return Promise.reject();
       })
       .catch((err) => {
-        res.json(errorResponse("no such user exists", err));
+        res.status(200).json(errorResponse("no such user exists", err));
       });
   }
 };
