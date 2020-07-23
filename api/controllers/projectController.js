@@ -1,7 +1,9 @@
 const { body, validationResult } = require("express-validator");
 const Project = require("../models/Project");
 const Column = require("../models/Column");
-const ProjectColumn = require("../models/ProjectColumn");
+const ProjectColumns = require("../models/ProjectColumns");
+const ColumnTask = require("../models/ColumnsTasks");
+const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
 
@@ -107,7 +109,7 @@ exports.create_project_column = function (req, res, next) {
       } = col;
 
       if (columnId) {
-        ProjectColumn.create({
+        ProjectColumns.create({
           project_id: projectId,
           column_id: columnId,
         })
@@ -158,7 +160,7 @@ exports.view_project_columns = function (req, res, next) {
     return;
   }
 
-  ProjectColumn.findAll({
+  ProjectColumns.findAll({
     where: {
       project_id: projectId,
     },
@@ -175,9 +177,131 @@ exports.view_project_columns = function (req, res, next) {
         where: {
           [Op.or]: columnQuery,
         },
-      }).then((columnResults) => {
-        res.json(successResponse("Found project columns", columnResults));
+      }).then(async (columnResults) => {
+        console.log(
+          "exports.view_project_columns -> columnResults",
+          columnResults
+        );
+        const taskQuery = columnResults.map((val) => {
+          const {
+            dataValues: { id },
+          } = val;
+          return { column_id: id };
+        });
+
+        try {
+          // find tasks for each column
+          const tasks = await ColumnTask.findAll({
+            where: {
+              [Op.or]: taskQuery,
+            },
+          });
+          console.log("exports.view_project_columns -> tasks", tasks);
+
+          const columnInfo = columnResults.map((col) => {
+            const {
+              dataValues: { id: col_id },
+            } = col;
+            col.dataValues.tasks = [];
+            tasks.forEach((element) => {
+              const {
+                dataValues: { column_id: owner_id, task_id },
+              } = element;
+
+              if (owner_id === col_id) {
+                col.dataValues.tasks.push(task_id);
+              }
+            });
+            return col;
+          });
+
+          res.json(successResponse("Found project columns", columnInfo));
+        } catch (err) {
+          (err) =>
+            res.json(errorResponse("error in fetching column tasks", err));
+        }
       });
     })
     .catch((err) => res.json(errorResponse("no matching project found", err)));
+};
+
+exports.create_new_task = function (req, res, next) {
+  console.log(req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const name = req.body.name.trim();
+  const column_id = req.body.column_id;
+  const project_id = req.body.project_id;
+  const description = req.body.description.trim();
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!name || !column_id || !(project_id >= 0)) {
+    res
+      .status(400)
+      .json(errorResponse("missing projectId, columnName or column order"));
+    return;
+  }
+
+  Task.create({
+    name,
+    description,
+  })
+    .then((task) => {
+      const {
+        dataValues: { id: task_id },
+      } = task;
+      ColumnTask.create({
+        column_id,
+        task_id,
+      })
+        .then((result) => {
+          res
+            .status(200)
+            .json(successResponse("successfully created task", result));
+        })
+        .catch((err) =>
+          res
+            .status(400)
+            .json(errorResponse("Error in attaching task to column", err))
+        );
+    })
+    .catch((err) =>
+      res.status(400).json(errorResponse("Error in creating task", err))
+    );
+};
+
+exports.get_all_tasks = function (req, res, next) {
+  console.log(req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const task_ids = req.body.task_ids;
+  console.log("exports.get_all_tasks -> task_ids", task_ids);
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!task_ids.length) {
+    res.status(400).json(errorResponse("missing taskIds"));
+    return;
+  }
+
+  Task.findAll({
+    where: {
+      [Op.or]: task_ids.map((t) => ({ id: t })),
+    },
+  })
+    .then((result) => {
+      res
+        .status(200)
+        .json(successResponse("Successfully found task data", result));
+    })
+    .catch((err) =>
+      res.status(400).json(errorResponse("Error in finding tasks", err))
+    );
 };
