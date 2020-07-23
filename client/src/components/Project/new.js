@@ -21,10 +21,17 @@ class NewProject extends React.Component {
     }
 
     create = async () => {
-        const { name, description, team } = this.state;
-        const url = `${baseURL}/project/new`;
-        const body = { name, description, team_id: team.id };
-        // TODO: call create api
+        const { name, description, team_id } = this.state;
+        const url = `${baseURL}/project/create`;
+        const body = { name, description, team_id };
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(response => response.json())
+        .then(data => console.log("project create success", data)) // TODO: redirect to project page
+        .catch(err => console.log("project create error", err));
     };
 
     getTeams = () => {
@@ -36,7 +43,7 @@ class NewProject extends React.Component {
         .then(response => response.json())
         .then(data => {this.setState({ team_options: data.data })
         })
-        .catch(err => console.log("fetch error", err));
+        .catch(err => console.log("team fetch error", err));
     };
 
     render() {
