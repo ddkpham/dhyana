@@ -26,10 +26,17 @@ class Home extends React.Component {
     this.setState({ contacts });
   };
 
-  getProjects = async () => {
-    const fakeProjects = [{id: 1, name: "Test Project", description: "Toria testing", cards: [], owner: 'org/123123'}];
-    this.setState({ projects: fakeProjects });
-  }
+  getProjects = () => {
+    const url = `${baseURL}/project/all`;
+    fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+    })
+    .then(response => response.json())
+    .then(data => {this.setState({ projects: data.data })
+    })
+    .catch(err => console.log("project fetch error", err));
+};
 
   render() {
     const { contacts, projects } = this.state;
