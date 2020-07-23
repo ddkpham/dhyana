@@ -4,13 +4,11 @@ const { errorResponse, successResponse } = require("../utility/response");
 var User = require("../models/User");
 
 exports.get_user_info = function (req, res, next) {
-  body(req.body).trim().escape().not().isEmpty();
-
-  username = req.body.username.trim();
-  const errors = validationResult(req.body);
+  username = req.params.username;
+  const errors = validationResult(username);
 
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
     if (username == "") {
@@ -25,14 +23,14 @@ exports.get_user_info = function (req, res, next) {
     })
       .then((user) => {
         if (user.length) {
-          res.json(successResponse("user exists", user));
+          res.status(200).json(successResponse("user exists", user));
           return;
         }
 
         return Promise.reject();
       })
       .catch((err) => {
-        res.json(errorResponse("user doesn't exist", err));
+        res.status(200).json(errorResponse("user doesn't exist", err));
       });
   }
 };
@@ -47,11 +45,13 @@ exports.create_new_user = function (req, res, next) {
   const errors = validationResult(req.body);
 
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
     if (user == "" || pass == "") {
-      res.json(errorResponse("username or password cannot be null"));
+      res
+        .status(400)
+        .json(errorResponse("username or password cannot be null"));
       return;
     }
 
@@ -64,10 +64,12 @@ exports.create_new_user = function (req, res, next) {
       password,
     })
       .then((user) => {
-        res.json(successResponse("user created successfully", user));
+        res
+          .status(200)
+          .json(successResponse("user created successfully", user));
       })
       .catch((err) => {
-        res.json(errorResponse("user already exists", err));
+        res.status(200).json(errorResponse("user already exists", err));
       });
   }
 };

@@ -1,8 +1,15 @@
 var User = require("../models/User");
+const { body, validationResult } = require("express-validator");
 
 exports.login_post = function (req, res, next) {
   console.log(req.body);
   const { username, password } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   User.findAll({
     where: {
       username: username,

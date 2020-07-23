@@ -5,7 +5,7 @@ const errorResponse = (message, err = {}) => ({
   err,
 });
 
-const successResponse = (message, data) => ({
+const successResponse = (message, data = []) => ({
   confirmation: "success",
   data,
   message,

@@ -32,12 +32,10 @@ exports.create_team = function (req, res, next) {
 };
 
 exports.view_team = function (req, res, next) {
-  console.log(req.body);
+  const name = req.params.name.trim();
+  console.log("exports.view_team -> name", name);
 
-  body(req.body).trim().escape().not().isEmpty();
-  const name = req.body.name.trim();
-
-  const errors = validationResult(req.body);
+  const errors = validationResult(req.params);
   if (!errors.isEmpty()) {
     res.json(errorResponse("errors in inputted data"));
   }

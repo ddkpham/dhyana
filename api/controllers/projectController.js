@@ -38,18 +38,18 @@ exports.create_project = function (req, res, next) {
 };
 
 exports.view_project = function (req, res, next) {
-  console.log(req.body);
+  console.log(req.params);
 
-  body(req.body).trim().escape().not().isEmpty();
-  const name = req.body.name.trim();
+  const name = req.params.name.trim();
+  console.log("exports.view_project -> name", name);
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
   }
 
   if (!name) {
-    res.json(errorResponse("missing Project name"));
+    res.status(400).json(errorResponse("missing Project name"));
     return;
   }
 
@@ -60,15 +60,22 @@ exports.view_project = function (req, res, next) {
   })
     .then((project) => {
       if (project.length) {
-        res.json(successResponse("Sucessfully found Project", project));
+        res
+          .status(200)
+          .json(successResponse("Sucessfully found Project", project));
       } else {
-        res.json(errorResponse("Team not found.", err));
+        res.status(200).json(errorResponse("Project not found.", err));
       }
     })
     .catch((err) => {
-      res.json(
-        errorResponse("Team not found. error in request. Check query.", err)
-      );
+      res
+        .status(200)
+        .json(
+          errorResponse(
+            "Project not found. error in request. Check query.",
+            err
+          )
+        );
     });
 };
 
@@ -137,9 +144,9 @@ exports.create_project_column = function (req, res, next) {
 };
 
 exports.view_project_columns = function (req, res, next) {
-  console.log(req.body);
+  console.log(req.params);
 
-  const projectId = req.body.projectId;
+  const projectId = req.params.projectId;
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
