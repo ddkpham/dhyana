@@ -11,4 +11,6 @@ router.get(
   teamController.view_team
 );
 
+router.get("/all", teamController.view_all);
+
 module.exports = router;
