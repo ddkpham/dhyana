@@ -40,13 +40,13 @@ exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
 
   username = req.body.username.trim();
-  first_name = req.body.first_name.trim();
-  last_name = req.body.last_name.trim();
+  // first_name = req.body.first_name.trim();
+  // last_name = req.body.last_name.trim();
 
-  if (!username.length && !first_name.length && !last_name.length) {
-    res.status(400).json(errorResponse("no search criteria specified"));
-    return;
-  }
+  // if (!username.length && !first_name.length && !last_name.length) {
+  //   res.status(400).json(errorResponse("no search criteria specified"));
+  //   return;
+  // }
 
   const errors = validationResult(req.body);
 
@@ -54,9 +54,47 @@ exports.search_user = function (req, res, next) {
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
+    // User.findAll({
+    //   where: {
+    //     [Op.or]: [{ first_name }, { last_name }, { username }],
+    //   },
+    // })
+    // User.findAll({
+    //   // [Op.or]: [
+    //   where: {
+    //     username: {
+    //       // $like: "%username%",
+    //       [Op.like]: "$(username)%",
+    //     },
+    //   },
+    //   // ],
+    // })
+    // User.findAll({
+    //   where: {
+    //     [Op.or]: [
+    //       {
+    //         username: {
+    //           $like: "%$(username)%",
+    //         },
+    //       },
+    //       {
+    //         first_name: {
+    //           $like: "%$(first_name)%",
+    //         },
+    //       },
+    //       {
+    //         last_name: {
+    //           $like: "%$(last_name)%",
+    //         },
+    //       },
+    //     ],
+    //   },
+    // })
     User.findAll({
       where: {
-        [Op.or]: [{ first_name }, { last_name }, { username }],
+        username: {
+          $like: `%${username}%`,
+        },
       },
     })
       .then((user) => {
