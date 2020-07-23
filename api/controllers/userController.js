@@ -1,5 +1,6 @@
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
+const { Op } = require("sequelize");
 
 var User = require("../models/User");
 
@@ -31,6 +32,43 @@ exports.get_user_info = function (req, res, next) {
       })
       .catch((err) => {
         res.status(200).json(errorResponse("user doesn't exist", err));
+      });
+  }
+};
+
+exports.search_user = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+
+  username = req.body.username.trim();
+  first_name = req.body.first_name.trim();
+  last_name = req.body.last_name.trim();
+
+  if (!username.length && !first_name.length && !last_name.length) {
+    res.json(errorResponse("no search criteria specified"));
+    return;
+  }
+
+  const errors = validationResult(req.body);
+
+  if (!errors.isEmpty()) {
+    res.json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    User.findAll({
+      where: {
+        [Op.or]: [{ first_name }, { last_name }, { username }],
+      },
+    })
+      .then((user) => {
+        if (user.length > 0) {
+          res.json(successResponse("user(s) found", user));
+          return;
+        }
+
+        return Promise.reject();
+      })
+      .catch((err) => {
+        res.json(errorResponse("no such user exists", err));
       });
   }
 };

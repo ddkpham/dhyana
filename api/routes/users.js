@@ -18,4 +18,6 @@ router.get(
   userController.get_user_info
 );
 
+router.get("/search/result", userController.search_user);
+
 module.exports = router;
