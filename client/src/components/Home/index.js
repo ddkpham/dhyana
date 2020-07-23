@@ -7,15 +7,15 @@ import AddIcon from '@material-ui/icons/Add';
 import { baseURL, clientBaseURL } from "../../config/settings";
 import ContactLink from "../ContactLink";
 import Contact from "../Contact";
-import BoardCard from "../Board/card";
+import ProjectCard from "../Project/card";
 class Home extends React.Component {
   state = {
     contacts: [],
-    boards: [],
+    projects: [],
   };
   async componentDidMount() {
     this.getUsers();
-    this.getBoards();
+    this.getProjects();
   }
 
   getUsers = async () => {
@@ -26,13 +26,13 @@ class Home extends React.Component {
     this.setState({ contacts });
   };
 
-  getBoards = async () => {
-    const fakeBoards = [{id: 1, name: "Test Board", description: "Toria testing", cards: [], owner: 'org/123123'}];
-    this.setState({ boards: fakeBoards });
+  getProjects = async () => {
+    const fakeProjects = [{id: 1, name: "Test Project", description: "Toria testing", cards: [], owner: 'org/123123'}];
+    this.setState({ projects: fakeProjects });
   }
 
   render() {
-    const { contacts, boards } = this.state;
+    const { contacts, projects } = this.state;
     console.log("Home -> render -> contacts", contacts);
     const contactInfo = contacts.map((contact) => {
       const { first_name, last_name } = contact;
@@ -49,16 +49,16 @@ class Home extends React.Component {
             last_name={contact.last_name}
           />
         ))}
-        <Typography variant="h4">Boards</Typography>
-        {boards.map((b) => (
-          <BoardCard board={b} />
+        <Typography variant="h4">Projects</Typography>
+        {projects.map((p) => (
+          <ProjectCard project={p} />
         ))}
         <Card raised>
-          <CardActionArea href={"/board/new"}>
+          <CardActionArea href={"/project/new"}>
             <CardContent>
               <Typography variant="h5" color="textSecondary" gutterBottom>
                 <AddIcon/>
-                New Card
+                Add Project
               </Typography>
             </CardContent>
           </CardActionArea>

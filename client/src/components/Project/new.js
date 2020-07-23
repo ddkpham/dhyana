@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { baseURL } from "../../config/settings";
 
-class NewBoard extends React.Component {
+class NewProject extends React.Component {
     state = {
         name: "",
         description: ""
@@ -12,7 +12,7 @@ class NewBoard extends React.Component {
 
     create = async () => {
         const { name, description } = this.state;
-        const url = `${baseURL}/board/new`;
+        const url = `${baseURL}/project/new`;
         const body = { name, description };
         // TODO: call create api
     };
@@ -21,7 +21,7 @@ class NewBoard extends React.Component {
         const { name, description } = this.props;
         return (
             <div>
-            <Typography variant='h4'>Create New Board</Typography>
+            <Typography variant='h4'>Create New Project</Typography>
             <div className="text-input">
                 <TextField
                 label="Name"
@@ -46,4 +46,4 @@ class NewBoard extends React.Component {
         }
     }
 
-export default NewBoard;
+export default NewProject;
