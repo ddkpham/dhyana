@@ -1,0 +1,21 @@
+.col {
+  &-task-wrapper {
+    width: 350px;
+  }
+
+  &-title-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  &-input-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  &-text-field {
+    width: 300px;
+    margin: 5px auto;
+  }
+}

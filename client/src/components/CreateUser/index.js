@@ -24,8 +24,6 @@ function CreateUser() {
     const { confirmation } = data;
     alert(confirmation);
     if (confirmation === "success") {
-      localStorage.setItem("auth-token", "success");
-
       window.location.href = `${clientBaseURL}/home`;
     }
   };
