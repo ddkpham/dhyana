@@ -25,7 +25,7 @@ function App(props) {
         <ul>
           
           <li>
-            <Link to="/home">home</Link>
+            <Link to="/home">{ authenticated ? "Home" : "Login" }</Link>
           </li>
           
           { authenticated ?
