@@ -18,4 +18,14 @@ router.get(
   userController.get_user_info
 );
 
+router.post(
+  "/search/result",
+  [
+    body("username").escape(),
+    body("last_name").escape(),
+    body("first_name").escape(),
+  ],
+  userController.search_user
+);
+
 module.exports = router;
