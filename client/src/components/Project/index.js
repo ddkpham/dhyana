@@ -12,6 +12,7 @@ import { baseURL } from "../../config/settings";
 class Project extends React.Component {
     state = {
         project: {},
+        columns: [],
         columnModalOpen: false
     };
 
@@ -22,14 +23,33 @@ class Project extends React.Component {
 
     getProject = (name) => {
         const url = `${baseURL}/project/${name}`;
+        console.log('get project', name)
+        fetch(url, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+        })
+        .then(response => {console.log('in first promise'); return response.json()})
+        .then(data => {
+            console.log('fetch project success', data)
+            const project = data.data[0];
+            this.setState({ project });
+            this.getColumns(project.id);
+        })
+        .catch(err => console.log("project fetch error", err));
+    };
+
+    getColumns = (projectId) => {
+        const url = `${baseURL}/project/${projectId}/columns`;
         fetch(url, {
             method: "GET",
             headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
         })
         .then(response => response.json())
-        .then(data => {this.setState({ project: data.data[0] })
+        .then(data => {
+            console.log('fetch columns success', data)
+            this.setState({ columns: data.data })
         })
-        .catch(err => console.log("team fetch error", err));
+        .catch(err => console.log("column fetch error", err));
     };
 
     closeColumnModal = () => {
@@ -41,19 +61,20 @@ class Project extends React.Component {
     }
 
     render(){
-        const { project, columnModalOpen } = this.state;
-        const columns = [{ name: "todo"}, {name: "in progress"}, {name: "done"}]
+        const { project, columns, columnModalOpen } = this.state;
+        const { id } = this.props;
+        console.log("columns", columns)
         return (
             <div>
                 <DndProvider backend={HTML5Backend}>
-                    <AddColumnModal isOpen={columnModalOpen} close={this.closeColumnModal} projectId={project.id} order={columns?.length || 0} />
+                    <AddColumnModal isOpen={columnModalOpen} close={this.closeColumnModal} projectId={id} order={columns.length || 0} />
                     <Typography variant="h5" color="textSecondary" gutterBottom>{project.name}</Typography>
                     <Typography variant="body1" gutterBottom>{project.description}</Typography>
                     <Button
                         startIcon={<AddIcon />} onClick={this.openColumnModal}>Add Column</Button>
                     <Grid container>
                         {columns.map((c) =>
-                            <Column column={c} key={c.name}/>
+                            <Column column={c} key={c.name} projectId={id}/>
                         )}
                     </Grid>
                 </DndProvider>

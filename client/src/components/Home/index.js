@@ -60,7 +60,7 @@ class Home extends React.Component {
         ))}
         <Typography variant="h4">Projects</Typography>
         {projects.map((p) => (
-          <ProjectCard key={p.name} project={p} />
+          <ProjectCard key={p.id} project={p} />
         ))}
         <Card raised>
           <CardActionArea href={"/project/new"}>
