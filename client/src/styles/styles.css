@@ -1,0 +1,29 @@
+.MuiCard-root {
+    margin: 10px;
+}
+
+.MuiDialog-paper {
+    padding: 10px;
+}
+
+.MuiFormControl-root {
+    margin: 10px!important;
+    padding: 5px;
+}
+
+.MuiFormLabel-root.select-label{
+    margin-left: 10px;
+    text-align: center;
+}
+
+.root{
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.centered {
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    display: flex;
+}

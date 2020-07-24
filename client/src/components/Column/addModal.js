@@ -39,16 +39,18 @@ class AddColumnDialog extends React.Component {
         return (
             <Dialog open={isOpen} onClose={close}>
                 <div>
-                    <Typography variant='h4'>Create New Column</Typography>
-                    <TextField
-                        label="Name"
-                        variant="outlined"
-                        value={name}
-                        onChange={(event) => {
-                            this.setState({ name: event.target.value });
-                        }}
-                    />
-                    <Button onClick={this.create}>Add</Button>
+                    <Typography variant='h4' color="textSecondary">Create New Column</Typography>
+                    <div className="centered">
+                        <TextField
+                            label="Name"
+                            variant="outlined"
+                            value={name}
+                            onChange={(event) => {
+                                this.setState({ name: event.target.value });
+                            }}
+                        />
+                        <Button onClick={this.create}>Add</Button>
+                    </div>
                 </div>
             </Dialog>
         );
