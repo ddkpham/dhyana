@@ -43,4 +43,7 @@ router.post(
   projectController.get_all_tasks
 );
 
+router.delete(
+  "/task/:task_id/delete", projectController.delete_task);
+
 module.exports = router;

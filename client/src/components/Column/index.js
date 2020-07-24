@@ -15,8 +15,17 @@ class Column extends React.Component {
         this.getTasks();
     }
 
+    componentDidUpdate(prevProps, prevState){
+        const { column } = this.props;
+        if(prevProps.column.tasks != column.tasks){
+            console.log('reloading')
+            this.getTasks();
+        }
+    }
+
     getTasks = () => {
         const { column } = this.props
+        console.log('column', column.name, column.tasks.length);
         const url = `${baseURL}/project/tasks`;
         const body = {task_ids: column.tasks};
         fetch(url, {
@@ -32,17 +41,41 @@ class Column extends React.Component {
         .catch(err => console.log("task fetch error", err));
     };
 
+    onDrop = (task) => {
+        const { column, projectId, reload } = this.props
+        const url = `${baseURL}/project/task`;
+        const body = {name: task.name, description: task.description, project_id: projectId, column_id: column.id};
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(() => {
+            const delUrl = `${baseURL}/project/task/${task.id}/delete`
+            return fetch(delUrl, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('create tasks success', data)
+            reload();
+        })
+        .catch(err => console.log("create fetch error", err));
+    };
+
     render(){
         const { column } = this.props;
         const { tasks } = this.state;
 
         return (
             <Grid item key={column.id}>
-                <DragTarget columnName={column.name}>
+                <DragTarget columnName={column.name} onDrop={this.onDrop}>
                     <Paper>
                         <Typography>{column.name}</Typography>
-                        {tasks.map((t) =>
-                            <Task task={t} key={t.name}/>
+                        {tasks?.map((t) =>
+                            <Task task={t} key={t.id} columnId={column.id}/>
                         )}
                     </Paper>
                 </DragTarget>

@@ -17,11 +17,11 @@ class Project extends React.Component {
     };
 
     async componentDidMount() {
-        const { name } = this.props
-        this.getProject(name);
+        this.getProject();
     }
 
-    getProject = (name) => {
+    getProject = () => {
+        const { name } = this.props
         const url = `${baseURL}/project/${name}`;
         console.log('get project', name)
         fetch(url, {
@@ -75,7 +75,12 @@ class Project extends React.Component {
                         startIcon={<AddIcon />} onClick={this.openColumnModal}>Add Column</Button>
                     <Grid container>
                         {columns.map((c) =>
-                            <Column column={c} key={c.id} projectId={project?.id}/>
+                            <Column
+                                column={c}
+                                key={c.id}
+                                projectId={project?.id}
+                                reload={this.getProject}
+                            />
                         )}
                     </Grid>
                 </DndProvider>
