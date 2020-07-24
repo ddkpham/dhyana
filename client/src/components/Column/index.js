@@ -17,6 +17,7 @@ const styles = (theme) => ({
     columnPaper: {
         padding: '5px',
         height: '100%',
+        backgroundColor: "inherit"
     },
 });
 
@@ -138,58 +139,58 @@ class Column extends React.Component {
         console.log("Column -> render -> open", open);
         const id = open ? "simple-popover" : undefined;
         return (
-        <Grid item key={column.id} className={classes.column}>
-            <DragTarget columnName={column.name} onDrop={this.onDrop}>
-                <Paper className={classes.columnPaper}>
-                    <Typography>{column.name}</Typography>
-                    {tasks?.map((t) => (
-                    <Task task={t} key={t.id} columnId={column.id} />
-                    ))}
-                </Paper>
-            </DragTarget>
-            <Button onClick={this.handleClick}>Add task</Button>
-            <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={this.handleClose}
-            anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-            }}
-            transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-            }}
-            >
-            <Card className="col-task-wrapper">
-                <div className="col-title-wrapper">
-                <Typography className="title">Create a Task. 🥅</Typography>
-                </div>
-                <div className="col-input-wrapper">
-                <TextField
-                    className="col-text-field"
-                    id="outlined-basic"
-                    label="Task name"
-                    variant="outlined"
-                    onChange={(e) =>
-                    this.setState({ currTaskName: e.target.value })
-                    }
-                />
-                <TextField
-                    className="col-text-field"
-                    id="outlined-basic"
-                    label="Task description"
-                    variant="outlined"
-                    onChange={(e) =>
-                    this.setState({ currDescription: e.target.value })
-                    }
-                />
-                <Button onClick={this.addTask}>Create task</Button>
-                </div>
-            </Card>
-            </Popover>
-        </Grid>
+            <Grid item key={column.id} className={classes.column}>
+                <DragTarget columnName={column.name} onDrop={this.onDrop}>
+                    <Paper className={classes.columnPaper}>
+                        <Typography>{column.name}</Typography>
+                        {tasks?.map((t) => (
+                        <Task task={t} key={t.id} columnId={column.id} />
+                        ))}
+                    </Paper>
+                </DragTarget>
+                <Button onClick={this.handleClick}>Add task</Button>
+                <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={this.handleClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                }}
+                >
+                <Card className="col-task-wrapper">
+                    <div className="col-title-wrapper">
+                    <Typography className="title">Create a Task. 🥅</Typography>
+                    </div>
+                    <div className="col-input-wrapper">
+                    <TextField
+                        className="col-text-field"
+                        id="outlined-basic"
+                        label="Task name"
+                        variant="outlined"
+                        onChange={(e) =>
+                        this.setState({ currTaskName: e.target.value })
+                        }
+                    />
+                    <TextField
+                        className="col-text-field"
+                        id="outlined-basic"
+                        label="Task description"
+                        variant="outlined"
+                        onChange={(e) =>
+                        this.setState({ currDescription: e.target.value })
+                        }
+                    />
+                    <Button onClick={this.addTask}>Create task</Button>
+                    </div>
+                </Card>
+                </Popover>
+            </Grid>
         );
     }
     }

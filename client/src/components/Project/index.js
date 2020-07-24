@@ -75,35 +75,35 @@ class Project extends React.Component {
         const { project, columns, columnModalOpen } = this.state;
         console.log("Project -> render -> project", project);
         return (
-        <div>
-            <DndProvider backend={HTML5Backend}>
-            <AddColumnModal
-                isOpen={columnModalOpen}
-                close={this.closeColumnModal}
-                projectId={project?.id}
-                order={columns.length || 0}
-            />
-            <Typography variant="h6" gutterBottom>{project.name}>
-                {project.name}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-                {project.description}
-            </Typography>
-            <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
-                Add Column
-            </Button>
-            <Grid container spacing={2}>
-                {columns.map((c) => (
-                <Column
-                    column={c}
-                    key={c.id}
+            <div>
+                <DndProvider backend={HTML5Backend}>
+                <AddColumnModal
+                    isOpen={columnModalOpen}
+                    close={this.closeColumnModal}
                     projectId={project?.id}
-                    reload={this.getProject}
+                    order={columns.length || 0}
                 />
-                ))}
-            </Grid>
-            </DndProvider>
-        </div>
+                <Typography variant="h6" gutterBottom>{project.name}>
+                    {project.name}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                    {project.description}
+                </Typography>
+                <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
+                    Add Column
+                </Button>
+                <Grid container spacing={2}>
+                    {columns.map((c) => (
+                    <Column
+                        column={c}
+                        key={c.id}
+                        projectId={project?.id}
+                        reload={this.getProject}
+                    />
+                    ))}
+                </Grid>
+                </DndProvider>
+            </div>
         );
     }
 }
