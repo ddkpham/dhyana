@@ -15,12 +15,12 @@ import { clientBaseURL } from "./config/settings";
 import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";
 import Project from "./components/Project/index";
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './styles/theme';
-import './styles/styles.css';
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./styles/theme";
+import "./styles/styles.css";
 
 // Simple auth
-var authenticated = true;//localStorage.getItem("auth-token");
+var authenticated = localStorage.getItem("auth-token");
 console.log("authenticated", authenticated);
 
 function App(props) {

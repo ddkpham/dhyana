@@ -3,6 +3,7 @@
   justify-self: center;
   flex-direction: column;
   width: 200px;
+  margin: 0 auto;
 }
 
 #mainDiv {
@@ -18,4 +19,10 @@
   content: "";
   display: table;
   clear: both;
+}
+
+.search-user-button {
+  margin: 0 auto;
+  position: relative;
+  left: 50px;
 }

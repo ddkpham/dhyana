@@ -1,21 +1,21 @@
-.text-input {
+.login-text-input .MuiFormControl-root {
   display: flex;
   justify-self: center;
   flex-direction: column;
   width: 200px;
-  margin: 10px auto;
+  margin: 10px auto !important;
 }
 
 .outer-wrapper {
   display: flex;
   justify-self: center;
   margin-top: 120px;
-  height: 250px;
+  height: 280px;
 }
 
-.inner-wrapper {
+.login-inner-wrapper {
   width: 300px;
-  margin: 0px auto;
+  margin: 0px auto !important;
 }
 
 .title-wrapper {

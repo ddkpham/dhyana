@@ -60,6 +60,7 @@ function SearchUser() {
     if (contactList.length > firstIndexPresented + numResultsToShow) {
       return (
         <Button
+          className="search-user-button"
           variant="outlined"
           color="primary"
           onClick={() =>
@@ -78,6 +79,7 @@ function SearchUser() {
     if (firstIndexPresented > 0 && contactList.length > 0) {
       return (
         <Button
+          className="search-user-button"
           variant="outlined"
           color="primary"
           onClick={() =>

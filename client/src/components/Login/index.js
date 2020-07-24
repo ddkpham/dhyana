@@ -33,13 +33,13 @@ function Login() {
 
   return (
     <div className={"outer-wrapper"}>
-      <Card className={"inner-wrapper"}>
+      <Card className={"login-inner-wrapper"}>
         <div className={"title-wrapper"}>
           <h2 className={"title"}>Login 👋</h2>
         </div>
         <div className="text-input-wrapper">
           <TextField
-            className="text-input"
+            className="login-text-input"
             label="username"
             variant="outlined"
             onChange={(event) => {
@@ -47,7 +47,7 @@ function Login() {
             }}
           />
           <TextField
-            className="text-input"
+            className="login-text-input"
             label="password"
             variant="outlined"
             onChange={(event) => {
