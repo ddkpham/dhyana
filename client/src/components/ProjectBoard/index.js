@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import CreateTask from "./CreateTask";
 import Item from "./Item";
 import DropWrapper from "./DropWrapper";
 import Col from "./Col";
@@ -28,6 +30,12 @@ const ProjectBoard = (props) => {
     });
   };
 
+  const [show, setShow] = useState(false);
+
+  const onOpen = () => setShow(true);
+
+  const onClose = () => setShow(false);
+
   return (
     <div className={"row"}>
       {statuses.map((s) => {
@@ -49,6 +57,13 @@ const ProjectBoard = (props) => {
                   ))}
               </Col>
             </DropWrapper>
+            <Button onClick={onOpen}>Create Task</Button>
+            {items
+              .filter((i) => i.status === s.status)
+              .map((i, idx) => (
+                //hard coded for now because no project_id
+                <CreateTask column_id ={idx} project_id ={7} onClose={onClose} show={show} />
+            ))}
           </div>
         );
       })}
