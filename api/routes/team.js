@@ -5,6 +5,8 @@ const { body, param } = require("express-validator");
 
 router.post("/create", teamController.create_team);
 
+router.get("/all", teamController.view_all);
+
 router.get(
   "/:name",
   [param("name").isLength({ min: 2 })],

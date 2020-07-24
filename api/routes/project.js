@@ -19,6 +19,8 @@ router.get(
   projectController.view_project
 );
 
+router.get("/all", projectController.view_all);
+
 //TEMP for debuggin
 router.post("/column", projectController.create_project_column);
 

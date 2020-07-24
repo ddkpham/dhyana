@@ -81,6 +81,22 @@ exports.view_project = function (req, res, next) {
     });
 };
 
+exports.view_all = function (req, res, next) {
+  Project.findAll()
+    .then((projects) => {
+      if (projects.length) {
+        res.json(successResponse("Sucessfully found projects", projects));
+      } else {
+        res.json(errorResponse("No projects found", err));
+      }
+    })
+    .catch((err) => {
+      res.json(
+        errorResponse("Projects not found. error in request. Check query.", err)
+      );
+    });
+};
+
 exports.create_project_column = function (req, res, next) {
   console.log(req.body);
 
