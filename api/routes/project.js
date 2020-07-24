@@ -13,13 +13,13 @@ router.post(
   projectController.create_project
 );
 
+router.get("/all", projectController.view_all);
+
 router.get(
   "/:name",
   [param("name").isLength({ min: 2 })],
   projectController.view_project
 );
-
-router.get("/all", projectController.view_all);
 
 //TEMP for debuggin
 router.post("/column", projectController.create_project_column);
@@ -42,5 +42,8 @@ router.post(
   [body("task_ids").isLength({ min: 1 })],
   projectController.get_all_tasks
 );
+
+router.delete(
+  "/task/:task_id/delete", projectController.delete_task);
 
 module.exports = router;

@@ -321,3 +321,33 @@ exports.get_all_tasks = function (req, res, next) {
       res.status(400).json(errorResponse("Error in finding tasks", err))
     );
 };
+
+exports.delete_task = function (req, res, next) {
+  console.log(req.params);
+  const task_id = req.params.task_id.trim();
+
+  if (!task_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  ColumnTask.destroy({
+    where: {
+      task_id
+    }
+  }).then(() => {
+    Task.destroy({
+      where: {
+        id: task_id
+      }
+    }).then(() =>
+      res
+        .status(200)
+        .json(successResponse("successfully deleted task"))
+    ).catch((err) =>
+      res.status(400).json(errorResponse("task destroy error: " + err.message))
+    )
+  }).catch((err) =>
+    res.status(400).json(errorResponse("columntask destroy error: " + err.message))
+  )
+};
