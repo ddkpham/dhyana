@@ -1,11 +1,18 @@
 import React from "react";
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Modal from '@material-ui/core/Modal';
+import Column from '../Column';
+import AddColumnModal from '../Column/addModal';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 import { baseURL } from "../../config/settings";
 class Project extends React.Component {
     state = {
         project: {},
+        columnModalOpen: false
     };
 
     async componentDidMount() {
@@ -25,22 +32,31 @@ class Project extends React.Component {
         .catch(err => console.log("team fetch error", err));
     };
 
-    render(){
-        const { project } = this.state;
+    closeColumnModal = () => {
+        this.setState({ columnModalOpen: false });
+    }
 
+    openColumnModal = () => {
+        this.setState({ columnModalOpen: true });
+    }
+
+    render(){
+        const { project, columnModalOpen } = this.state;
+        const columns = [{ name: "todo"}, {name: "in progress"}, {name: "done"}]
         return (
             <div>
-                <Typography variant="h5" color="textSecondary" gutterBottom>{project.name}</Typography>
-                <Typography variant="body1" gutterBottom>{project.description}</Typography>
-                <Grid container>
-                    {project.columns && project.columns.map((c) =>
-                        <Grid item xs={6} key={c.id}>
-                            <Paper>
-                                <Typography>{c.name}</Typography>
-                            </Paper>
-                        </Grid>
-                    )}
-                </Grid>
+                <DndProvider backend={HTML5Backend}>
+                    <AddColumnModal isOpen={columnModalOpen} close={this.closeColumnModal} projectId={project.id} order={columns?.length || 0} />
+                    <Typography variant="h5" color="textSecondary" gutterBottom>{project.name}</Typography>
+                    <Typography variant="body1" gutterBottom>{project.description}</Typography>
+                    <Button
+                        startIcon={<AddIcon />} onClick={this.openColumnModal}>Add Column</Button>
+                    <Grid container>
+                        {columns.map((c) =>
+                            <Column column={c} key={c.name}/>
+                        )}
+                    </Grid>
+                </DndProvider>
             </div>
         );
     }

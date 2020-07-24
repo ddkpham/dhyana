@@ -33,7 +33,9 @@ class Home extends React.Component {
         headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
     })
     .then(response => response.json())
-    .then(data => {this.setState({ projects: data.data })
+    .then(data => {
+      console.log("projects", data)
+      this.setState({ projects: data.data })
     })
     .catch(err => console.log("project fetch error", err));
 };
