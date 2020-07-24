@@ -1,6 +1,6 @@
+const { Op } = require("sequelize");
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
-const { Op } = require("sequelize");
 
 var User = require("../models/User");
 
