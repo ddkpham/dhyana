@@ -5,6 +5,7 @@ import Col from "./Col";
 import { data, statuses } from "../data";
 import "./index.css";
 
+// Project board takes in a list of items,
 const ProjectBoard = (props) => {
   const [items, setItems] = useState(data);
 
@@ -30,6 +31,8 @@ const ProjectBoard = (props) => {
 
   return (
     <div className={"row"}>
+      {/* for each status or column we are going to create a column and filter
+      out items that dont have the same status. Currently this is mock data*/}
       {statuses.map((s) => {
         return (
           <div key={s.status} className={"col-wrapper"}>

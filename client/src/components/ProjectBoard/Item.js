@@ -3,6 +3,11 @@ import { useDrag, useDrop } from "react-dnd";
 import Window from "./Window";
 import ITEM_TYPE from "../data/types";
 
+// item prop contains info about the item. Index is the position,
+// in the column. Every single item is replicated across all columns,
+// it is visible in columns with a matching status code and not.
+// moveItem is a parent Handler function so that the item element
+// can tell the parent element where it has moved to.
 const Item = ({ item, index, moveItem, status }) => {
   const ref = useRef(null);
 
