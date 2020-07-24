@@ -5,14 +5,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 function UserCard(props) {
-	const { user: {username, fName, lName} } = props;
+	const { user: {username, first_name, last_name} } = props;
 	return (
 		<Card raised>
-			<CardActionArea href={"/user/" + fName}>
+			<CardActionArea href={"/user/" + first_name}>
 				<CardContent>
 					<Typography variant="h5" color="textSecondary" gutterBottom>{username}</Typography>
-					<Typography variant="body1">{fName}</Typography>
-                    <Typography variant="body1">{lName}</Typography>
+					<Typography variant="body1">{first_name}</Typography>
+                    <Typography variant="body1">{last_name}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>

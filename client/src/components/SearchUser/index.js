@@ -6,37 +6,32 @@ import "./index.scss";
 import { Link } from "react-router-dom";
 import UserCard from "./userCard";
 
-
-// for (var contact = 0; contact<contactList.length; contact++) {
-//   <li>
-//     {contact.first_name} {contact.last_name}
-//   </li>
-// }
-
 function SearchUser() {
-  const [contactList, setContacts] = useState("");
+  const [contactList, setContacts] = useState([]);
   const [input, setInput] = useState("");
 
   const search = async (props) => {
     const url = `${baseURL}/user/search/result`;
-    const body = { input };
+    const searchString = {input};
     const response = await fetch(url, {
       method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
+      body: JSON.stringify(searchString),
     });
-
-    const data = await response.json();
-    const { confirmation: confirmation, data: contacts } = data;
-    alert(confirmation)
-    alert(JSON.stringify(contacts))
+   
+    const payload = await response.json();
+    const { confirmation: confirmation, data: contacts } = payload;
+    console.log(contacts);
     if (confirmation == "success") {
-      setContacts({ contacts });
+      setContacts(contacts);
+    } else {
+
     }
-  };
+  }
 
   return (
     <div id="mainDiv">
+
       <div class="column">
         <h2>Search User</h2>
         <div className="text-input">
@@ -53,8 +48,16 @@ function SearchUser() {
           </Button>
         </div>
       </div>
+
       <div class="column">
+        <h2>Results</h2>
+        <ul>
+          { 
+              contactList.map(contact => (<UserCard user={contact} />) )
+          }
+        </ul>
       </div>
+
     </div>
   );
 }
