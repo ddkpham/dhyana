@@ -61,3 +61,12 @@ exports.view_team = function (req, res, next) {
       res.json(errorResponse("Team not found.", err));
     });
 };
+
+exports.view_all = function(req, res, next){
+  Team.findAll().then((teams) => {
+    res.json(successResponse("Sucessfully found team", teams));
+  })
+  .catch((err) => {
+    res.json(errorResponse("Error fetching teams", err));
+  });
+}

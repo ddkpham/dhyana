@@ -13,7 +13,8 @@ import NewContact from "./components/NewContact/index";
 import CreateUser from "./components/CreateUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
-
+import NewProject from "./components/Project/new";
+import Project from "./components/Project/index";
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
 console.log("authenticated", authenticated);
@@ -84,6 +85,24 @@ function App(props) {
               return <Login />;
             }}
           />
+          <Route path="/project/new">
+            {authenticated ? <NewProject /> : <Login />}
+          </Route>
+          <Route
+          path="/project/:name"
+          render={(props) => {
+              const {
+                match: {
+                  params: { name },
+                },
+              } = props;
+              if (authenticated) {
+                return (
+                  <Project name={name} />
+                );
+              }
+              return <Login />;
+            }}/>
         </Switch>
       </div>
     </Router>
