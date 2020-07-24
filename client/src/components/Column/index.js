@@ -12,19 +12,24 @@ class Column extends React.Component {
     };
 
     componentDidMount() {
-        const { column } = this.props
-        this.getTasks(column.id);
+        this.getTasks();
     }
 
-    getTasks = (id) => {
-        const fakeTasks = [
-            {name: "task 1", description: "for testing"},
-            {name: "task 2", description: ""},
-            {name: "task 3", description: "I have descriiption"},
-            {name: "task 4", description: "be the best"}
-        ];
-        this.setState({tasks: fakeTasks});
-
+    getTasks = () => {
+        const { column } = this.props
+        const url = `${baseURL}/project/tasks`;
+        const body = {task_ids: column.tasks};
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
+            body: JSON.stringify(body),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('fetch tasks success', data)
+            this.setState({ tasks: data.data })
+        })
+        .catch(err => console.log("task fetch error", err));
     };
 
     render(){
