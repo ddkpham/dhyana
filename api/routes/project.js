@@ -24,4 +24,21 @@ router.post("/column", projectController.create_project_column);
 
 router.get("/:projectId/columns", projectController.view_project_columns);
 
+router.post(
+  "/task",
+  [
+    body("name").isLength({ min: 1 }),
+    body("description").isLength({ min: 1 }).escape(),
+    body("column_id").isLength({ min: 1 }),
+    body("project_id").isLength({ min: 1 }),
+  ],
+  projectController.create_new_task
+);
+
+router.post(
+  "/tasks",
+  [body("task_ids").isLength({ min: 1 })],
+  projectController.get_all_tasks
+);
+
 module.exports = router;

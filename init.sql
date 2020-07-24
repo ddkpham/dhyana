@@ -57,7 +57,8 @@ ALTER SEQUENCE public.columns_id_seq OWNED BY public.pcolumns.id;
 
 CREATE TABLE public.columnstasks (
     column_id integer NOT NULL,
-    task_id integer NOT NULL
+    task_id integer NOT NULL,
+    id integer NOT NULL
 );
 
 
@@ -79,6 +80,26 @@ CREATE SEQUENCE public.columnstasks_column_id_seq
 --
 
 ALTER SEQUENCE public.columnstasks_column_id_seq OWNED BY public.columnstasks.column_id;
+
+
+--
+-- Name: columnstasks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.columnstasks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: columnstasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.columnstasks_id_seq OWNED BY public.columnstasks.id;
 
 
 --
@@ -295,6 +316,13 @@ ALTER TABLE ONLY public.columnstasks ALTER COLUMN task_id SET DEFAULT nextval('p
 
 
 --
+-- Name: columnstasks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.columnstasks ALTER COLUMN id SET DEFAULT nextval('public.columnstasks_id_seq'::regclass);
+
+
+--
 -- Name: pcolumns id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -340,8 +368,17 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: columnstasks; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.columnstasks (column_id, task_id) FROM stdin;
-2	1
+COPY public.columnstasks (column_id, task_id, id) FROM stdin;
+2	1	1
+7	6	2
+7	7	3
+7	8	4
+2	9	5
+2	10	6
+2	11	7
+2	12	8
+2	13	9
+2	14	10
 \.
 
 
@@ -398,6 +435,18 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 COPY public.tasks (id, name, owner, description, activity_log) FROM stdin;
 1	create models	\N	create models for db	\N
 2	dont create models	\N	dont create models for db	\N
+3	get shit done	\N		\N
+4	get shit done	\N		\N
+5	get shit done	\N		\N
+6	get shit done	\N		\N
+7	get shit done	\N		\N
+8	get shit done	\N		\N
+9	get shit done	\N		\N
+10	get shit done	\N		\N
+11	get shit done	\N		\N
+12	get shit done	\N		\N
+13	get shit done	\N		\N
+14	get shit done	\N	work work work work work	\N
 \.
 
 
@@ -420,6 +469,7 @@ COPY public.teams (id, name) FROM stdin;
 5	post-malone
 8	
 9	brady-bunch
+13	gold fire
 \.
 
 
@@ -457,6 +507,13 @@ SELECT pg_catalog.setval('public.columnstasks_column_id_seq', 1, false);
 
 
 --
+-- Name: columnstasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.columnstasks_id_seq', 10, true);
+
+
+--
 -- Name: columnstasks_tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -481,14 +538,14 @@ SELECT pg_catalog.setval('public.projects_id_seq', 8, true);
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 2, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 14, true);
 
 
 --
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teams_id_seq', 12, true);
+SELECT pg_catalog.setval('public.teams_id_seq', 14, true);
 
 
 --
@@ -504,6 +561,14 @@ SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 ALTER TABLE ONLY public.pcolumns
     ADD CONSTRAINT columns_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: columnstasks columnstasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.columnstasks
+    ADD CONSTRAINT columnstasks_pkey PRIMARY KEY (id);
 
 
 --
