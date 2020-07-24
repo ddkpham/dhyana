@@ -14,8 +14,8 @@ class AddColumnDialog extends React.Component {
         const { close, projectId, order } = this.props;
         const { name } = this.state;
         const url = `${baseURL}/project/column`;
-        console.log('column name', name, projectId, order)
         const body = { columnName: name, projectId, columnOrder: order };
+
         fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
@@ -26,6 +26,7 @@ class AddColumnDialog extends React.Component {
         console.log("column create success", data)
         if(data.confirmation === 'success' && data.data){
             close();
+            this.setState({name: ""});
         } else {
             console.log("project create error", data.message);
         }
