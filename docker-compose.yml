@@ -7,9 +7,9 @@ services:
     ports:
       - "8080:3000"
     stdin_open: true
-    # volumes:
-    #   - ./client:/usr/src/client
-    #   - /usr/src/client/node_modules/
+    volumes:
+      - ./client:/usr/src/client
+      - /usr/src/client/node_modules/
 
   api:
     container_name: dhyana-api
@@ -26,9 +26,9 @@ services:
     command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
     stdin_open: true
     tty: true
-    # volumes:
-    #   - ./api:/usr/src/api
-    #   - /usr/src/api/node_modules/
+    volumes:
+      - ./api:/usr/src/api
+      - /usr/src/api/node_modules/
 
   db:
     image: "postgres:latest"
