@@ -21,9 +21,7 @@ router.get(
 router.post(
   "/search/result",
   [
-    body("username").escape(),
-    body("last_name").escape(),
-    body("first_name").escape(),
+    body("input").escape(),
   ],
   userController.search_user
 );
