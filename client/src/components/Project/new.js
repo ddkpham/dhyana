@@ -57,42 +57,43 @@ class NewProject extends React.Component {
         const { name, description, team_id, team_options } = this.state;
         return (
             <div>
-            <Typography variant='h4'>Create New Project</Typography>
-            <div className="text-input">
-                <TextField
-                label="Name"
-                variant="outlined"
-                value={name}
-                onChange={(event) => {
-                    this.setState({ name: event.target.value });
-                }}
-                />
-                <TextField
-                label="Description"
-                variant="outlined"
-                value={description}
-                onChange={(event) => {
-                    this.setState({ description: event.target.value });
-                }}
-                />
-                <FormControl>
-                    <InputLabel id="demo-simple-select-label">Team</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={team_id}
+                <Typography variant='h4'>Create New Project</Typography>
+                <div className="text-input">
+                    <TextField
+                        label="Name"
+                        variant="outlined"
+                        value={name}
                         onChange={(event) => {
-                            this.setState({ team_id: event.target.value });
+                            this.setState({ name: event.target.value });
                         }}
-                    >
-                        {team_options.map((t) => {
-                            return <MenuItem value={t.id}>{t.name}</MenuItem>
-                        })}
-                        <MenuItem value="">None</MenuItem>
-                    </Select>
-                </FormControl>
-            </div>
-            <Button onClick={this.create}>Create</Button>
+                    />
+                    <TextField
+                        label="Description"
+                        variant="outlined"
+                        value={description}
+                        onChange={(event) => {
+                            this.setState({ description: event.target.value });
+                        }}
+                    />
+                    <FormControl>
+                        <InputLabel className="select-label" htmlFor="team_id" id="team-select-label">Team</InputLabel>
+                        <Select
+                            labelId="team-select-label"
+                            variant="outlined"
+                            value={team_id}
+                            variant="outlined"
+                            onChange={(event) => {
+                                this.setState({ team_id: event.target.value });
+                            }}
+                        >
+                            {team_options.map((t) => {
+                                return <MenuItem value={t.id}>{t.name}</MenuItem>
+                            })}
+                            <MenuItem value="">None</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Button onClick={this.create} variant="outlined" color="secondary">Create</Button>
+                </div>
             </div>
         );
         }

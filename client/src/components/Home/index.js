@@ -1,4 +1,5 @@
 import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
@@ -6,6 +7,15 @@ import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
 import { baseURL, clientBaseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
+
+const styles = (theme) => ({
+  homeRoot:{
+    padding: '5px',
+  },
+  projectWrapper: {
+    display: 'inline-block',
+  }
+});
 
 class Home extends React.Component {
   state = {
@@ -31,26 +41,29 @@ class Home extends React.Component {
 
   render() {
     const { projects } = this.state;
+    const { classes } = this.props
 
     return (
-      <div>
-        <Typography variant="h4">Projects</Typography>
-        {projects.map((p) => (
-          <ProjectCard key={p.id} project={p} />
-        ))}
-        <Card raised>
-          <CardActionArea href={"/project/new"}>
-            <CardContent>
-              <Typography variant="h5" color="textSecondary" gutterBottom>
-                <AddIcon/>
-                Add Project
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
+      <div className={classes.homeRoot}>
+        <div className={classes.projectWrapper}>
+          <Typography variant="h4">Projects</Typography>
+          {projects.map((p) => (
+            <ProjectCard key={p.id} project={p} />
+          ))}
+          <Card raised>
+            <CardActionArea href={"/project/new"}>
+              <CardContent>
+                <Typography variant="h5" color="textSecondary" gutterBottom>
+                  <AddIcon/>
+                  Add Project
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </div>
       </div>
     );
   }
 }
 
-export default Home;
+export default withStyles(styles)(Home);

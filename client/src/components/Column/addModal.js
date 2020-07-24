@@ -39,7 +39,7 @@ class AddColumnDialog extends React.Component {
         return (
             <Dialog open={isOpen} onClose={close}>
                 <div>
-                    <Typography variant='h4'>Create New Column</Typography>
+                    <Typography variant='h4' color="textSecondary">Create New Column</Typography>
                     <TextField
                         label="Name"
                         variant="outlined"

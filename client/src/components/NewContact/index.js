@@ -79,8 +79,8 @@ class NewContact extends React.Component {
               this.setState({ notes: event.target.value });
             }}
           />
+          <Button onClick={this.create}>Create</Button>
         </div>
-        <Button onClick={this.create}>Create</Button>
       </div>
     );
   }
