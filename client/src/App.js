@@ -12,43 +12,26 @@ import CreateUser from "./components/CreateUser/index";
 import SearchUser from "./components/SearchUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
+import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";
 import Project from "./components/Project/index";
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
+authenticated = true;
 console.log("authenticated", authenticated);
 
 function App(props) {
   return (
     <Router>
       <div>
-        <ul>
-          
-          <li>
-            <Link to="/home">{ authenticated ? "Home" : "Login" }</Link>
-          </li>
-          
-          { authenticated ?
-            <li>
-              <Link to="/searchUser">Search User</Link>
-            </li>
-            :
+        {/*
+        createUser still needs to be added 
             <li>
               <Link to="/createUser">Create Account</Link>
             </li>
-          }
-          
-          <li>
-            <Button
-              onClick={() => {
-                localStorage.removeItem("auth-token");
-                window.location.href = `${clientBaseURL}`;
-              }}
-            >
-              Log out
-            </Button>
-          </li>
-        </ul>
+          )}
+*/}
+        <AppBar />
 
         <hr />
 
