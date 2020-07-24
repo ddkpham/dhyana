@@ -2,11 +2,15 @@ import { baseURL, clientBaseURL } from "../../config/settings";
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import { useHistory } from "react-router-dom";
+
 import "./index.scss";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPass] = useState("");
+  const history = useHistory();
 
   const login = async (user, name) => {
     const url = `${baseURL}/login`;
@@ -19,7 +23,7 @@ function Login() {
 
     const data = await response.json();
     const { confirmation } = data;
-    alert(confirmation)
+    alert(confirmation);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
 
@@ -28,29 +32,50 @@ function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <div className="text-input">
-        <TextField
-          label="username"
-          variant="outlined"
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
-        />
-        <TextField
-          label="password"
-          variant="outlined"
-          onChange={(event) => {
-            setPass(event.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <Button variant="outlined" color="primary" onClick={login}>
-          Login
-        </Button>
-      </div>
+    <div className={"outer-wrapper"}>
+      <Card className={"inner-wrapper"}>
+        <div className={"title-wrapper"}>
+          <h2 className={"title"}>Login 👋</h2>
+        </div>
+        <div className="text-input-wrapper">
+          <TextField
+            className="text-input"
+            label="username"
+            variant="outlined"
+            onChange={(event) => {
+              setUsername(event.target.value);
+            }}
+          />
+          <TextField
+            className="text-input"
+            label="password"
+            variant="outlined"
+            onChange={(event) => {
+              setPass(event.target.value);
+            }}
+          />
+        </div>
+        <div className={"button-container"}>
+          <Button
+            className={"button"}
+            variant="outlined"
+            color="primary"
+            onClick={login}
+          >
+            Login
+          </Button>
+          <Button
+            className={"button"}
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              history.push("/createUser");
+            }}
+          >
+            Sign Up
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

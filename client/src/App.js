@@ -15,9 +15,9 @@ import { clientBaseURL } from "./config/settings";
 import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";
 import Project from "./components/Project/index";
+
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
-authenticated = true;
 console.log("authenticated", authenticated);
 
 function App(props) {
