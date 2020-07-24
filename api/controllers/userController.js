@@ -39,11 +39,9 @@ exports.get_user_info = function (req, res, next) {
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
 
-  username = req.body.username.trim();
-  first_name = req.body.first_name.trim();
-  last_name = req.body.last_name.trim();
+  input = req.body.input.trim();
 
-  if (!username.length && !first_name.length && !last_name.length) {
+  if (!input.length) {
     res.status(400).json(errorResponse("no search criteria specified"));
     return;
   }
@@ -61,21 +59,22 @@ exports.search_user = function (req, res, next) {
         [Op.or]: [
           {
             username: {
-              [Op.like]: `%${username}%`,
+              [Op.like]: `%${input}%`,
             },
           },
           {
             first_name: {
-              [Op.like]: `%${first_name}%`,
+              [Op.like]: `%${input}%`,
             },
           },
           {
             last_name: {
-              [Op.like]: `%${last_name}%`,
+              [Op.like]: `%${input}%`,
             },
           },
         ],
       },
+      attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
         if (user.length > 0) {
