@@ -24,16 +24,7 @@ function App(props) {
   return (
     <Router>
       <div>
-        {/*
-        createUser still needs to be added 
-            <li>
-              <Link to="/createUser">Create Account</Link>
-            </li>
-          )}
-*/}
         <AppBar />
-
-        <hr />
 
         {/*
           A <Switch> looks through all its children <Route>
