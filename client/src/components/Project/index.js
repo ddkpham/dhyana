@@ -53,7 +53,9 @@ class Project extends React.Component {
     };
 
     closeColumnModal = () => {
+        const { project } = this.state;
         this.setState({ columnModalOpen: false });
+        this.getColumns(project.id);
     }
 
     openColumnModal = () => {
@@ -62,19 +64,18 @@ class Project extends React.Component {
 
     render(){
         const { project, columns, columnModalOpen } = this.state;
-        const { id } = this.props;
         console.log("columns", columns)
         return (
             <div>
                 <DndProvider backend={HTML5Backend}>
-                    <AddColumnModal isOpen={columnModalOpen} close={this.closeColumnModal} projectId={id} order={columns.length || 0} />
+                    <AddColumnModal isOpen={columnModalOpen} close={this.closeColumnModal} projectId={project?.id} order={columns.length || 0} />
                     <Typography variant="h5" color="textSecondary" gutterBottom>{project.name}</Typography>
                     <Typography variant="body1" gutterBottom>{project.description}</Typography>
                     <Button
                         startIcon={<AddIcon />} onClick={this.openColumnModal}>Add Column</Button>
                     <Grid container>
                         {columns.map((c) =>
-                            <Column column={c} key={c.name} projectId={id}/>
+                            <Column column={c} key={c.id} projectId={project?.id}/>
                         )}
                     </Grid>
                 </DndProvider>
