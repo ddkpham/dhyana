@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import { clientBaseURL, baseURL } from "../../config/settings";
 
 import "./index.scss";
-import { render } from "react-dom";
+
 class NewContact extends React.Component {
   state = {
     first_name: "",
@@ -27,7 +27,7 @@ class NewContact extends React.Component {
 
     const data = await response.json();
     const { confirmation } = data;
-    if (confirmation == "success") {
+    if (confirmation === "success") {
       window.location.href = `${clientBaseURL}/home`;
     }
   };

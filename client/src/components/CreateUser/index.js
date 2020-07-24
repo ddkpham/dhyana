@@ -23,7 +23,7 @@ function CreateUser() {
     const data = await response.json();
     const { confirmation } = data;
     alert(confirmation)
-    if (confirmation == "success") {
+    if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
 
       window.location.href = `${clientBaseURL}/home`;

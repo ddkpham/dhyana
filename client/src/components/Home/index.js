@@ -4,10 +4,10 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
-import { baseURL, clientBaseURL } from "../../config/settings";
+import { baseURL } from "../../config/settings";
 import ContactLink from "../ContactLink";
-import Contact from "../Contact";
 import ProjectCard from "../Project/card";
+
 class Home extends React.Component {
   state = {
     contacts: [],

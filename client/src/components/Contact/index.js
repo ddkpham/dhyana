@@ -1,5 +1,5 @@
 import React from "react";
-import { baseURL, clientBaseURL } from "../../config/settings";
+import { baseURL } from "../../config/settings";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 class Contact extends React.Component {
@@ -56,7 +56,7 @@ class Contact extends React.Component {
 
     const data = await response.json();
     const { confirmation } = data;
-    if (confirmation == "success") {
+    if (confirmation === "success") {
       // window.location.href = `${clientBaseURL}/home`;
     }
   };
