@@ -83,7 +83,7 @@ class Project extends React.Component {
                     projectId={project?.id}
                     order={columns.length || 0}
                 />
-                <Typography variant="h6" gutterBottom>{project.name}>
+                <Typography variant="h6" gutterBottom>
                     {project.name}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
