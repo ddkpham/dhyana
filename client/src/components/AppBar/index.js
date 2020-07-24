@@ -114,6 +114,7 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     localStorage.removeItem("auth-token");
     history.push("/home");
+    window.location.reload(false);
   };
 
   const menuId = "primary-search-account-menu";

@@ -5,11 +5,19 @@ import Paper from "@material-ui/core/Paper";
 import DragTarget from "./DragTarget";
 import Task from "../Task";
 import { baseURL } from "../../config/settings";
+import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
+
+import "./index.scss";
 
 class Column extends React.Component {
   state = {
     tasks: [],
+    anchorEl: null,
+    currTaskName: "",
+    currDescription: "",
   };
 
   componentDidMount() {
@@ -23,6 +31,15 @@ class Column extends React.Component {
       this.getTasks();
     }
   }
+
+  handleClick = (event) => {
+    console.log("Column -> handleClick -> event", event);
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
 
   getTasks = () => {
     const { column } = this.props;
@@ -45,8 +62,30 @@ class Column extends React.Component {
       .catch((err) => console.log("task fetch error", err));
   };
 
-  addTask = (columnId) => {
-    console.log("adding task to ", columnId);
+  addTask = () => {
+    const { currDescription, currTaskName } = this.state;
+    const { projectId, column } = this.props;
+    const url = `${baseURL}/project/task`;
+    const body = {
+      name: currTaskName,
+      description: currDescription,
+      column_id: column.id,
+      project_id: projectId,
+    };
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("fetch tasks success", data);
+        this.handleClose();
+        window.location.reload(false);
+      });
   };
 
   onDrop = (task) => {
@@ -86,8 +125,10 @@ class Column extends React.Component {
 
   render() {
     const { column } = this.props;
-    const { tasks } = this.state;
-
+    const { tasks, anchorEl } = this.state;
+    const open = Boolean(anchorEl);
+    console.log("Column -> render -> open", open);
+    const id = open ? "simple-popover" : undefined;
     return (
       <Grid item key={column.id}>
         <DragTarget columnName={column.name} onDrop={this.onDrop}>
@@ -98,7 +139,48 @@ class Column extends React.Component {
             ))}
           </Paper>
         </DragTarget>
-        <Button onClick={() => this.addTask(column.id)}>Add task</Button>
+        <Button onClick={this.handleClick}>Add task</Button>
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={this.handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Card className="col-task-wrapper">
+            <div className="col-title-wrapper">
+              <Typography className="title">Create a Task. 🥅</Typography>
+            </div>
+            <div className="col-input-wrapper">
+              <TextField
+                className="col-text-field"
+                id="outlined-basic"
+                label="Task name"
+                variant="outlined"
+                onChange={(e) =>
+                  this.setState({ currTaskName: e.target.value })
+                }
+              />
+              <TextField
+                className="col-text-field"
+                id="outlined-basic"
+                label="Task description"
+                variant="outlined"
+                onChange={(e) =>
+                  this.setState({ currDescription: e.target.value })
+                }
+              />
+              <Button onClick={this.addTask}>Create task</Button>
+            </div>
+          </Card>
+        </Popover>
       </Grid>
     );
   }
