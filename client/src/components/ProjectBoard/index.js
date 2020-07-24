@@ -5,7 +5,7 @@ import Col from "./Col";
 import { data, statuses } from "../data";
 import "./index.css";
 
-const Homepage = (props) => {
+const ProjectBoard = (props) => {
   const [items, setItems] = useState(data);
 
   const onDrop = (item, monitor, status) => {
@@ -56,4 +56,4 @@ const Homepage = (props) => {
   );
 };
 
-export default Homepage;
+export default ProjectBoard;
