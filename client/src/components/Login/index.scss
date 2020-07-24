@@ -4,3 +4,13 @@
   flex-direction: column;
   width: 200px;
 }
+
+.outer-wrapper {
+  display: flex;
+  justify-self: center;
+}
+
+.inner-wrapper {
+  width: 200px;
+  margin: 0px auto;
+}

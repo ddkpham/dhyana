@@ -98,6 +98,7 @@ export default function PrimarySearchAppBar() {
   const logOut = () => {
     setAnchorEl(null);
     localStorage.removeItem("auth-token");
+    history.push("/home");
   };
 
   const menuId = "primary-search-account-menu";
