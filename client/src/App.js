@@ -13,6 +13,10 @@ import NewContact from "./components/NewContact/index";
 import CreateUser from "./components/CreateUser/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL } from "./config/settings";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import Header from "./components/ProjectBoard/Header";
+import ProjectBoard from "./components/ProjectBoard";
 
 // Simple auth
 var authenticated = localStorage.getItem("auth-token");
@@ -84,6 +88,12 @@ function App(props) {
               return <Login />;
             }}
           />
+          <Route path="/project">
+            <DndProvider backend={HTML5Backend}>
+              <Header />
+              <ProjectBoard />
+            </DndProvider>
+          </Route>
         </Switch>
       </div>
     </Router>
