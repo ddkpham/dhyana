@@ -24,32 +24,13 @@ function App(props) {
   return (
     <Router>
       <div>
-        {/* <ul>
-          <li>
-            <Link to="/home">{authenticated ? "Home" : "Login"}</Link>
-          </li>
-
-          {authenticated ? (
-            <li>
-              <Link to="/searchUser">Search User</Link>
-            </li>
-          ) : (
+        {/*
+        createUser still needs to be added 
             <li>
               <Link to="/createUser">Create Account</Link>
             </li>
           )}
-
-          <li>
-            <Button
-              onClick={() => {
-                localStorage.removeItem("auth-token");
-                window.location.href = `${clientBaseURL}`;
-              }}
-            >
-              Log out
-            </Button>
-          </li>
-        </ul> */}
+*/}
         <AppBar />
 
         <hr />
