@@ -11,8 +11,7 @@ function UserCard(props) {
 			<CardActionArea href={"/user/" + first_name}>
 				<CardContent>
 					<Typography variant="h5" color="textSecondary" gutterBottom>{username}</Typography>
-					<Typography variant="body1">{first_name}</Typography>
-                    <Typography variant="body1">{last_name}</Typography>
+					<Typography variant="body1">{first_name} {last_name}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>
