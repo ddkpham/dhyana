@@ -49,6 +49,23 @@ function App(props) {
           <Route path="/createUser">{<CreateUser />}</Route>
           <Route path="/searchUser">{<SearchUser />}</Route>
           <Route path="/home">{authenticated ? <Home /> : <Login />}</Route>
+          <Route path="/project/new">
+            {authenticated ? <NewProject /> : <Login />}
+          </Route>
+          <Route
+            path="/project/:name"
+            render={(props) => {
+              const {
+                match: {
+                  params: { name },
+                },
+              } = props;
+              if (authenticated) {
+                return <Project name={name} />;
+              }
+              return <Login />;
+            }}
+          />
         </Switch>
       </div>
     </Router>
