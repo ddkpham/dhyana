@@ -5,12 +5,11 @@ import "./index.scss";
 import { useHistory } from "react-router-dom";
 
 function ProfilePage(props) {
-  let history = useHistory();
   const { username } = props;
+  let history = useHistory();
   const [userInfo, setUser] = useState([]);
 
-  useEffect((props) => {
-    const { username } = props;
+  useEffect(() => {
     function getUser() {
       const url = `${baseURL}/user/${username}`;
       fetch(url, {
@@ -25,6 +24,7 @@ function ProfilePage(props) {
       .catch(err => console.log("project fetch error", err));
     }
       getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
