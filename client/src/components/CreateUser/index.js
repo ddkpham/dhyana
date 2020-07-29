@@ -18,10 +18,12 @@ function CreateUser() {
     const response = await postCall(url, body);
 
     const data = await response.json();
-    const { confirmation } = data;
-    alert(confirmation);
+    const { confirmation, message } = data;
+    console.log(data)
     if (confirmation === "success") {
       window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert(message)
     }
   };
 

@@ -19,13 +19,14 @@ function Login() {
     const response = await postCall(url, body);
 
     const data = await response.json();
-    const { confirmation } = data;
+    const { confirmation, message } = data;
+    console.log(data)
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
 
       window.location.href = `${clientBaseURL}/home`;
     } else {
-      alert(data.message);
+      alert(message);
     }
   };
 
