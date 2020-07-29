@@ -33,6 +33,7 @@ app.use(session(sessionConfig));
 // authentication/session middleware
 const redirectLogin = (req, res, next) => {
   const { userId } = req.session;
+  console.log("redirectLogin -> req.session", req.session);
   if (!userId) {
     res.redirect("/unauthorized");
   } else {
@@ -42,7 +43,7 @@ const redirectLogin = (req, res, next) => {
 
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
-app.use("/user", redirectLogin, userRouter);
+app.use("/user", userRouter);
 app.use("/team", redirectLogin, teamRouter);
 app.use("/project", redirectLogin, projectRouter);
 app.use("/unauthorized", authRouter);
