@@ -29,12 +29,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // add session middleware.
 app.use(session(sessionConfig));
-console.log("sessionConfig", sessionConfig);
 
+// authentication/session middleware
 const redirectLogin = (req, res, next) => {
   const { userId } = req.session;
-  console.log("redirectLogin -> req.session", req.session);
-  console.log("redirectLogin -> userId", userId);
   if (!userId) {
     res.redirect("/unauthorized");
   } else {
@@ -42,11 +40,6 @@ const redirectLogin = (req, res, next) => {
   }
 };
 
-const redirectHome = (req, res, next) => {
-  if (req.session.userId) {
-    res.redirect("");
-  }
-};
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/user", redirectLogin, userRouter);
