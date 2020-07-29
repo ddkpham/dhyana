@@ -1,9 +1,9 @@
-import { baseURL, clientBaseURL } from "../../config/settings";
+import { baseURL } from "../../config/settings";
 import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./index.scss";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import UserCard from "./userCard";
 
 function SearchUser() {
@@ -12,27 +12,27 @@ function SearchUser() {
   const [hasSearched, setHasSearched] = useState(false);
   const [firstIndexPresented, setFirstIndexPresented] = useState(0);
   const numResultsToShow = 5;
-
-  const search = async (props) => {
-    const url = `${baseURL}/user/search/result`;
-    const searchString = { input };
-    const response = await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(searchString),
-    });
-
-    const payload = await response.json();
-    const { confirmation: confirmation, data: contacts } = payload;
-    console.log(contacts);
-    setHasSearched(true);
-    setFirstIndexPresented(0);
-    if (response.status == 200) {
-      setContacts(contacts);
-    }
-  };
+  let history = useHistory();
 
   useEffect(() => {
+    async function search(props) {
+      const url = `${baseURL}/user/search/result`;
+      const searchString = { input };
+      const response = await fetch(url, {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(searchString),
+      });
+  
+      const payload = await response.json();
+      const { data: contacts } = payload;
+      console.log(contacts);
+      setHasSearched(true);
+      setFirstIndexPresented(0);
+      if (response.status === 200) {
+        setContacts(contacts);
+      }
+    }
     if (input.length) {
       search();
     }
@@ -49,7 +49,7 @@ function SearchUser() {
         results.push(<UserCard user={contactList[i]} key={i} />);
       }
       return <ul>{results}</ul>;
-    } else if (hasSearched && contactList.length == 0) {
+    } else if (hasSearched && contactList.length === 0) {
       return <h4>Sorry, no results match your search</h4>;
     } else {
       return null;
@@ -95,24 +95,34 @@ function SearchUser() {
   };
 
   return (
-    <div id="mainDiv">
-      <div className="column">
-        <h2 className="title">Search User</h2>
-        <div className="text-input">
-          <TextField
-            variant="outlined"
-            onChange={(event) => {
-              setInput(event.target.value);
-            }}
-          />
-        </div>
+    <div>
+      <div className="buttonDiv">
+        <Button 
+          className="backButton"
+          variant="outlined"
+          color="primary"
+          onClick={() => history.goBack()}>Back
+        </Button>
       </div>
+      <div id="mainDiv">
+        <div className="column">
+          <h2 className="title">Search User</h2>
+          <div className="text-input">
+            <TextField
+              variant="outlined"
+              onChange={(event) => {
+                setInput(event.target.value);
+              }}
+            />
+          </div>
+        </div>
 
-      <div className="column">
-        <h2 className="title">Results</h2>
-        {prevButton()}
-        {nextButton()}
-        {searchResults()}
+        <div className="column">
+          <h2 className="title">Results</h2>
+          {prevButton()}
+          {nextButton()}
+          {searchResults()}
+        </div>
       </div>
     </div>
   );
