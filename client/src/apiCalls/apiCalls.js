@@ -20,4 +20,16 @@ const getCall = async (url) => {
     },
   });
 };
-export { postCall, getCall };
+
+const deleteCall = async (url) => {
+  return fetch(url, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+  });
+};
+
+export { postCall, getCall, deleteCall };

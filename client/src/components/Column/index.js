@@ -10,7 +10,7 @@ import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
-import { postCall, getCall } from "../../apiCalls/apiCalls";
+import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 
 import "./index.scss";
 
@@ -96,13 +96,7 @@ class Column extends React.Component {
     postCall(url, body)
       .then(() => {
         const delUrl = `${baseURL}/project/task/${task.id}/delete`;
-        return fetch(delUrl, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        });
+        return deleteCall(delUrl);
       })
       .then((response) => response.json())
       .then((data) => {
