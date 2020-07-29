@@ -3,6 +3,8 @@ var router = express.Router();
 const { body, validationResult } = require("express-validator");
 var loginController = require("../controllers/loginController");
 const { errorResponse, successResponse } = require("../utility/response");
+const sessionConfig = require("../config/session");
+console.log("SESS_NAME", sessionConfig.name);
 
 /* Login Attempt */
 router.post(
@@ -14,20 +16,8 @@ router.post(
   loginController.login_post
 );
 
-router.get("/", function (req, res, next) {
-  console.log("req.session", req.session);
-  if (req.session.views) {
-    req.session.views++;
-    res.setHeader("Content-Type", "text/html");
-    res.write("<p>views: " + req.session.views + "</p>");
-    res.write("<p>expires in: " + req.session.cookie.maxAge / 1000 + "s</p>");
-    res.end();
-  } else {
-    req.session.views = 1;
-    res.end("welcome to the session demo. refresh!");
-  }
-  // req.session.userId = 2;
-  // res.status(200).send(req.session);
-});
+router.get("/clearCookie", loginController.clear_cookie);
+
+router.get("/sessionCheck", loginController.session_check);
 
 module.exports = router;

@@ -16,6 +16,8 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
 import PageviewIcon from "@material-ui/icons/Pageview";
+import { getCall } from "../../apiCalls/apiCalls";
+import { baseURL, clientBaseURL } from "../../config/settings";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -110,11 +112,19 @@ export default function PrimarySearchAppBar() {
     alert("not implemented yet");
   };
 
-  const logOut = () => {
+  const logOut = async () => {
     setAnchorEl(null);
-    localStorage.removeItem("auth-token");
-    history.push("/home");
-    window.location.reload(false);
+    const url = `${baseURL}/login/clearCookie`;
+    const response = await getCall(url);
+    const data = await response.json();
+    const { confirmation } = data;
+    if (confirmation === "success") {
+      localStorage.removeItem("auth-token");
+      history.push("/home");
+      window.location.reload(false);
+    } else {
+      console.log("failed to clear session cookie");
+    }
   };
 
   const menuId = "primary-search-account-menu";

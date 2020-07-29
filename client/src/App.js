@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,7 +11,8 @@ import Login from "./components/Login/index";
 import CreateUser from "./components/CreateUser/index";
 import SearchUser from "./components/SearchUser/index";
 import Button from "@material-ui/core/Button";
-import { clientBaseURL } from "./config/settings";
+import { clientBaseURL, baseURL } from "./config/settings";
+import { getCall } from "./apiCalls/apiCalls";
 import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";
 import Project from "./components/Project/index";
@@ -20,10 +21,25 @@ import theme from "./styles/theme";
 import "./styles/styles.css";
 
 // Simple auth
-var authenticated = localStorage.getItem("auth-token");
-console.log("authenticated", authenticated);
 
 function App(props) {
+  const [authenticated, setAuthenticated] = useState(false);
+  console.log("App -> authenticated", authenticated);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const url = `${baseURL}/login/sessionCheck`;
+      const response = await getCall(url);
+      const data = await response.json();
+      console.log("checkSession -> data", data);
+      const { confirmation } = data;
+      if (confirmation === "success") {
+        setAuthenticated(true);
+      }
+    };
+    checkSession();
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -50,7 +66,9 @@ function App(props) {
                 {authenticated ? <Home /> : <Login />}
               </Route>
               <Route path="/createUser">{<CreateUser />}</Route>
-              <Route path="/searchUser">{<SearchUser />}</Route>
+              <Route path="/searchUser">
+                {authenticated ? <SearchUser /> : <Login />}
+              </Route>
               <Route path="/home">{authenticated ? <Home /> : <Login />}</Route>
               <Route path="/project/new">
                 {authenticated ? <NewProject /> : <Login />}
