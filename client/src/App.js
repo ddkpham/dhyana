@@ -10,6 +10,7 @@ import Home from "./components/Home/index";
 import Login from "./components/Login/index";
 import CreateUser from "./components/CreateUser/index";
 import SearchUser from "./components/SearchUser/index";
+import ProfilePage from "./components/ProfilePage/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL, baseURL } from "./config/settings";
 import { getCall } from "./apiCalls/apiCalls";
@@ -46,13 +47,6 @@ function App(props) {
     <ThemeProvider theme={theme}>
       <Router>
         <div>
-          {/*
-          createUser still needs to be added 
-              <li>
-                <Link to="/createUser">Create Account</Link>
-              </li>
-            )}
-  */}
           <AppBar />
 
           {/*
@@ -68,10 +62,26 @@ function App(props) {
                 <Route exact path="/">
                   {authenticated ? <Home /> : <Login />}
                 </Route>
-                <Route path="/createUser">{<CreateUser />}</Route>
-                <Route path="/searchUser">
-                  {authenticated ? <SearchUser /> : <Login />}
+                <Route path="/createUser">
+                  {authenticated ? <CreateUser /> : <Login />}
                 </Route>
+                <Route path="/searchUser">{<SearchUser />}</Route>
+
+                <Route
+                  path="/user/:username"
+                  render={(props) => {
+                    const {
+                      match: {
+                        params: { username },
+                      },
+                    } = props;
+                    if (authenticated) {
+                      return <ProfilePage username={username} />;
+                    }
+                    return <Login />;
+                  }}
+                />
+
                 <Route path="/home">
                   {authenticated ? <Home /> : <Login />}
                 </Route>
