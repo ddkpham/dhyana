@@ -1,0 +1,32 @@
+.profileDiv {
+  margin: 0 auto;
+  padding: 25px 45px;
+  margin-top: 100px;
+  border: 1px solid lightgrey;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+}
+
+.container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.buttonDiv {
+}
+
+.backButton {
+  margin: 0 auto;
+  position: relative;
+  left: 50px;
+  top: 25px;
+}
+
+.username {
+  width: fit-content;
+  color: blue;
+}
