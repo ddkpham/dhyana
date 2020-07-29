@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import { postCall, getCall } from "../../apiCalls/apiCalls";
 import "./index.scss";
 
 function CreateUser() {
@@ -11,14 +12,10 @@ function CreateUser() {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
 
-  const login = async (user, name) => {
+  const create = async (user, name) => {
     const url = `${baseURL}/user/create`;
     const body = { username, password, first_name, last_name };
-    const response = await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const response = await postCall(url, body);
 
     const data = await response.json();
     const { confirmation } = data;
@@ -69,7 +66,7 @@ function CreateUser() {
           />
         </div>
         <div className="sign-up-button">
-          <Button variant="outlined" color="primary" onClick={login}>
+          <Button variant="outlined" color="primary" onClick={create}>
             Create User
           </Button>
         </div>

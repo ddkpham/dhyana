@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
 var loginController = require("../controllers/loginController");
-const { errorResponse, successResponse } = require("../utility/response");
 
 /* Login Attempt */
 router.post(
@@ -14,8 +13,8 @@ router.post(
   loginController.login_post
 );
 
-router.get("/", function (req, res, next) {
-  res.status(200).json(successResponse("testing login", []));
-});
+router.get("/clearCookie", loginController.clear_cookie);
+
+router.get("/sessionCheck", loginController.session_check);
 
 module.exports = router;

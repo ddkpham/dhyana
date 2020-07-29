@@ -5,7 +5,7 @@ services:
     build: ./client
     restart: always
     ports:
-      - "8080:3000"
+      - "8080:8080"
     stdin_open: true
     volumes:
       - ./client:/usr/src/client

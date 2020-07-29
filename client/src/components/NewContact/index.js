@@ -2,6 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL, baseURL } from "../../config/settings";
+import { postCall, getCall } from "../../apiCalls/apiCalls";
 
 import "./index.scss";
 
@@ -19,11 +20,7 @@ class NewContact extends React.Component {
     const url = `${baseURL}/contacts/new`;
     const body = { first_name, last_name, phone_number, email, notes };
     console.log("login -> body", body);
-    const response = await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const response = await postCall(url, body);
 
     const data = await response.json();
     const { confirmation } = data;

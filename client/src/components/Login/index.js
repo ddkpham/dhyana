@@ -6,6 +6,7 @@ import Card from "@material-ui/core/Card";
 import { useHistory } from "react-router-dom";
 
 import "./index.scss";
+import { postCall } from "../../apiCalls/apiCalls";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -15,19 +16,16 @@ function Login() {
   const login = async (user, name) => {
     const url = `${baseURL}/login`;
     const body = { username, password };
-    const response = await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const response = await postCall(url, body);
 
     const data = await response.json();
     const { confirmation } = data;
-    alert(confirmation);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
 
       window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert(data.message);
     }
   };
 

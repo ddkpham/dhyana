@@ -1,13 +1,13 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+var session = require("express-session");
+var sessionConfig = require("./config/session");
 
+var authRouter = require("./routes/auth");
 var loginRouter = require("./routes/login");
 var userRouter = require("./routes/users");
 var indexRouter = require("./routes/index");
@@ -19,7 +19,7 @@ var app = express();
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -27,11 +27,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// add session middleware.
+app.use(session(sessionConfig));
+
+// authentication/session middleware
+const redirectLogin = (req, res, next) => {
+  const { userId } = req.session;
+  console.log("redirectLogin -> req.session", req.session);
+  if (!userId) {
+    res.redirect("/unauthorized");
+  } else {
+    next();
+  }
+};
+
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
-app.use("/team", teamRouter);
-app.use("/project", projectRouter);
+app.use("/team", redirectLogin, teamRouter);
+app.use("/project", redirectLogin, projectRouter);
+app.use("/unauthorized", authRouter);
 
 var db = require("./config/database");
 

@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import "./index.scss";
 import { useHistory } from "react-router-dom";
 import UserCard from "./userCard";
+import { postCall, getCall } from "../../apiCalls/apiCalls";
 
 function SearchUser() {
   const [contactList, setContacts] = useState([]);
@@ -18,12 +19,8 @@ function SearchUser() {
     async function search(props) {
       const url = `${baseURL}/user/search/result`;
       const searchString = { input };
-      const response = await fetch(url, {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(searchString),
-      });
-  
+      const response = await postCall(url, searchString);
+
       const payload = await response.json();
       const { data: contacts } = payload;
       console.log(contacts);
@@ -97,11 +94,13 @@ function SearchUser() {
   return (
     <div>
       <div className="buttonDiv">
-        <Button 
+        <Button
           className="backButton"
           variant="outlined"
           color="primary"
-          onClick={() => history.goBack()}>Back
+          onClick={() => history.goBack()}
+        >
+          Back
         </Button>
       </div>
       <div id="mainDiv">
