@@ -63,7 +63,9 @@ function App(props) {
                   {authenticated ? <Home /> : <Login />}
                 </Route>
                 <Route path="/createUser">{<CreateUser />}</Route>
-                <Route path="/searchUser">{<SearchUser />}</Route>
+                <Route path="/searchUser">
+                  {authenticated ? <SearchUser /> : <Login />}
+                </Route>
 
                 <Route
                   path="/user/:username"
