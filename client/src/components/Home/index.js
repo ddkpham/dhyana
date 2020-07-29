@@ -1,20 +1,21 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import AddIcon from '@material-ui/icons/Add';
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import AddIcon from "@material-ui/icons/Add";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
+import { getCall } from "../../apiCalls/apiCalls";
 
 const styles = (theme) => ({
-  homeRoot:{
-    padding: '5px',
+  homeRoot: {
+    padding: "5px",
   },
   projectWrapper: {
-    display: 'inline-block',
-  }
+    display: "inline-block",
+  },
 });
 
 class Home extends React.Component {
@@ -27,21 +28,18 @@ class Home extends React.Component {
 
   getProjects = () => {
     const url = `${baseURL}/project/all`;
-    fetch(url, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", 'Accept': 'application/json' },
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("projects", data)
-      this.setState({ projects: data.data })
-    })
-    .catch(err => console.log("project fetch error", err));
-};
+    getCall(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("projects", data);
+        this.setState({ projects: data.data });
+      })
+      .catch((err) => console.log("project fetch error", err));
+  };
 
   render() {
     const { projects } = this.state;
-    const { classes } = this.props
+    const { classes } = this.props;
 
     return (
       <div className={classes.homeRoot}>
@@ -54,7 +52,7 @@ class Home extends React.Component {
             <CardActionArea href={"/project/new"}>
               <CardContent>
                 <Typography variant="h5" color="textSecondary" gutterBottom>
-                  <AddIcon/>
+                  <AddIcon />
                   Add Project
                 </Typography>
               </CardContent>

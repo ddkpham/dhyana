@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import "./index.scss";
 import { Link } from "react-router-dom";
 import UserCard from "./userCard";
+import { postCall, getCall } from "../../apiCalls/apiCalls";
 
 function SearchUser() {
   const [contactList, setContacts] = useState([]);
@@ -16,11 +17,7 @@ function SearchUser() {
   const search = async (props) => {
     const url = `${baseURL}/user/search/result`;
     const searchString = { input };
-    const response = await fetch(url, {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(searchString),
-    });
+    const response = await postCall(url, searchString);
 
     const payload = await response.json();
     const { confirmation: confirmation, data: contacts } = payload;

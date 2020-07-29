@@ -15,12 +15,23 @@ exports.login_post = function (req, res, next) {
       username: username,
       password: password,
     },
-  }).then((user) => {
-    console.log(user);
-    if (user.length) {
-      res.json({
-        confirmation: "success",
-        data: user,
+  }).then((users) => {
+    console.log(users);
+
+    if (users.length) {
+      const user = users[0];
+      const {
+        dataValues: { id: userId },
+      } = user;
+      req.session.userId = userId;
+      req.session.save((err) => {
+        if (!err) {
+          console.log(req.session);
+          res.json({
+            confirmation: "success",
+            data: user,
+          });
+        }
       });
     } else {
       res.json({
