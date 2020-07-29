@@ -24,6 +24,7 @@ import "./styles/styles.css";
 
 function App(props) {
   const [authenticated, setAuthenticated] = useState(false);
+  const [pageLoaded, setPageLoaded] = useState(false);
   console.log("App -> authenticated", authenticated);
 
   useEffect(() => {
@@ -36,6 +37,7 @@ function App(props) {
       if (confirmation === "success") {
         setAuthenticated(true);
       }
+      setPageLoaded(true);
     };
     checkSession();
   }, []);
@@ -60,35 +62,39 @@ function App(props) {
             you have multiple routes, but you want only one
             of them to render at a time
           */}
-          <div className="root">
-            <Switch>
-              <Route exact path="/">
-                {authenticated ? <Home /> : <Login />}
-              </Route>
-              <Route path="/createUser">{<CreateUser />}</Route>
-              <Route path="/searchUser">
-                {authenticated ? <SearchUser /> : <Login />}
-              </Route>
-              <Route path="/home">{authenticated ? <Home /> : <Login />}</Route>
-              <Route path="/project/new">
-                {authenticated ? <NewProject /> : <Login />}
-              </Route>
-              <Route
-                path="/project/:name"
-                render={(props) => {
-                  const {
-                    match: {
-                      params: { name },
-                    },
-                  } = props;
-                  if (authenticated) {
-                    return <Project name={name} />;
-                  }
-                  return <Login />;
-                }}
-              />
-            </Switch>
-          </div>
+          {pageLoaded ? (
+            <div className="root">
+              <Switch>
+                <Route exact path="/">
+                  {authenticated ? <Home /> : <Login />}
+                </Route>
+                <Route path="/createUser">{<CreateUser />}</Route>
+                <Route path="/searchUser">
+                  {authenticated ? <SearchUser /> : <Login />}
+                </Route>
+                <Route path="/home">
+                  {authenticated ? <Home /> : <Login />}
+                </Route>
+                <Route path="/project/new">
+                  {authenticated ? <NewProject /> : <Login />}
+                </Route>
+                <Route
+                  path="/project/:name"
+                  render={(props) => {
+                    const {
+                      match: {
+                        params: { name },
+                      },
+                    } = props;
+                    if (authenticated) {
+                      return <Project name={name} />;
+                    }
+                    return <Login />;
+                  }}
+                />
+              </Switch>
+            </div>
+          ) : null}
         </div>
       </Router>
     </ThemeProvider>
