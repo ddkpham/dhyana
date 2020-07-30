@@ -12,12 +12,12 @@ exports.create_team = function (req, res, next) {
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
     return;
   }
 
   if (!name) {
-    res.json(errorResponse("missing team name"));
+    res.status(400).json(errorResponse("missing team name"));
     return;
   }
 
@@ -26,10 +26,10 @@ exports.create_team = function (req, res, next) {
   })
     .then((team) => {
       console.log(team);
-      res.json(successResponse("Team created successfully", team));
+      res.status(200).json(successResponse("Team created successfully", team));
     })
     .catch((err) => {
-      res.json(errorResponse("Team exists already.", err));
+      res.status(409).json(errorResponse("Team exists already.", err));
     });
 };
 
@@ -39,11 +39,11 @@ exports.view_team = function (req, res, next) {
 
   const errors = validationResult(req.params);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
   }
 
   if (!name) {
-    res.json(errorResponse("missing team name"));
+    res.status(400).json(errorResponse("missing team name"));
     return;
   }
 
@@ -54,13 +54,13 @@ exports.view_team = function (req, res, next) {
   })
     .then((team) => {
       if (team.length) {
-        res.json(successResponse("Sucessfully found team", team));
+        res.status(200).json(successResponse("Sucessfully found team", team));
       } else {
-        res.json(errorResponse("Team not found.", err));
+        res.status(404).json(errorResponse("Team not found.", err));
       }
     })
     .catch((err) => {
-      res.json(errorResponse("Team not found.", err));
+      res.status(404).json(errorResponse("Team not found.", err));
     });
 };
 

@@ -18,11 +18,11 @@ exports.create_project = function (req, res, next) {
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
   }
 
   if (!name || !team_id) {
-    res.json(errorResponse("missing team id or project name"));
+    res.status(400).json(errorResponse("missing team id or project name"));
     return;
   }
 
@@ -33,10 +33,12 @@ exports.create_project = function (req, res, next) {
   })
     .then((team) => {
       console.log(team);
-      res.json(successResponse("Project created successfully", team));
+      res
+        .status(200)
+        .json(successResponse("Project created successfully", team));
     })
     .catch((err) => {
-      res.json(errorResponse("Project exists already.", err));
+      res.status(409).json(errorResponse("Project exists already.", err));
     });
 };
 
@@ -67,12 +69,12 @@ exports.view_project = function (req, res, next) {
           .status(200)
           .json(successResponse("Sucessfully found Project", project));
       } else {
-        res.status(200).json(errorResponse("Project not found.", err));
+        res.status(404).json(errorResponse("Project not found.", err));
       }
     })
     .catch((err) => {
       res
-        .status(200)
+        .status(404)
         .json(
           errorResponse(
             "Project not found. error in request. Check query.",
@@ -121,15 +123,22 @@ exports.view_all = function (req, res, next) {
   Project.findAll()
     .then((projects) => {
       if (projects.length) {
-        res.json(successResponse("Sucessfully found projects", projects));
+        res
+          .status(200)
+          .json(successResponse("Sucessfully found projects", projects));
       } else {
-        res.json(errorResponse("No projects found", err));
+        res.status(404).json(errorResponse("No projects found", err));
       }
     })
     .catch((err) => {
-      res.json(
-        errorResponse("Projects not found. error in request. Check query.", err)
-      );
+      res
+        .status(404)
+        .json(
+          errorResponse(
+            "Projects not found. error in request. Check query.",
+            err
+          )
+        );
     });
 };
 
@@ -143,11 +152,13 @@ exports.create_project_column = function (req, res, next) {
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
   }
 
   if (!projectId || !columnName || !(columnOrder >= 0)) {
-    res.json(errorResponse("missing projectId, columnName or column order"));
+    res
+      .status(400)
+      .json(errorResponse("missing projectId, columnName or column order"));
     return;
   }
 
@@ -166,17 +177,21 @@ exports.create_project_column = function (req, res, next) {
           column_id: columnId,
         })
           .then((result) => {
-            res.json(
-              successResponse("Sucessfully created column in Project", result)
-            );
+            res
+              .status(200)
+              .json(
+                successResponse("Sucessfully created column in Project", result)
+              );
           })
           .catch((err) => {
-            res.json(
-              errorResponse(
-                "Error in creating project column. Please double check query.",
-                err
-              )
-            );
+            res
+              .status(404)
+              .json(
+                errorResponse(
+                  "Error in creating project column. Please double check query.",
+                  err
+                )
+              );
           });
       } else {
         res.json(
@@ -188,12 +203,14 @@ exports.create_project_column = function (req, res, next) {
       }
     })
     .catch((err) => {
-      res.json(
-        errorResponse(
-          "Error in creating column. Please double check query.",
-          err
-        )
-      );
+      res
+        .status(404)
+        .json(
+          errorResponse(
+            "Error in creating column. Please double check query.",
+            err
+          )
+        );
     });
 };
 
@@ -204,11 +221,11 @@ exports.view_project_columns = function (req, res, next) {
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
-    res.json(errorResponse("errors in inputted data"));
+    res.status(400).json(errorResponse("errors in inputted data"));
   }
 
   if (!projectId) {
-    res.json(errorResponse("missing projectId"));
+    res.status(400).json(errorResponse("missing projectId"));
     return;
   }
 
@@ -267,14 +284,20 @@ exports.view_project_columns = function (req, res, next) {
             return col;
           });
 
-          res.json(successResponse("Found project columns", columnInfo));
+          res
+            .status(200)
+            .json(successResponse("Found project columns", columnInfo));
         } catch (err) {
           (err) =>
-            res.json(errorResponse("error in fetching column tasks", err));
+            res
+              .status(400)
+              .json(errorResponse("error in fetching column tasks", err));
         }
       });
     })
-    .catch((err) => res.json(errorResponse("no matching project found", err)));
+    .catch((err) =>
+      res.status(404).json(errorResponse("no matching project found", err))
+    );
 };
 
 exports.create_new_task = function (req, res, next) {

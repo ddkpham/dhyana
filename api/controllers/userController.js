@@ -13,7 +13,9 @@ exports.get_user_info = function (req, res, next) {
     return;
   } else {
     if (username == "") {
-      res.json(errorResponse("username or password cannot be null"));
+      res
+        .status(400)
+        .json(errorResponse("username or password cannot be null"));
       return;
     }
 
@@ -32,7 +34,7 @@ exports.get_user_info = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("user doesn't exist", err));
+        res.status(404).json(errorResponse("user doesn't exist", err));
       });
   }
 };
@@ -86,7 +88,7 @@ exports.search_user = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("no such user exists", err));
+        res.status(404).json(errorResponse("no such user exists", err));
       });
   }
 };
@@ -125,7 +127,7 @@ exports.create_new_user = function (req, res, next) {
           .json(successResponse("user created successfully", user));
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("user already exists", err));
+        res.status(409).json(errorResponse("user already exists", err));
       });
   }
 };
