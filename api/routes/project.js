@@ -15,6 +15,8 @@ router.post(
 
 router.get("/all", projectController.view_all);
 
+router.get("/all/userSpecific", projectController.view_user_specific);
+
 router.get(
   "/:name",
   [param("name").isLength({ min: 2 })],
@@ -43,7 +45,6 @@ router.post(
   projectController.get_all_tasks
 );
 
-router.delete(
-  "/task/:task_id/delete", projectController.delete_task);
+router.delete("/task/:task_id/delete", projectController.delete_task);
 
 module.exports = router;
