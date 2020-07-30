@@ -22,7 +22,7 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
-router.post("/edit",
+router.post("/editUser",
   authMiddleware,
   userController.edit_user
 );

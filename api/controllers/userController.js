@@ -161,27 +161,42 @@ exports.create_new_user = function (req, res, next) {
 
 exports.edit_user = function (req, res, next) {
   const { userId: id } = req.session;
+  console.log("edit user to", req.body, id);
+
+  body(req.body).trim().escape().not().isEmpty();
+
+  pass = req.body.password.trim();
+  const errorsBody = validationResult(req.body);
   const errors = validationResult(id);
 
-  if (!errors.isEmpty()) {
+  if (!errors.isEmpty() || !errorsBody.isEmpty()) {
+    console.log("error is not empty")
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
-    User.findAll({
-      where: {
-        id,
-      },
-    })
+    const { password, first_name, last_name } = req.body;
+    console.log("attempting to update user")
+    User.update(
+        { 
+          first_name, 
+          last_name, 
+          password, 
+        },
+        { 
+          where: { id, },
+        }
+      )
       .then((user) => {
         if (user.length) {
-          res.status(200).json(successResponse("user exists", user));
+          res.status(200).json(successResponse("User modified successfully.", user));
           return;
         }
 
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("user doesn't exist", err));
+        console.log("error in update", err)
+        res.status(200).json(errorResponse("User couldn’t be modified.", err));
       });
   }
 };
