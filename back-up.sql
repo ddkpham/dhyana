@@ -425,6 +425,7 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 4	dhyana project	test project	1
 5	brady-6	win 6 superbowls	9
 7	brady-7		9
+9	killer mike's project	killer mikes project	15
 \.
 
 
@@ -470,6 +471,8 @@ COPY public.teams (id, name) FROM stdin;
 8	
 9	brady-bunch
 13	gold fire
+15	deep-space
+17	killer mike
 \.
 
 
@@ -489,6 +492,38 @@ COPY public.teamsusers (team_id, user_id) FROM stdin;
 COPY public.users (id, username, password, first_name, last_name) FROM stdin;
 1	tlou2	2uolt	tlo	u2
 4	123	123	\N	\N
+6	zz	zz	\N	\N
+7	kingkong	kingkong	king	kong
+8	jmayer	jmayer	john	mayer
+9	prepFuture	prepFuture	prep	future
+10	snowybird	snowybird	adele	bird
+11	sbarer	sbarer	simon	barer
+12	jcameron	jcameron	james	cameron
+13	jkrasinski	jkrasinski	john	krasinski
+14	scarrel	scarrel	steve	carrel
+15	jfischer	jfischer	jenna	fischer
+16	rwilson	rwilson	rainn	wilson
+17	akinsey	akinsey	angela	kinsey
+18	mKaling	mKaling	Mindy	Kaling
+19	ehelms	ehelms	ed	helms
+20	bbaumgartner	bbaumgartner	brian	baumgartner
+21	bjnovak	bjnovak	bj	novak
+22	kflannery	kflannery	kate	flannery
+23	psmith	psmith	phyllis	smith
+24	onunez	onunez	oscar	nunez
+25	cbratton	cbratton	creed	bratton
+26	ekemper	ekemper	ellie	kemper
+27	shudson	shudson	stanley	hudson
+28	plieberstein	plieberstein	paul	lieberstein
+29	crobinson	crobinson	craig	robinson
+30	rjones	rjones	rashida	jones
+31	zwoods	zwoods	zack	woods
+32	randerson	randerson	roy	anderson
+33	abuckley	abuckley	andy	buckley
+34	jspader	jspader	james	spader
+35	aryan	aryan	amy	ryan
+36	wferrell	wferrell	will	ferrell
+37	aadams	aadams	amy	adams
 \.
 
 
@@ -531,7 +566,7 @@ SELECT pg_catalog.setval('public.projectcolumns_id_seq', 7, true);
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 8, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 9, true);
 
 
 --
@@ -545,14 +580,14 @@ SELECT pg_catalog.setval('public.tasks_id_seq', 14, true);
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teams_id_seq', 14, true);
+SELECT pg_catalog.setval('public.teams_id_seq', 17, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 4, true);
+SELECT pg_catalog.setval('public.users_id_seq', 37, true);
 
 
 --
