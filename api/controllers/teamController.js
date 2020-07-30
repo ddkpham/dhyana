@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Team = require("../models/Team");
 const TeamsUsers = require("../models/TeamsUsers");
+const { Op } = require("sequelize");
 
 const { errorResponse, successResponse } = require("../utility/response");
 
@@ -66,15 +67,36 @@ exports.view_team = function (req, res, next) {
 
 exports.view_all = function (req, res, next) {
   const { userId } = req.session;
+  console.log("exports.view_all -> userId", userId);
   TeamsUsers.findAll({
     where: {
       user_id: userId,
     },
   })
     .then((teams) => {
-      res.json(successResponse("Sucessfully found teams", teams));
+      console.log("exports.view_all -> teams", teams);
+      const teamQuery = teams.map((team) => {
+        const {
+          dataValues: { team_id },
+        } = team;
+        return { id: team_id };
+      });
+      console.log("exports.view_all -> teamQuery", teamQuery);
+      Team.findAll({
+        where: {
+          [Op.or]: teamQuery,
+        },
+      })
+        .then((teams) => {
+          res
+            .status(200)
+            .json(successResponse("Sucessfully found teams", teams));
+        })
+        .catch((err) => {
+          res.status(400).json(errorResponse("Error fetching teams", err));
+        });
     })
     .catch((err) => {
-      res.json(errorResponse("Error fetching teams", err));
+      res.status(400).json(errorResponse("Error fetching teams", err));
     });
 };

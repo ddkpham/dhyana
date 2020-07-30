@@ -109,13 +109,15 @@ exports.view_user_specific = function (req, res, next) {
   try {
     findProjects()
       .then((projects) => {
-        res.json(successResponse("Sucessfully found projects", projects));
+        res
+          .status(200)
+          .json(successResponse("Sucessfully found projects", projects));
       })
       .catch((err) => {
-        res.json(errorResponse("No projects found", err));
+        res.status(400).json(errorResponse("No projects found", err));
       });
   } catch (err) {
-    res.json(errorResponse("No projects found", err));
+    res.status(400).json(errorResponse("No projects found", err));
   }
 };
 
