@@ -37,11 +37,11 @@ exports.login_post = function (req, res, next) {
           }
         });
       } else {
-        res.json(errorResponse("wrong username or password"));
+        res.status(401).json(errorResponse("wrong username or password"));
       }
     })
     .catch((err) => {
-      res.json(errorResponse("wrong username or password", err));
+      res.status(401).json(errorResponse("wrong username or password", err));
     });
 };
 
@@ -54,15 +54,15 @@ exports.clear_cookie = function (req, res, next) {
       );
     }
     res.clearCookie(sessionConfig.name);
-    res.json(successResponse("successfully logged out"));
+    res.status(200).json(successResponse("successfully logged out"));
   });
 };
 
 exports.session_check = function (req, res, next) {
   const { userId } = req.session;
   if (!userId) {
-    res.json(errorResponse("Active session not found"));
+    res.status(440).json(errorResponse("active session not found"));
   } else {
-    res.json(successResponse("user has an active session"));
+    res.status(200).json(successResponse("user has an active session"));
   }
 };
