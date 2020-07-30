@@ -1,5 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Team = require("../models/Team");
+const TeamsUsers = require("../models/TeamsUsers");
+
 const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
@@ -62,11 +64,17 @@ exports.view_team = function (req, res, next) {
     });
 };
 
-exports.view_all = function(req, res, next){
-  Team.findAll().then((teams) => {
-    res.json(successResponse("Sucessfully found team", teams));
+exports.view_all = function (req, res, next) {
+  const { userId } = req.session;
+  TeamsUsers.findAll({
+    where: {
+      user_id: userId,
+    },
   })
-  .catch((err) => {
-    res.json(errorResponse("Error fetching teams", err));
-  });
-}
+    .then((teams) => {
+      res.json(successResponse("Sucessfully found teams", teams));
+    })
+    .catch((err) => {
+      res.json(errorResponse("Error fetching teams", err));
+    });
+};
