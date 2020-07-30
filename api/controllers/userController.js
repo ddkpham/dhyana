@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, json } = require("sequelize");
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
 
@@ -86,6 +86,59 @@ exports.search_user = function (req, res, next) {
       })
       .catch((err) => {
         res.status(200).json(errorResponse("no such user exists", err));
+      });
+  }
+};
+
+exports.update_user = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+
+  username = req.body.username.trim();
+  password = req.body.password.trim();
+  first_name = req.body.first_name.trim();
+  last_name = req.body.last_name.trim();
+  const errors = validationResult(username);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    if (!username.length || !password.length) {
+      res
+        .status(400)
+        .json(errorResponse("username or password cannot be null"));
+      return;
+    }
+
+    User.update(
+      {
+        password,
+        first_name,
+        last_name,
+      },
+      {
+        where: {
+          username,
+        },
+      }
+    )
+      .then(() => {
+        var object = new Object();
+        object.username = username;
+        object.password = password;
+        object.first_name = first_name;
+        object.last_name = last_name;
+        var jsonObject = JSON.stringify(object);
+        jsonObject = JSON.parse(jsonObject);
+
+        res
+          .status(200)
+          .json(successResponse("user info updated successfully", jsonObject));
+        return;
+      })
+      .catch((err) => {
+        res.status(200).json(errorResponse("user not updated. try again", err));
+        return;
       });
   }
 };

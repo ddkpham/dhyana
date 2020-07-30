@@ -20,10 +20,26 @@ router.get(
 
 router.post(
   "/search/result",
-  [
-    body("input").escape(),
-  ],
+  [body("input").escape()],
   userController.search_user
+);
+
+router.get("/update/result", function (req, res, next) {
+  res.json({
+    confirmation: "success",
+    message: "get update user",
+  });
+});
+
+router.post(
+  "/update/result",
+  [
+    body("username").escape(),
+    body("password").escape(),
+    body("first_name").escape(),
+    body("last_name").escape(),
+  ],
+  userController.update_user
 );
 
 module.exports = router;
