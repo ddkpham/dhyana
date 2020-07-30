@@ -1,0 +1,35 @@
+.text-input-wrapper {
+  display: flex;
+  justify-self: center;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+}
+
+#mainDiv {
+  padding: 50px;
+  display: flex;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+}
+
+.sign-up-text-input .MuiFormControl-root {
+  width: 200px;
+  margin: 5px auto;
+}
+
+.update-user-button {
+  width: 200px;
+  margin: 5px auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-user-wrapper {
+  width: 80%;
+  margin: 0 auto !important;
+}

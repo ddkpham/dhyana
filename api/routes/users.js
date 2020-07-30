@@ -3,9 +3,9 @@ var router = express.Router();
 var userController = require("../controllers/userController");
 const { body, param } = require("express-validator");
 
-const redirectLogin = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const { userId } = req.session;
-  console.log("redirectLogin -> req.session", req.session);
+  console.log("authMiddleware -> req.session", req.session);
   if (!userId) {
     res.redirect("/unauthorized");
   } else {
@@ -22,16 +22,23 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
+router.post("/edit",
+  authMiddleware,
+  userController.edit_user
+);
+
+router.get("/myProfile", userController.get_my_profile);
+
 router.get(
-  "/:username",
-  redirectLogin,
+  "/profile/:username",
+  authMiddleware,
   [param("username").isLength({ min: 1 })],
   userController.get_user_info
 );
 
 router.post(
   "/search/result",
-  redirectLogin,
+  authMiddleware,
   [body("input").escape()],
   userController.search_user
 );

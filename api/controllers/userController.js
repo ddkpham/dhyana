@@ -39,6 +39,33 @@ exports.get_user_info = function (req, res, next) {
   }
 };
 
+exports.get_my_profile = function (req, res, next) {
+  const { userId: id } = req.session;
+  const errors = validationResult(id);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    User.findAll({
+      where: {
+        id,
+      },
+    })
+      .then((user) => {
+        if (user.length) {
+          res.status(200).json(successResponse("user exists", user));
+          return;
+        }
+
+        return Promise.reject();
+      })
+      .catch((err) => {
+        res.status(200).json(errorResponse("user doesn't exist", err));
+      });
+  }
+};
+
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
 
@@ -128,6 +155,33 @@ exports.create_new_user = function (req, res, next) {
       })
       .catch((err) => {
         res.status(409).json(errorResponse("user already exists", err));
+      });
+  }
+};
+
+exports.edit_user = function (req, res, next) {
+  const { userId: id } = req.session;
+  const errors = validationResult(id);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    User.findAll({
+      where: {
+        id,
+      },
+    })
+      .then((user) => {
+        if (user.length) {
+          res.status(200).json(successResponse("user exists", user));
+          return;
+        }
+
+        return Promise.reject();
+      })
+      .catch((err) => {
+        res.status(200).json(errorResponse("user doesn't exist", err));
       });
   }
 };

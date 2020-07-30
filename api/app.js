@@ -31,9 +31,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(session(sessionConfig));
 
 // authentication/session middleware
-const redirectLogin = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const { userId } = req.session;
-  console.log("redirectLogin -> req.session", req.session);
+  console.log("authMiddleware -> req.session", req.session);
   if (!userId) {
     res.redirect("/unauthorized");
   } else {
@@ -44,8 +44,8 @@ const redirectLogin = (req, res, next) => {
 app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/user", userRouter);
-app.use("/team", redirectLogin, teamRouter);
-app.use("/project", redirectLogin, projectRouter);
+app.use("/team", authMiddleware, teamRouter);
+app.use("/project", authMiddleware, projectRouter);
 app.use("/unauthorized", authRouter);
 
 var db = require("./config/database");
