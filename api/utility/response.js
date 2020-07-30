@@ -3,12 +3,14 @@ const errorResponse = (message, err = {}) => ({
   data: [],
   message,
   err,
+  sucess: false,
 });
 
 const successResponse = (message, data = []) => ({
   confirmation: "success",
   data,
   message,
+  success: true,
 });
 
 module.exports = { errorResponse, successResponse };
