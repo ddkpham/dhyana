@@ -3,6 +3,7 @@ const Project = require("../models/Project");
 const Column = require("../models/Column");
 const ProjectColumns = require("../models/ProjectColumns");
 const ColumnTask = require("../models/ColumnsTasks");
+const TeamsUsers = require("../models/TeamsUsers");
 const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
@@ -79,6 +80,41 @@ exports.view_project = function (req, res, next) {
           )
         );
     });
+};
+
+exports.view_user_specific = function (req, res, next) {
+  const { userId } = req.session;
+
+  const findProjects = async () => {
+    const teams = await TeamsUsers.findAll({
+      where: {
+        user_id: userId,
+      },
+    });
+    console.log("findTeams -> teams", teams);
+    const teamQuery = teams.map((team) => {
+      const {
+        dataValues: { team_id },
+      } = team;
+      return { team_id };
+    });
+    return Project.findAll({
+      where: {
+        [Op.or]: teamQuery,
+      },
+    });
+  };
+  try {
+    findProjects()
+      .then((projects) => {
+        res.json(successResponse("Sucessfully found projects", projects));
+      })
+      .catch((err) => {
+        res.json(errorResponse("No projects found", err));
+      });
+  } catch (err) {
+    res.json(errorResponse("No projects found", err));
+  }
 };
 
 exports.view_all = function (req, res, next) {
@@ -333,21 +369,27 @@ exports.delete_task = function (req, res, next) {
 
   ColumnTask.destroy({
     where: {
-      task_id
-    }
-  }).then(() => {
-    Task.destroy({
-      where: {
-        id: task_id
-      }
-    }).then(() =>
+      task_id,
+    },
+  })
+    .then(() => {
+      Task.destroy({
+        where: {
+          id: task_id,
+        },
+      })
+        .then(() =>
+          res.status(200).json(successResponse("successfully deleted task"))
+        )
+        .catch((err) =>
+          res
+            .status(400)
+            .json(errorResponse("task destroy error: " + err.message))
+        );
+    })
+    .catch((err) =>
       res
-        .status(200)
-        .json(successResponse("successfully deleted task"))
-    ).catch((err) =>
-      res.status(400).json(errorResponse("task destroy error: " + err.message))
-    )
-  }).catch((err) =>
-    res.status(400).json(errorResponse("columntask destroy error: " + err.message))
-  )
+        .status(400)
+        .json(errorResponse("columntask destroy error: " + err.message))
+    );
 };
