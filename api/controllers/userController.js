@@ -39,6 +39,33 @@ exports.get_user_info = function (req, res, next) {
   }
 };
 
+exports.get_my_profile = function (req, res, next) {
+  const { userId: id } = req.session;
+  const errors = validationResult(id);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    User.findAll({
+      where: {
+        id,
+      },
+    })
+      .then((user) => {
+        if (user.length) {
+          res.status(200).json(successResponse("user exists", user));
+          return;
+        }
+
+        return Promise.reject();
+      })
+      .catch((err) => {
+        res.status(200).json(errorResponse("user doesn't exist", err));
+      });
+  }
+};
+
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
 
@@ -128,6 +155,48 @@ exports.create_new_user = function (req, res, next) {
       })
       .catch((err) => {
         res.status(409).json(errorResponse("user already exists", err));
+      });
+  }
+};
+
+exports.edit_user = function (req, res, next) {
+  const { userId: id } = req.session;
+  console.log("edit user to", req.body, id);
+
+  body(req.body).trim().escape().not().isEmpty();
+
+  pass = req.body.password.trim();
+  const errorsBody = validationResult(req.body);
+  const errors = validationResult(id);
+
+  if (!errors.isEmpty() || !errorsBody.isEmpty()) {
+    console.log("error is not empty")
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  } else {
+    const { password, first_name, last_name } = req.body;
+    console.log("attempting to update user")
+    User.update(
+        { 
+          first_name, 
+          last_name, 
+          password, 
+        },
+        { 
+          where: { id, },
+        }
+      )
+      .then((user) => {
+        if (user.length) {
+          res.status(200).json(successResponse("User modified successfully.", user));
+          return;
+        }
+
+        return Promise.reject();
+      })
+      .catch((err) => {
+        console.log("error in update", err)
+        res.status(409).json(errorResponse("User couldn’t be modified.", err));
       });
   }
 };

@@ -5,29 +5,29 @@ import "./index.scss";
 import { useHistory } from "react-router-dom";
 import { getCall } from "../../apiCalls/apiCalls";
 
-function ProfilePage(props) {
-  const { username } = props;
+function MyProfile() {
   let history = useHistory();
-  const [userInfo, setUser] = useState([]);
+  const [ProfileInfo, setProfile] = useState([]);
 
   useEffect(() => {
-    function getUser() {
-      const url = `${baseURL}/user/profile/${username}`;
+    function getProfile() {
+      console.log("GET from", `${baseURL}/user/myProfile`)
+      const url = `${baseURL}/user/myProfile`;
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
           console.log("payload", payload);
-          setUser(payload.data[0]);
+          setProfile(payload.data[0]);
         })
         .catch((err) => console.log("project fetch error", err));
     }
-    getUser();
+    getProfile();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    console.log("userInfo", userInfo);
-  }, [userInfo]);
+    console.log("ProfileInfo", ProfileInfo);
+  }, [ProfileInfo]);
 
   return (
     <div>
@@ -44,14 +44,29 @@ function ProfilePage(props) {
 
       <div className="container">
         <div className="profileDiv">
-          <h2 className="username">Username: {userInfo.username}</h2>
+          <h2 className="username">Username: {ProfileInfo.username}</h2>
           <h2 className="name">
-            Name: {userInfo.first_name} {userInfo.last_name}
+            Name: {ProfileInfo.first_name} {ProfileInfo.last_name}
           </h2>
+        </div>
+      </div>
+
+      <div className="container2">
+        <div className="buttonDiv">
+          <Button
+            className="editButton"
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              history.push("/editProfile");
+            }}
+          >
+            Edit Profile
+          </Button>
         </div>
       </div>
     </div>
   );
 }
 
-export default ProfilePage;
+export default MyProfile;

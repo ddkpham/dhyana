@@ -11,6 +11,8 @@ import Login from "./components/Login/index";
 import CreateUser from "./components/CreateUser/index";
 import SearchUser from "./components/SearchUser/index";
 import ProfilePage from "./components/ProfilePage/index";
+import MyProfile from "./components/MyProfile/index";
+import EditProfile from "./components/EditProfile/index";
 import Button from "@material-ui/core/Button";
 import { clientBaseURL, baseURL } from "./config/settings";
 import { getCall } from "./apiCalls/apiCalls";
@@ -63,6 +65,8 @@ function App(props) {
                   {authenticated ? <Home /> : <Login />}
                 </Route>
                 <Route path="/createUser">{<CreateUser />}</Route>
+                <Route path="/myProfile">{<MyProfile />}</Route>
+                <Route path="/editProfile">{<EditProfile />}</Route>
                 <Route path="/searchUser">
                   {authenticated ? <SearchUser /> : <Login />}
                 </Route>

@@ -138,7 +138,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={notImplemented}>Profile</MenuItem>
+      <MenuItem onClick={() => {
+              history.push("/myProfile");
+            }}>Profile</MenuItem>
       <MenuItem onClick={notImplemented}>My account</MenuItem>
       <MenuItem onClick={logOut}>Log out</MenuItem>
     </Menu>

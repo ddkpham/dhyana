@@ -3,7 +3,6 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import ProfilePage from "../ProfilePage/index";
 
 function UserCard(props) {
 	const { user: {username, first_name, last_name} } = props;
