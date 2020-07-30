@@ -196,7 +196,7 @@ exports.edit_user = function (req, res, next) {
       })
       .catch((err) => {
         console.log("error in update", err)
-        res.status(200).json(errorResponse("User couldn’t be modified.", err));
+        res.status(409).json(errorResponse("User couldn’t be modified.", err));
       });
   }
 };
