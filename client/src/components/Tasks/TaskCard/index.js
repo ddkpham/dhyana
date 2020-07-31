@@ -5,7 +5,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import { useDrag, useDrop } from "react-dnd";
 
-const Task = ({ task, index, moveItem }) => {
+const TaskCard = ({ task, index, moveItem }) => {
   const ref = useRef(null);
 
   const [, drop] = useDrop({
@@ -27,9 +27,7 @@ const Task = ({ task, index, moveItem }) => {
     <Card raised ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
       <CardActionArea>
         <CardContent>
-          <Typography variant="body1" gutterBottom>
-            {task.name}
-          </Typography>
+          <Typography variant="body1" gutterBottom>{task.name}</Typography>
           <Typography variant="body2">{task.description}</Typography>
         </CardContent>
       </CardActionArea>
@@ -37,4 +35,4 @@ const Task = ({ task, index, moveItem }) => {
   );
 };
 
-export default Task;
+export default TaskCard;
