@@ -467,6 +467,8 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 --
 
 COPY public.tasks (id, name, description, date_created, date_modified, user_id_created, user_id_assigned, priority, time_estimated, time_elapsed, flag) FROM stdin;
+21	testtesttest	\N	2020-12-12	\N	4	\N	\N	\N	\N	\N
+22	testtesttest	\N	2020-12-12	\N	4	\N	\N	\N	\N	\N
 \.
 
 
@@ -598,7 +600,7 @@ SELECT pg_catalog.setval('public.projects_id_seq', 10, true);
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 20, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 22, true);
 
 
 --
