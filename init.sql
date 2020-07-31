@@ -57,7 +57,6 @@ ALTER SEQUENCE public.columns_id_seq OWNED BY public.pcolumns.id;
 
 CREATE TABLE public.columnstasks (
     column_id integer NOT NULL,
-    task_id integer NOT NULL,
     id integer NOT NULL
 );
 
@@ -100,26 +99,6 @@ CREATE SEQUENCE public.columnstasks_id_seq
 --
 
 ALTER SEQUENCE public.columnstasks_id_seq OWNED BY public.columnstasks.id;
-
-
---
--- Name: columnstasks_tasks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.columnstasks_tasks_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: columnstasks_tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.columnstasks_tasks_id_seq OWNED BY public.columnstasks.task_id;
 
 
 --
@@ -192,9 +171,18 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 CREATE TABLE public.tasks (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
-    owner character varying(255),
     description character varying(1023),
-    activity_log character varying(1023)[]
+    activity_log character varying(1023)[],
+    user_id_created integer NOT NULL,
+    date_created date NOT NULL,
+    priority integer,
+    time_estimated double precision,
+    time_elapsed double precision,
+    user_id_assigned integer,
+    flag boolean,
+    title character varying(100),
+    date_modified date,
+    num_changes integer
 );
 
 
@@ -330,13 +318,6 @@ ALTER TABLE ONLY public.columnstasks ALTER COLUMN column_id SET DEFAULT nextval(
 
 
 --
--- Name: columnstasks task_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.columnstasks ALTER COLUMN task_id SET DEFAULT nextval('public.columnstasks_tasks_id_seq'::regclass);
-
-
---
 -- Name: columnstasks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -396,22 +377,22 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: columnstasks; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.columnstasks (column_id, task_id, id) FROM stdin;
-2	1	1
-7	6	2
-7	7	3
-7	8	4
-2	9	5
-2	10	6
-2	11	7
-2	12	8
-2	13	9
-2	14	10
-19	15	11
-20	16	12
-21	17	13
-22	18	14
-21	20	16
+COPY public.columnstasks (column_id, id) FROM stdin;
+2	1
+7	2
+7	3
+7	4
+2	5
+2	6
+2	7
+2	8
+2	9
+2	10
+19	11
+20	12
+21	13
+22	14
+21	16
 \.
 
 
@@ -475,26 +456,11 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 -- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.tasks (id, name, owner, description, activity_log) FROM stdin;
-1	create models	\N	create models for db	\N
-2	dont create models	\N	dont create models for db	\N
-3	get shit done	\N		\N
-4	get shit done	\N		\N
-5	get shit done	\N		\N
-6	get shit done	\N		\N
-7	get shit done	\N		\N
-8	get shit done	\N		\N
-9	get shit done	\N		\N
-10	get shit done	\N		\N
-11	get shit done	\N		\N
-12	get shit done	\N		\N
-13	get shit done	\N		\N
-14	get shit done	\N	work work work work work	\N
-15	work	\N	work work worrk	\N
-16	do more work	\N	more work	\N
-17	buy tree	\N	choose a big one	\N
-18	buy tree	\N	choose a big one	\N
-20	buy tree	\N	choose a big one	\N
+COPY public.tasks (id, name, description, activity_log, user_id_created, date_created, priority, time_estimated, time_elapsed, user_id_assigned, flag, title, date_modified, num_changes) FROM stdin;
+22	test	\N	\N	10	2000-12-31	\N	\N	\N	\N	\N	\N	\N	\N
+23	test	\N	\N	10	2000-12-31	\N	\N	\N	\N	\N	\N	\N	\N
+24	test	\N	\N	10	2020-12-31	\N	\N	\N	\N	\N	\N	\N	\N
+25	userid = 4, task_id = 25	\N	\N	4	2020-12-31	\N	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -503,7 +469,6 @@ COPY public.tasks (id, name, owner, description, activity_log) FROM stdin;
 --
 
 COPY public.taskstasks (story_id, sub_task_id) FROM stdin;
-1	2
 \.
 
 
@@ -520,6 +485,8 @@ COPY public.teams (id, name) FROM stdin;
 13	gold fire
 15	deep-space
 17	killer mike
+2	isert
+-1	null
 \.
 
 
@@ -578,6 +545,7 @@ COPY public.users (id, username, password, first_name, last_name) FROM stdin;
 40	rbobby	rbobby	ricky	bobby
 41	sb1	1234	simon	barer
 1	tlou2	tlo	tlo	u2
+123	test	test	\N	\N
 \.
 
 
@@ -603,13 +571,6 @@ SELECT pg_catalog.setval('public.columnstasks_id_seq', 16, true);
 
 
 --
--- Name: columnstasks_tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.columnstasks_tasks_id_seq', 1, false);
-
-
---
 -- Name: projectcolumns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -627,7 +588,7 @@ SELECT pg_catalog.setval('public.projects_id_seq', 10, true);
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 20, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 25, true);
 
 
 --
@@ -764,14 +725,6 @@ ALTER TABLE ONLY public.taskstasks
 
 
 --
--- Name: columnstasks task_id; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.columnstasks
-    ADD CONSTRAINT task_id FOREIGN KEY (task_id) REFERENCES public.tasks(id);
-
-
---
 -- Name: projects team_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -793,6 +746,22 @@ ALTER TABLE ONLY public.teamsusers
 
 ALTER TABLE ONLY public.teamsusers
     ADD CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: tasks user_id_assigned; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tasks
+    ADD CONSTRAINT user_id_assigned FOREIGN KEY (user_id_assigned) REFERENCES public.users(id) NOT VALID;
+
+
+--
+-- Name: tasks user_id_created; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tasks
+    ADD CONSTRAINT user_id_created FOREIGN KEY (user_id_created) REFERENCES public.users(id) NOT VALID;
 
 
 --
