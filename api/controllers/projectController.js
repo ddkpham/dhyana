@@ -314,7 +314,8 @@ exports.create_new_task = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
   const description = req.body.description.trim();
-  const user_id_created = req.body.user_id_created;
+  const { userId: user_id_created } = req.session;
+  console.log("user_id_created: ", user_id_created);
   const user_id_assigned = req.body.user_id_assigned;
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
@@ -338,11 +339,11 @@ exports.create_new_task = function (req, res, next) {
   Task.create({
     name,
     description,
+    date_created,
     user_id_created,
     user_id_assigned,
     priority,
     time_estimated,
-    date_created,
     flag,
   })
     .then((task) => {

@@ -34,6 +34,9 @@ const styles = (theme) => ({
     minWidth: '300px',
     marginBottom: '50px'
   }
+  addTaskButton: {
+    marginTop: 25,
+  }
 });
 
 class Column extends React.Component {
@@ -82,15 +85,20 @@ class Column extends React.Component {
 
   addTask = (details) => {
     console.log("sending addTask to server")
-    const {name, description, userIdAssigned, priority, timeEstimated, flag} = details;
+    const {name, description, userIdAssigned, priorityInt, timeEstimated, flag} = details;
     const { projectId, column } = this.props;
     const url = `${baseURL}/project/task`;
     const body = {
       name: name,
       description: description,
+      user_id_assigned: userIdAssigned,
+      priority: priorityInt,
+      time_estimated: timeEstimated,
+      flag: flag,
       column_id: column.id,
       project_id: projectId,
     };
+    console.log("details: ", body)
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -138,7 +146,7 @@ class Column extends React.Component {
             ))}
           </Paper>
         </DragTarget>
-        <Button onClick={this.handleClick}>Add task</Button>
+        <Button className={classes.addTaskButton} onClick={this.handleClick}>Add task</Button>
         <Popover
           id={id}
           open={open}

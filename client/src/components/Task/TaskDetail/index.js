@@ -68,10 +68,11 @@ function TaskDetail(props) {
 
 
     const createTask = () => {
-        console.log("entered createTask")
-        console.log("name", name, "description", description)
         const priorityInt = priority.charAt(0)
-        const details = {name, description, userIdAssigned, priorityInt, timeEstimated, flag}
+        // TODO: handle properly tagging users
+        const assignedUserId = 4
+        const details = {name, description, userIdAssigned: assignedUserId, priorityInt, timeEstimated, flag}
+        console.log("task details: ", details)
         props.addTask(details);
     }
 
