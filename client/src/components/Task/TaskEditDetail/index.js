@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
 function TaskEditDetail(props) {
     const classes = useStyles();
     const { currValues } = props;
-    console.log(currValues)
+    console.log("currValues: ", currValues)
 
     const tempUserArray = ["person1", "person2", "person3"]
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
@@ -115,7 +115,8 @@ function TaskEditDetail(props) {
     }
 
     const deleteTask = () => {
-
+        console.log("TaskEditDetail - entered deleteTask with taskId: ", currValues.id)
+        props.deleteTask()
     }
 
     const assignUser = (event) => {

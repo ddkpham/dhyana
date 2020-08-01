@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Task = ({ task, index, moveItem }) => {
+const Task = ({ task, index, moveItem, deleteTask }) => {
   const ref = useRef(null);
   const classes = useStyles();
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
@@ -74,12 +74,17 @@ const Task = ({ task, index, moveItem }) => {
     }),
   });
 
+  const deleteT = () => {
+    console.log("entered deleteT")
+    deleteTask(task.id)
+  }
+
   drag(drop(ref));
 
   if (isDragging) return null;
 
   const open = Boolean(anchor);
-  console.log("Column -> render -> open", open);
+  // console.log("Column -> render -> open", open);
   const id = open ? "simple-popover" : undefined;
 
   return (
@@ -114,7 +119,7 @@ const Task = ({ task, index, moveItem }) => {
         }}
         className={classes.popover}
       >
-        <TaskEditDetail addTask={editTask.bind(this)} className={classes.taskDetail} currValues={task}/>
+        <TaskEditDetail addTask={editTask.bind(this)} className={classes.taskDetail} currValues={task} deleteTask={deleteT.bind(this)}/>
       </Popover>
     </div>
   );
