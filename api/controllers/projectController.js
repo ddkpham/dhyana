@@ -319,7 +319,7 @@ exports.create_new_task = function (req, res, next) {
   const user_id_assigned = req.body.user_id_assigned;
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
-  const flag = req.body.flag;
+  const flag = req.body.flag == "" ? false : req.body.flag;
   const date_created = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;

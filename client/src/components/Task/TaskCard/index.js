@@ -92,8 +92,10 @@ const Task = ({ task, index, moveItem }) => {
             </Typography>
             <Typography variant="body2">{task.description}</Typography>
             <Typography variant="body2">{task.priority}</Typography>
-            <Typography variant="body2">{timeElapsed}/{task.time_estimated} Hours Completed</Typography>
-          </CardContent>
+            { task.time_estimated ? (
+              <Typography variant="body2">{timeElapsed}/{task.time_estimated} Hours Completed</Typography>
+            ) : (null)}
+            </CardContent>
         </CardActionArea>
       </Card>
 
