@@ -4,13 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import DragTarget from "./DragTarget";
-import TaskCard from "../Task/TaskCard";
+import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import TextField from "@material-ui/core/TextField";
-import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
+import { postCall, deleteCall } from "../../apiCalls/apiCalls";
 
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
@@ -63,7 +61,7 @@ class Column extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { column } = this.props;
-    if (prevProps.column.tasks != column.tasks) {
+    if (prevProps.column.tasks !== column.tasks) {
       console.log("reloading");
       this.getTasks();
     }
@@ -77,7 +75,7 @@ class Column extends React.Component {
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
-        console.log("fetch tasks success", data);
+        console.log("Fetch Tasks Response", data);
         this.setState({ tasks: data.data });
       })
       .catch((err) => console.log("task fetch error", err));
@@ -102,10 +100,11 @@ class Column extends React.Component {
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
-        console.log("fetch tasks success", data);
+        console.log("Add Task Response", data);
         this.handleClose();
         window.location.reload(false);
-      });
+      })
+      .catch((err) => console.log("Add Task Error", err));
   };
 
   onDrop = (task) => {
@@ -124,10 +123,10 @@ class Column extends React.Component {
       })
       .then((response) => response.json())
       .then((data) => {
-        console.log("create tasks success", data);
+        console.log("Delete Task Response", data);
         reload();
       })
-      .catch((err) => console.log("create fetch error", err));
+      .catch((err) => console.log("Delete Task error", err));
   };
 
   render() {
@@ -142,7 +141,7 @@ class Column extends React.Component {
           <Paper elevation={4} className={classes.columnPaper}>
             <Typography>{column.name}</Typography>
             {tasks?.map((t) => (
-              <TaskCard task={t} key={t.id} columnId={column.id} />
+              <Task task={t} key={t.id} columnId={column.id} />
             ))}
           </Paper>
         </DragTarget>

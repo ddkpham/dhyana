@@ -1,9 +1,6 @@
-import React, { Fragment, useState, useRef } from "react";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardContent from "@material-ui/core/CardContent";
-import { useDrag, useDrop } from "react-dnd";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
