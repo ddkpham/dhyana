@@ -14,7 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
-import { cyan } from '@material-ui/core/colors';
+import { cyan, grey } from '@material-ui/core/colors';
 
 
 
@@ -41,34 +41,61 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
     timeEstimated: {
-        width: 200,
+        width: 220,
     },
     bottomStack: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
     },
+    toggle: {
+        alignItems: 'right',
+    },
     createTaskButton: {
         marginTop: 25,
         width: "50%",
+    },
+    priority: {
+        width: 220,
+    },
+    priorityFlagStack: {
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+    },
+    flagDiv: {
+        alignItems: 'right',
+        justifyContent: 'right',
+        width: 220,
+        paddingLeft: 50,
     }
   }));
 
-function TaskDetail(props) {
+function TaskEditDetail(props) {
     const classes = useStyles();
-
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [userIdAssigned, setUserAssigned] = useState(null);
-    const [priority, setPriority] = useState("");
-    const [timeEstimated, setTimeEstimated] = useState(null);
-    const [flag, setFlag] = useState(false);
+    const { currValues } = props;
+    console.log(currValues)
 
     const tempUserArray = ["person1", "person2", "person3"]
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
+    const currPriority = prioritiesArray.find(getPriority)
 
+    const [name, setName] = useState(currValues.name);
+    const [description, setDescription] = useState(currValues.description);
+    const [userIdAssigned, setUserAssigned] = useState(currValues.userIdAssigned);
+    const [priority, setPriority] = useState(currPriority);
+    const [timeEstimated, setTimeEstimated] = useState(currValues.time_estimated);
+    const [timeCompleted, setTimeCompleted] = useState(currValues.time_elapsed);
+    const [flag, setFlag] = useState(currValues.flag);
 
-    const createTask = () => {
+    // useEffect(() => {
+    // }
+
+    function getPriority(p) {
+        return p.charAt(0) == currValues.priority
+    }
+
+    const editTask = () => {
         const priorityInt = priority.charAt(0)
         // TODO: handle properly tagging users
         const assignedUserId = 4
@@ -101,10 +128,19 @@ function TaskDetail(props) {
         }
     }
 
+    const assignTimeCompleted = (event) => {
+        console.log("event value is: ", event.target.value)
+        const re = /^[0-9\b]+$/;
+
+        if (event.target.value === '' || re.test(event.target.value)) {
+            setTimeCompleted(event.target.value)
+        }
+    }
+
   return (
     <Card className="col-task-wrapper">
         <div className="col-title-wrapper">
-            <Typography className="title">Create a Task. 🥅</Typography>
+            <Typography className="title">Edit Task. 🥅</Typography>
         </div>
         <div className="col-input-wrapper">
             <TextField
@@ -112,6 +148,7 @@ function TaskDetail(props) {
                 id="outlined-basic"
                 label="Title"
                 variant="outlined"
+                defaultValue={currValues.name}
                 onChange={(e) =>
                     setName(e.target.value)
                 }
@@ -123,6 +160,7 @@ function TaskDetail(props) {
                 multiline
                 rows={3}
                 variant="outlined"
+                defaultValue={currValues.description}
                 onChange={(e) =>
                     setDescription(e.target.value )
                 }
@@ -131,25 +169,12 @@ function TaskDetail(props) {
                 <InputLabel id="assignUserLabel">Assign User</InputLabel>
                 <Select 
                     labelId="assignUserLabel"
-                    value={userIdAssigned}
+                    defaultValue={currValues.userIdAssigned}
                     onChange={assignUser}
                 >
                     <MenuItem value=""><em>None</em></MenuItem>
                     {tempUserArray.map((user) => (
                         <MenuItem value={user}>{user}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-
-            <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="assignPriorityLabel">Priority</InputLabel>
-                <Select 
-                    labelId="assignPriorityLabel"
-                    value={priority}
-                    onChange={assignPriority}
-                >
-                    {prioritiesArray.map((priority) => (
-                        <MenuItem value={priority}>{priority}</MenuItem>
                     ))}
                 </Select>
             </FormControl>
@@ -160,25 +185,55 @@ function TaskDetail(props) {
                     id="outlined-number"
                     label="Time Estimated"
                     type="number"
+                    defaultValue={currValues.time_estimated}
                     variant="outlined"
                     onChange={assignTimeEstimated}
                 />
 
-                <FormControl component="fieldset">
+                <TextField
+                    className={classes.timeEstimated}
+                    id="outlined-number"
+                    label="Time Completed"
+                    defaultValue={currValues.time_elapsed}
+                    type="number"
+                    variant="outlined"
+                    onChange={assignTimeCompleted}
+                />
+            </div>
+
+            <div className={classes.priorityFlagStack}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel id="assignPriorityLabel">Priority</InputLabel>
+                    <Select 
+                        labelId="assignPriorityLabel"
+                        defaultValue={currPriority}
+                        onChange={assignPriority}
+                        className={classes.priority}
+                    >
+                        {prioritiesArray.map((priority) => (
+                            <MenuItem value={priority}>{priority}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
+                <div className={classes.flagDiv}>
+                    <FormControl className={classes.toggle} component="fieldset">
                         <FormControlLabel
                             control={
                                 <ColouredSwitch checked={flag} onChange={assignFlag} name="flag" />}
                             label="Flagged"
+                            defaultValue={currValues.flag}
                         />
-                </FormControl>
+                    </FormControl>
+                </div>
             </div>
 
             <div className={classes.bottomStack}>
-                <Button variant="outlined" className={classes.createTaskButton} onClick={createTask}>Create Task</Button>
+                <Button variant="outlined" className={classes.createTaskButton} onClick={editTask}>Edit Task</Button>
             </div>
         </div>
     </Card>
   );
 };
 
-export default TaskDetail;
+export default TaskEditDetail;
