@@ -402,6 +402,63 @@ exports.get_all_tasks = function (req, res, next) {
     );
 };
 
+exports.move_task = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+  console.log("move task req.body is: ", req.body);
+  console.log("move task params: ", req.params);
+  const task_id = req.params.task_id.trim();
+  const column_id = req.body.column_id;
+
+  if (!task_id || !column_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  ColumnTask.update(
+      {
+        column_id,
+      },
+      {
+        where: { task_id,},
+      }
+    )
+    .then(() => {
+      res.status(200).json(successResponse("task moved successfully."));
+      return;
+    })
+    .catch((err) => {
+      console.log("error in update", err)
+      res.status(409).json(errorResponse("task couldn’t be moved.", err));
+    });
+    
+
+  // ColumnTask.destroy({
+  //   where: {
+  //     task_id,
+  //   },
+  // })
+  //   .then(() => {
+  //     Task.destroy({
+  //       where: {
+  //         id: task_id,
+  //       },
+  //     })
+  //       .then(() =>
+  //         res.status(200).json(successResponse("successfully deleted task"))
+  //       )
+  //       .catch((err) =>
+  //         res
+  //           .status(400)
+  //           .json(errorResponse("task destroy error: " + err.message))
+  //       );
+  //   })
+  //   .catch((err) =>
+  //     res
+  //       .status(400)
+  //       .json(errorResponse("columntask destroy error: " + err.message))
+  //   );
+};
+
 exports.delete_task = function (req, res, next) {
   console.log("exports.delete_task -> req.params", req.params);
   const task_id = req.params.task_id.trim();

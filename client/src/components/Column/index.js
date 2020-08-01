@@ -107,7 +107,7 @@ class Column extends React.Component {
       .catch((err) => console.log("Add Task Error", err));
   };
 
-  onDrop = (task) => {
+  editTask = (task) => {
     const { column, projectId, reload } = this.props;
     console.log(task)
     const url = `${baseURL}/project/task`;
@@ -128,6 +128,22 @@ class Column extends React.Component {
         const delUrl = `${baseURL}/project/task/${task.id}/delete`;
         return deleteCall(delUrl);
       })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Move Task Response", data);
+        reload();
+      })
+      .catch((err) => console.log("Move Task error", err));
+  };
+
+  onDrop = (task) => {
+    const { column, reload } = this.props;
+    console.log("moved task ", task, "to column: ", column)
+    const url = `${baseURL}/project/task/${task.id}/move`;
+    const body = {
+      column_id: column.id
+    }
+    postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
         console.log("Move Task Response", data);

@@ -45,11 +45,35 @@ router.post(
 );
 
 router.post(
+  "/task/:task_id/move",
+  [body("task_ids").isLength({ min: 1 })],
+  projectController.move_task
+);
+
+router.post(
   "/tasks",
   [body("task_ids").isLength({ min: 1 })],
   projectController.get_all_tasks
 );
 
 router.delete("/task/:task_id/delete", projectController.delete_task);
+
+router.post(
+  "/task/:task_id/edit",
+  [
+    body("task_id").isLength({ min: 1 }).escape(),
+    body("name").isLength({ min: 1 }).escape(),
+    body("description").isLength({ min: 1 }).escape(),
+    body("user_id_created").isLength({ min: 1 }),
+    body("user_id_assigned").isLength({ min: 1 }),
+    body("priority").isLength({ min: 1 }),
+    body("time_estimated").isLength({ min: 1 }),
+    body("time_completed").isLength({ min: 1 }),
+    body("flag").isLength({ min: 1 }).escape(),
+    body("column_id").isLength({ min: 1 }),
+    body("project_id").isLength({ min: 1 }),
+  ],
+  projectController.create_new_task
+);
 
 module.exports = router;
