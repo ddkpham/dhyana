@@ -93,7 +93,7 @@ class NewProject extends React.Component {
               <MenuItem value="">None</MenuItem>
             </Select>
           </FormControl>
-          <Button onClick={this.create} variant="outlined" color="secondary">
+          <Button onClick={this.create} variant="outlined" color="primary">
             Create
           </Button>
         </div>

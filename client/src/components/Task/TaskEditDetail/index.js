@@ -14,8 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
-import { cyan, grey } from '@material-ui/core/colors';
-
+import { cyan } from '@material-ui/core/colors';
 
 
 const ColouredSwitch = withStyles({
@@ -51,9 +50,17 @@ const useStyles = makeStyles((theme) => ({
     toggle: {
         alignItems: 'right',
     },
-    createTaskButton: {
+    editTaskButton: {
         marginTop: 25,
-        width: "50%",
+        marginLeft: 5,
+        marginRight: 5,
+        width: "45%",
+    },
+    deleteTaskButton: {
+        marginTop: 25,
+        marginLeft: 5,
+        marginRight: 5,
+        width: "45%",
     },
     priority: {
         width: 220,
@@ -96,12 +103,16 @@ function TaskEditDetail(props) {
     }
 
     const editTask = () => {
-        const priorityInt = priority.charAt(0)
-        // TODO: handle properly tagging users
-        const assignedUserId = 4
-        const details = {name, description, userIdAssigned: assignedUserId, priorityInt, timeEstimated, flag}
-        console.log("task details: ", details)
-        props.addTask(details);
+        // const priorityInt = priority.charAt(0)
+        // // TODO: handle properly tagging users
+        // const assignedUserId = 4
+        // const details = {name, description, userIdAssigned: assignedUserId, priorityInt, timeEstimated, flag}
+        // console.log("task details: ", details)
+        // props.addTask(details);
+    }
+
+    const deleteTask = () => {
+
     }
 
     const assignUser = (event) => {
@@ -229,7 +240,8 @@ function TaskEditDetail(props) {
             </div>
 
             <div className={classes.bottomStack}>
-                <Button variant="outlined" className={classes.createTaskButton} onClick={editTask}>Edit Task</Button>
+                <Button variant="outlined" className={classes.editTaskButton} onClick={editTask}>Edit Task</Button>
+                <Button variant="outlined" color="secondary" className={classes.deleteTaskButton} onClick={deleteTask}>Delete Task</Button>
             </div>
         </div>
     </Card>
