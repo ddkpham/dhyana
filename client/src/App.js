@@ -9,6 +9,7 @@ import {
 import Home from "./components/Home/index";
 import Login from "./components/Login/index";
 import CreateUser from "./components/CreateUser/index";
+import CreateTeam from "./components/CreateTeams/index";
 import SearchUser from "./components/SearchUser/index";
 import ProfilePage from "./components/ProfilePage/index";
 import MyProfile from "./components/MyProfile/index";
@@ -65,6 +66,7 @@ function App(props) {
                   {authenticated ? <Home /> : <Login />}
                 </Route>
                 <Route path="/createUser">{<CreateUser />}</Route>
+                <Route path="/createTeam">{<CreateTeam />}</Route>
                 <Route path="/myProfile">{<MyProfile />}</Route>
                 <Route path="/editProfile">{<EditProfile />}</Route>
                 <Route path="/searchUser">
