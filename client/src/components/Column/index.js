@@ -7,6 +7,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Select from "@material-ui/core/Select";
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DragTarget from "./DragTarget";
 import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
@@ -58,10 +61,20 @@ const styles = (theme) => ({
     justifyContent: "center",
     display: "flex",
   },
+  columnHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  }
 });
 
 
-const ColumnMenu = ({anchorEl, handleClose}) => {
+const ColumnMenu = ({anchorEl, handleClose, setSort, setFilters}) => {
+  const sortOptions = [
+    {name: 'Task Title', id: 'name'}
+  ];
+
   return (
     <Menu
       id="simple-menu"
@@ -70,9 +83,23 @@ const ColumnMenu = ({anchorEl, handleClose}) => {
       open={Boolean(anchorEl)}
       onClose={handleClose}
     >
-      <MenuItem onClick={handleClose}>Profile</MenuItem>
-      <MenuItem onClick={handleClose}>My account</MenuItem>
-      <MenuItem onClick={handleClose}>Logout</MenuItem>
+      <MenuItem >
+          Sort By:  
+        <Select
+          variant="outlined"
+          value=""
+          onChange={(event) => {
+            setSort({ sortBy: event.target.value });
+            handleClose();
+          }}
+        >
+          {sortOptions.map((o) => {
+            return <MenuItem value={o.id}>{o.name}</MenuItem>;
+          })}
+        </Select>
+      </MenuItem>
+      <MenuItem onClick={console.log('filtering not implemented yet')}>Filter By</MenuItem>
+      <MenuItem onClick={console.log('delete columns not implemented yet')}>Delete</MenuItem>
     </Menu>
   );
 }
@@ -84,6 +111,8 @@ class Column extends React.Component {
     anchorMenu: null,
     currTaskName: "",
     currDescription: "",
+    sort: "",
+    sortAsc: true,
   };
 
   componentDidMount() {
@@ -216,12 +245,32 @@ class Column extends React.Component {
       .catch((err) => console.log("Delete Task error", err));
   };
 
+  setSortBy = ({sortBy}) => {
+    const { sort } = this.state;
+    this.setState({sort: sortBy, sortAsc: true});
+  }
+
+  switchSortDirection = () => {
+    const { sortAsc } = this.state;
+    this.setState({ sortAsc: !sortAsc});
+  }
+
+  compareFunc = (a, b) => {
+    const { sort, sortAsc } = this.state;
+    if(a[sort] > b[sort]) return sortAsc ? 1 : -1;
+    if(a[sort] < b[sort]) return sortAsc ? -1 : 1;
+
+    return 0;
+  }
+
   render() {
     const { column, classes } = this.props;
-    const { tasks, anchorTask, anchorMenu } = this.state;
+    const { tasks, anchorTask, anchorMenu, sort, sortAsc } = this.state;
     const taskOpen = Boolean(anchorTask);
     console.log("Column -> render -> open", taskOpen);
     const id = taskOpen ? "simple-popover" : undefined;
+
+    if(!!sort) tasks.sort(this.compareFunc);
 
     return (
       <div className={classes.mainColumnDiv}>
@@ -237,10 +286,11 @@ class Column extends React.Component {
         <Grid item key={column.id} className={classes.column}>
           <DragTarget columnName={column.name} onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
-              <div style={{display: 'flex', flexDirection: 'row'}} className='centered'>
+              <div className={classes.columnHeader}>
                 <Typography>{column.name}</Typography>
+                {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
                 <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
-                <ColumnMenu anchorEl={anchorMenu} handleClose={this.closeMenu}/>
+                <ColumnMenu anchorEl={anchorMenu} handleClose={this.closeMenu} setSort={this.setSortBy}/>
               </div>
               {tasks?.map((t) => (
                   <Task
