@@ -12,6 +12,9 @@ const Task = db.define("task", {
   date_created: {
     type: Sequelize.DATE,
   },
+  date_modified: {
+    type: Sequelize.DATE,
+  },
   user_id_created: {
     type: Sequelize.INTEGER,
   },
@@ -22,6 +25,9 @@ const Task = db.define("task", {
     type: Sequelize.INTEGER,
   },
   time_estimated: {
+    type: Sequelize.DOUBLE,
+  },
+  time_elapsed: {
     type: Sequelize.DOUBLE,
   },
   flag: {

@@ -82,8 +82,8 @@ class Column extends React.Component {
   };
 
   addTask = (details) => {
-    console.log("sending addTask to server")
-    const {name, description, userIdAssigned, assignedPriority, timeEstimated, flag} = details;
+    console.log("sending addTask to server with details: ", details)
+    const {name, description, userIdAssigned, assignedPriority, time_estimated, flag} = details;
     const { projectId, column } = this.props;
     const url = `${baseURL}/project/task`;
     const body = {
@@ -91,12 +91,12 @@ class Column extends React.Component {
       description: description,
       user_id_assigned: userIdAssigned,
       priority: assignedPriority,
-      time_estimated: timeEstimated,
+      time_estimated: time_estimated,
       flag: flag,
       column_id: column.id,
       project_id: projectId,
     };
-    console.log("details: ", body)
+    console.log("sending addTask to server with body: ", body)
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -109,32 +109,27 @@ class Column extends React.Component {
 
   editTask = (task) => {
     const { column, projectId, reload } = this.props;
-    console.log(task)
-    const url = `${baseURL}/project/task`;
+    console.log("Column - entered editTask with: ", task)
+    const url = `${baseURL}/project/task/${task.id}/edit`;
     const body = {
-      task_id: task.id,
+      id: task.id,
       name: task.name,
       description: task.description,
-      project_id: projectId,
-      column_id: column.id,
       flag: task.flag,
       user_id_assigned: task.user_id_assigned,
       time_estimated: task.time_estimated,
-      priority: task.priority,
-      time_completed: task.time_completed
+      time_elapsed: task.time_elapsed,
+      priority: task.priority
     };
     postCall(url, body)
-      .then(() => {
-        const delUrl = `${baseURL}/project/task/${task.id}/delete`;
-        return deleteCall(delUrl);
-      })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Move Task Response", data);
+        console.log("Edit Task Response", data);
+        this.handleClose();
         reload();
       })
-      .catch((err) => console.log("Move Task error", err));
-  };
+      .catch((err) => console.log("Edit Task error", err));
+};
 
   onDrop = (task) => {
     const { column, reload } = this.props;
@@ -169,7 +164,6 @@ class Column extends React.Component {
     const { column, classes } = this.props;
     const { tasks, anchorEl } = this.state;
     const open = Boolean(anchorEl);
-    // console.log("Column -> render -> open", open);
     const id = open ? "simple-popover" : undefined;
     return (
       <Grid item key={column.id} className={classes.column}>
@@ -177,7 +171,10 @@ class Column extends React.Component {
           <Paper elevation={4} className={classes.columnPaper}>
             <Typography>{column.name}</Typography>
             {tasks?.map((t) => (
-              <Task task={t} key={t.id} columnId={column.id} deleteTask={this.deleteTask.bind(this)} />
+              <Task task={t} key={t.id} columnId={column.id} 
+                  deleteTask={this.deleteTask.bind(this)} 
+                  editTask={this.editTask.bind(this)}
+                  />
             ))}
           </Paper>
         </DragTarget>

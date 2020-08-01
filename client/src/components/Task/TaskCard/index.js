@@ -21,9 +21,12 @@ const useStyles = makeStyles((theme) => ({
     padding: "5px",
     height: "100%",
   },
+  addTaskButton: {
+    marginTop: 25,
+  }
 }));
 
-const Task = ({ task, index, moveItem, deleteTask }) => {
+const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
   const ref = useRef(null);
   const classes = useStyles();
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
@@ -36,31 +39,6 @@ const Task = ({ task, index, moveItem, deleteTask }) => {
 
   const handleClose = () => {
     setAnchor( null );
-  };
-
-  const editTask = (details) => {
-    console.log("sending addTask to server")
-    const {name, description, userIdAssigned, priorityInt, timeEstimated, flag} = details;
-    const { projectId, column } = this.props;
-    const url = `${baseURL}/project/task`;
-    const body = {
-      name: name,
-      description: description,
-      user_id_assigned: userIdAssigned,
-      priority: priorityInt,
-      time_estimated: timeEstimated,
-      flag: flag,
-      column_id: column.id,
-      project_id: projectId,
-    };
-    console.log("details: ", body)
-    postCall(url, body)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("fetch tasks success", data);
-        this.handleClose();
-        window.location.reload(false);
-      });
   };
 
   const [, drop] = useDrop({
@@ -77,6 +55,12 @@ const Task = ({ task, index, moveItem, deleteTask }) => {
   const deleteT = () => {
     console.log("entered deleteT")
     deleteTask(task.id)
+  }
+
+  const editT = (updatedValues) => {
+    console.log("entered editT with: ", updatedValues)
+    editTask(updatedValues)
+    setAnchor( null );
   }
 
   drag(drop(ref));
@@ -110,7 +94,7 @@ const Task = ({ task, index, moveItem, deleteTask }) => {
         anchorEl={anchor}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "center",
         }}
         transformOrigin={{
@@ -119,7 +103,12 @@ const Task = ({ task, index, moveItem, deleteTask }) => {
         }}
         className={classes.popover}
       >
-        <TaskEditDetail addTask={editTask.bind(this)} className={classes.taskDetail} currValues={task} deleteTask={deleteT.bind(this)}/>
+        <TaskEditDetail 
+            className={classes.taskDetail} 
+            currValues={task} 
+            deleteTask={deleteT.bind(this)}
+            editTask={editT.bind(this)}
+        />
       </Popover>
     </div>
   );

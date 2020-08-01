@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "@material-ui/core/Button";
-import "./index.scss";
 import { makeStyles, Select } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
@@ -39,11 +38,14 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       minWidth: 120,
     },
+    userField: {
+        width: 300,
+    },
     selectEmpty: {
       marginTop: theme.spacing(2),
     },
-    timeEstimated: {
-        width: 220,
+    timeField: {
+        width: 300,
     },
     bottomStack: {
         display: 'flex',
@@ -66,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
         width: "45%",
     },
     priority: {
-        width: 220,
+        width: 270,
     },
     priorityFlagStack: {
         display: 'flex',
@@ -76,8 +78,22 @@ const useStyles = makeStyles((theme) => ({
     flagDiv: {
         alignItems: 'right',
         justifyContent: 'right',
-        width: 220,
-        paddingLeft: 50,
+        width: 270,
+        paddingLeft: 100,
+    },
+    createTaskTitle: {
+        width: "100%",
+        marginTop: 25,
+        marginBottom: 25,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    taskEditDetailMainWrapper: {
+        width: 600,
+        height: 650,
+        alignItems: 'center',
+        alignItems: 'center',
     }
   }));
 
@@ -92,26 +108,31 @@ function TaskEditDetail(props) {
 
     const [name, setName] = useState(currValues.name);
     const [description, setDescription] = useState(currValues.description);
-    const [userIdAssigned, setUserAssigned] = useState(currValues.userIdAssigned);
+    const [user_id_assigned, setUserAssigned] = useState(currValues.user_id_assigned);
     const [priority, setPriority] = useState(currPriority);
-    const [timeEstimated, setTimeEstimated] = useState(currValues.time_estimated);
-    const [timeCompleted, setTimeCompleted] = useState(currValues.time_elapsed);
+    const [time_estimated, setTimeEstimated] = useState(currValues.time_estimated);
+    const [time_elapsed, setTimeCompleted] = useState(currValues.time_elapsed);
     const [flag, setFlag] = useState(currValues.flag);
-
-    // useEffect(() => {
-    // }
 
     function getPriority(p) {
         return p.charAt(0) == currValues.priority
     }
 
     const editTask = () => {
-        // const priorityInt = priority.charAt(0)
-        // // TODO: handle properly tagging users
-        // const assignedUserId = 4
-        // const details = {name, description, userIdAssigned: assignedUserId, priorityInt, timeEstimated, flag}
-        // console.log("task details: ", details)
-        // props.addTask(details);
+        console.log("TaskEditDetail - entered editTask with task currValues: ", currValues)
+        const priorityInt = priority == "" ? null : priority.charAt(0)
+        const updatedValues = {
+                            id: currValues.id,
+                            name, 
+                            description, 
+                            user_id_assigned, 
+                            priority: priorityInt, 
+                            time_estimated, 
+                            time_elapsed,
+                            flag,
+                        }
+                        console.log("TaskEditDetail - editTask updatedValues: ", updatedValues)
+        props.editTask(updatedValues);
     }
 
     const deleteTask = () => {
@@ -153,10 +174,8 @@ function TaskEditDetail(props) {
     }
 
   return (
-    <Card className="col-task-wrapper">
-        <div className="col-title-wrapper">
-            <Typography className="title">Edit Task. 🥅</Typography>
-        </div>
+    <Card className={classes.taskEditDetailMainWrapper}>
+        <Typography className={classes.createTaskTitle} variant="h4">Edit Task. 🥅</Typography>
         <div className="col-input-wrapper">
             <TextField
                 className={classes.formControl}
@@ -169,34 +188,47 @@ function TaskEditDetail(props) {
                 }
             />
             <TextField
-                className={classes.formControl}
+                className={classes.description}
                 id="outlined-basic"
                 label="Task description"
                 multiline
-                rows={3}
+                rows={4}
                 variant="outlined"
                 defaultValue={currValues.description}
                 onChange={(e) =>
                     setDescription(e.target.value )
                 }
             />
-            <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="assignUserLabel">Assign User</InputLabel>
-                <Select 
-                    labelId="assignUserLabel"
-                    defaultValue={currValues.userIdAssigned}
-                    onChange={assignUser}
-                >
-                    <MenuItem value=""><em>None</em></MenuItem>
-                    {tempUserArray.map((user) => (
-                        <MenuItem value={user}>{user}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            <div className={classes.bottomStack}>
+                <TextField 
+                    labelId="createdUserLabel"
+                    defaultValue={currValues.user_id_created}
+                    label="Created By"
+                    InputProps={{
+                        readOnly: true,
+                      }}
+                    variant="outlined" 
+                    className={classes.userField}
+                />
+
+                <FormControl variant="outlined" className={classes.userField}>
+                    <InputLabel id="assignUserLabel">Assigned User</InputLabel>
+                    <Select 
+                        labelId="assignUserLabel"
+                        defaultValue={currValues.user_id_assigned}
+                        onChange={assignUser}
+                    >
+                        <MenuItem value=""><em>None</em></MenuItem>
+                        {tempUserArray.map((user) => (
+                            <MenuItem value={user}>{user}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
 
             <div className={classes.bottomStack}>
                 <TextField
-                    className={classes.timeEstimated}
+                    className={classes.timeField}
                     id="outlined-number"
                     label="Time Estimated"
                     type="number"
@@ -206,7 +238,7 @@ function TaskEditDetail(props) {
                 />
 
                 <TextField
-                    className={classes.timeEstimated}
+                    className={classes.timeField}
                     id="outlined-number"
                     label="Time Completed"
                     defaultValue={currValues.time_elapsed}

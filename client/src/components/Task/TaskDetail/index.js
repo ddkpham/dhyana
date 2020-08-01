@@ -11,7 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
-import { cyan } from '@material-ui/core/colors';
+import { cyan, grey } from '@material-ui/core/colors';
 
 
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
     timeEstimated: {
-        width: 200,
+        width: 300,
     },
     bottomStack: {
         display: 'flex',
@@ -48,6 +48,29 @@ const useStyles = makeStyles((theme) => ({
     createTaskButton: {
         marginTop: 25,
         width: "50%",
+    },
+    flagDiv: {
+        alignItems: 'right',
+        justifyContent: 'right',
+        width: 300,
+        paddingLeft: 100,
+    },
+    toggle: {
+        alignItems: 'right',
+    },
+    createTaskTitle: {
+        width: "100%",
+        marginTop: 25,
+        marginBottom: 25,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    taskDetailMainWrapper: {
+        width: 600,
+        height: 650,
+        alignItems: 'center',
+        alignItems: 'center',
     }
   }));
 
@@ -66,10 +89,9 @@ function TaskDetail(props) {
 
 
     const createTask = () => {
-        const priorityInt = priority.charAt(0)
         // TODO: handle properly tagging users
         const assignedUserId = 4
-        const assignedPriority = priorityInt == "" ? null : priorityInt
+        const assignedPriority = priority == "" ? null : priority.charAt(0)
         const details = {name, description, userIdAssigned: assignedUserId, assignedPriority, timeEstimated, flag}
         console.log("task details: ", details)
         props.addTask(details);
@@ -100,10 +122,8 @@ function TaskDetail(props) {
     }
 
   return (
-    <Card className="col-task-wrapper">
-        <div className="col-title-wrapper">
-            <Typography className="title">Create a Task. 🥅</Typography>
-        </div>
+    <Card className={classes.taskDetailMainWrapper}>
+        <Typography className={classes.createTaskTitle} variant="h4">Create a Task. 🥅</Typography>
         <div className="col-input-wrapper">
             <TextField
                 className={classes.formControl}
@@ -125,6 +145,7 @@ function TaskDetail(props) {
                     setDescription(e.target.value )
                 }
             />
+            
             <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="assignUserLabel">Assign User</InputLabel>
                 <Select 
@@ -162,13 +183,15 @@ function TaskDetail(props) {
                     onChange={assignTimeEstimated}
                 />
 
-                <FormControl component="fieldset">
-                        <FormControlLabel
-                            control={
-                                <ColouredSwitch checked={flag} onChange={assignFlag} name="flag" />}
-                            label="Flagged"
-                        />
-                </FormControl>
+                <div className={classes.flagDiv}>
+                    <FormControl className={classes.toggle} component="fieldset">
+                            <FormControlLabel
+                                control={
+                                    <ColouredSwitch checked={flag} onChange={assignFlag} name="flag" />}
+                                label="Flagged"
+                            />
+                    </FormControl>
+                </div>
             </div>
 
             <div className={classes.bottomStack}>
