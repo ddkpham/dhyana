@@ -13,7 +13,7 @@ import { makeStyles, Select } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { withStyles } from '@material-ui/core/styles';
+import { fade, withStyles } from '@material-ui/core/styles';
 import { cyan } from '@material-ui/core/colors';
 
 
@@ -32,6 +32,12 @@ const ColouredSwitch = withStyles({
   })(Switch);
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        color: theme.palette.error.main,
+        "&:hover": {
+            backgroundColor: fade(theme.palette.error.main, 0.25),
+          },
+    },
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
@@ -241,7 +247,7 @@ function TaskEditDetail(props) {
 
             <div className={classes.bottomStack}>
                 <Button variant="outlined" className={classes.editTaskButton} onClick={editTask}>Edit Task</Button>
-                <Button variant="outlined" color="secondary" className={classes.deleteTaskButton} onClick={deleteTask}>Delete Task</Button>
+                <Button variant="outlined" classes={{ root: classes.root }} className={classes.deleteTaskButton} onClick={deleteTask}>Delete Task</Button>
             </div>
         </div>
     </Card>

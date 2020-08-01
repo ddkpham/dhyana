@@ -18,12 +18,16 @@ const theme = createMuiTheme({
             main: colours.teal,
         },
         secondary: {
-            main: colours.red,
+            main: colours.bronze,
         },
         text: {
             primary: colours.eerie_black,
             secondary: colours.murkey_green,
         },
+        error: {
+            main: colours.red,
+            secondary: red[200],
+        }
     },
     colours,
 });
