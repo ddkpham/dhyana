@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import DragTarget from "./DragTarget";
-import Task from "../Task";
+import TaskCard from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
@@ -13,12 +13,22 @@ import TextField from "@material-ui/core/TextField";
 import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 
 import "./index.scss";
+import TaskDetail from "../Task/TaskDetail";
 
 const styles = (theme) => ({
   columnPaper: {
     padding: "5px",
     height: "100%",
-    backgroundColor: "inherit",
+    backgroundColor: "rgba(200,200,200,0.25)",
+    width: props => props.width,
+  },
+  popover: {
+    padding: "5px",
+    height: "100%",
+  },
+  taskDetail: {
+    padding: "5px",
+    height: "100%",
   },
   column: {
     minWidth: '300px',
@@ -27,6 +37,7 @@ const styles = (theme) => ({
 });
 
 class Column extends React.Component {
+
   state = {
     tasks: [],
     anchorEl: null,
@@ -69,13 +80,14 @@ class Column extends React.Component {
       .catch((err) => console.log("task fetch error", err));
   };
 
-  addTask = () => {
-    const { currDescription, currTaskName } = this.state;
+  addTask = (details) => {
+    console.log("sending addTask to server")
+    const {name, description, userIdAssigned, priority, timeEstimated, flag} = details;
     const { projectId, column } = this.props;
     const url = `${baseURL}/project/task`;
     const body = {
-      name: currTaskName,
-      description: currDescription,
+      name: name,
+      description: description,
       column_id: column.id,
       project_id: projectId,
     };
@@ -122,7 +134,7 @@ class Column extends React.Component {
           <Paper elevation={4} className={classes.columnPaper}>
             <Typography>{column.name}</Typography>
             {tasks?.map((t) => (
-              <Task task={t} key={t.id} columnId={column.id} />
+              <TaskCard task={t} key={t.id} columnId={column.id} />
             ))}
           </Paper>
         </DragTarget>
@@ -140,33 +152,9 @@ class Column extends React.Component {
             vertical: "top",
             horizontal: "center",
           }}
+          className={classes.popover}
         >
-          <Card className="col-task-wrapper">
-            <div className="col-title-wrapper">
-              <Typography className="title">Create a Task. 🥅</Typography>
-            </div>
-            <div className="col-input-wrapper">
-              <TextField
-                className="col-text-field"
-                id="outlined-basic"
-                label="Task name"
-                variant="outlined"
-                onChange={(e) =>
-                  this.setState({ currTaskName: e.target.value })
-                }
-              />
-              <TextField
-                className="col-text-field"
-                id="outlined-basic"
-                label="Task description"
-                variant="outlined"
-                onChange={(e) =>
-                  this.setState({ currDescription: e.target.value })
-                }
-              />
-              <Button onClick={this.addTask}>Create task</Button>
-            </div>
-          </Card>
+          <TaskDetail addTask={this.addTask.bind(this)} className={classes.taskDetail}/>
         </Popover>
       </Grid>
     );

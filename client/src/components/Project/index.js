@@ -29,6 +29,7 @@ const styles = (theme) => ({
 
 const ScrollingComponent = withScrolling(Grid);
 class Project extends React.Component {
+
   state = {
     project: {},
     columns: [],
@@ -83,7 +84,7 @@ class Project extends React.Component {
     const { classes } = this.props;
     console.log("Project -> render -> project", project);
     return (
-      <div>
+      <div className="projectMainDiv">
         <DndProvider backend={HTML5Backend}>
           <AddColumnModal
             isOpen={columnModalOpen}
@@ -91,27 +92,27 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
-          <div className={classes.header}>
-            <div>
-              <Typography variant="h6" gutterBottom>
-                {project.name}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {project.description}
-              </Typography>
-              <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
-                Add Column
-              </Button>
-            </div>
-            <ProjectToggle />
-          </div>
-          <ScrollingComponent container spacing={2} className={classes.root}>
+          <Typography variant="h6" gutterBottom>
+            {project.name}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {project.description}
+          </Typography>
+          <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
+            Add Column
+          </Button>
+          <Grid 
+            container spacing={2} 
+            justify="center"
+            direction="row"
+          >
             {columns.map((c) => (
               <Column
                 column={c}
                 key={c.id}
                 projectId={project?.id}
                 reload={this.getProject}
+                width={300}
               />
             ))}
           </ScrollingComponent>
