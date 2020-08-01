@@ -3,6 +3,10 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import DragTarget from "./DragTarget";
 import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
@@ -56,10 +60,28 @@ const styles = (theme) => ({
   },
 });
 
+
+const ColumnMenu = ({anchorEl, handleClose}) => {
+  return (
+    <Menu
+      id="simple-menu"
+      anchorEl={anchorEl}
+      keepMounted
+      open={Boolean(anchorEl)}
+      onClose={handleClose}
+    >
+      <MenuItem onClick={handleClose}>Profile</MenuItem>
+      <MenuItem onClick={handleClose}>My account</MenuItem>
+      <MenuItem onClick={handleClose}>Logout</MenuItem>
+    </Menu>
+  );
+}
+
 class Column extends React.Component {
   state = {
     tasks: [],
-    anchorEl: null,
+    anchorTask: null,
+    anchorMenu: null,
     currTaskName: "",
     currDescription: "",
   };
@@ -68,13 +90,22 @@ class Column extends React.Component {
     this.getTasks();
   }
 
-  handleClick = (event) => {
-    console.log("Column -> handleClick -> event", event);
-    this.setState({ anchorEl: event.currentTarget });
+  openTaskPopover = (event) => {
+    console.log("Column -> openTaskPopover -> event", event.currentTarget);
+    this.setState({ anchorTask: event.currentTarget });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  closeTaskPopover = () => {
+    this.setState({ anchorTask: null });
+  };
+
+  openMenu = (event) => {
+    console.log("Column -> openMenu -> event", event.currentTarget);
+    this.setState({ anchorMenu: event.currentTarget });
+  };
+
+  closeMenu = () => {
+    this.setState({ anchorMenu: null });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -126,7 +157,7 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Add Task Response", data);
-        this.handleClose();
+        this.closeTaskPopover();
         window.location.reload(false);
       })
       .catch((err) => console.log("Add Task Error", err));
@@ -150,7 +181,7 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Edit Task Response", data);
-        this.handleClose();
+        this.closeTaskPopover();
         reload();
       })
       .catch((err) => console.log("Edit Task error", err));
@@ -187,16 +218,18 @@ class Column extends React.Component {
 
   render() {
     const { column, classes } = this.props;
-    const { tasks, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-    const id = open ? "simple-popover" : undefined;
+    const { tasks, anchorTask, anchorMenu } = this.state;
+    const taskOpen = Boolean(anchorTask);
+    console.log("Column -> render -> open", taskOpen);
+    const id = taskOpen ? "simple-popover" : undefined;
+
     return (
       <div className={classes.mainColumnDiv}>
         <div className={classes.buttonDiv}>
           <Button
             variant="outlined"
             className={classes.addTaskButton}
-            onClick={this.handleClick}
+            onClick={this.openTaskPopover}
           >
             Add task
           </Button>
@@ -204,28 +237,29 @@ class Column extends React.Component {
         <Grid item key={column.id} className={classes.column}>
           <DragTarget columnName={column.name} onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
-              <Typography variant="h6" className={classes.columnName}>
-                {column.name}
-              </Typography>
-
+              <div style={{display: 'flex', flexDirection: 'row'}} className='centered'>
+                <Typography>{column.name}</Typography>
+                <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
+                <ColumnMenu anchorEl={anchorMenu} handleClose={this.closeMenu}/>
+              </div>
               {tasks?.map((t) => (
-                <Task
-                  task={t}
-                  key={t.id}
-                  columnId={column.id}
-                  deleteTask={this.deleteTask.bind(this)}
-                  editTask={this.editTask.bind(this)}
-                  team_id={this.props.teamId}
-                />
-              ))}
+                  <Task
+                    task={t}
+                    key={t.id}
+                    columnId={column.id}
+                    deleteTask={this.deleteTask.bind(this)}
+                    editTask={this.editTask.bind(this)}
+                    team_id={this.props.teamId}
+                  />
+                ))}
             </Paper>
           </DragTarget>
 
           <Popover
             id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={this.handleClose}
+            open={taskOpen}
+            anchorEl={anchorTask}
+            onClose={this.closeTaskPopover}
             anchorReference={"none"}
             classes={{
               root: classes.popover,
