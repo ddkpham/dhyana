@@ -3,6 +3,8 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
+import CardHeader from '@material-ui/core/CardHeader';
+import MenuIcon from '@material-ui/icons/Menu';
 import { useDrag, useDrop } from "react-dnd";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from '@material-ui/core';
@@ -24,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
   },
   addTaskButton: {
     marginTop: 25,
+  },
+  taskHeader: {
+    padding: '10px',
+    paddingBottom: '0px',
+    alignItems: 'normal'
   }
 }));
 
@@ -93,8 +100,17 @@ const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
 
   return (
     <div>
-      <Card raised ref={ref} style={{ opacity: isDragging ? 0 : 1 }}>
+      <Card raised style={{ opacity: isDragging ? 0.2 : 1 }}>
         <CardActionArea onClick={handleClick}>
+          <CardHeader
+            avatar={
+              <MenuIcon/>
+            }
+            title={task.name}
+            titleTypographyProps={{variant: 'body1'}}
+            classes={{root: classes.taskHeader}}
+            ref={ref}
+          />
           <CardContent>
             <Typography variant="body1" gutterBottom>
               {task.name}
