@@ -31,8 +31,13 @@ router.get("/:projectId/columns", projectController.view_project_columns);
 router.post(
   "/task",
   [
-    body("name").isLength({ min: 1 }),
+    body("name").isLength({ min: 1 }).escape(),
     body("description").isLength({ min: 1 }).escape(),
+    body("user_id_created").isLength({ min: 1 }),
+    body("user_id_assigned").isLength({ min: 1 }),
+    body("priority").isLength({ min: 1 }),
+    body("time_estimated").isLength({ min: 1 }),
+    body("flag").isLength({ min: 1 }).escape(),
     body("column_id").isLength({ min: 1 }),
     body("project_id").isLength({ min: 1 }),
   ],
