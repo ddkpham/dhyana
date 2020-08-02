@@ -10,6 +10,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
+import ProjectToggle from "./projectToggle";
 class Project extends React.Component {
   state = {
     project: {},
@@ -81,6 +82,7 @@ class Project extends React.Component {
           <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
             Add Column
           </Button>
+          <ProjectToggle />
           <Grid container spacing={2}>
             {columns.map((c) => (
               <Column
