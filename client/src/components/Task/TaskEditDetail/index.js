@@ -5,7 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "@material-ui/core/Button";
-import { makeStyles, Select } from '@material-ui/core';
+import { makeStyles, Select, Step } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -100,7 +100,6 @@ const useStyles = makeStyles((theme) => ({
 function TaskEditDetail(props) {
     const classes = useStyles();
     const { currValues } = props;
-    console.log("currValues: ", currValues)
 
     const tempUserArray = ["person1", "person2", "person3"]
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
@@ -119,19 +118,21 @@ function TaskEditDetail(props) {
     }
 
     const editTask = () => {
-        console.log("TaskEditDetail - entered editTask with task currValues: ", currValues)
-        const priorityInt = priority == "" ? null : priority.charAt(0)
+        const priorityInt = (priority == "" || priority == null) ? null : priority.charAt(0)
+        console.log("time estimated before parse: ", time_estimated)
+        const timeEstimated = parseFloat(time_estimated)
+
         const updatedValues = {
                             id: currValues.id,
                             name, 
                             description, 
                             user_id_assigned, 
                             priority: priorityInt, 
-                            time_estimated, 
+                            time_estimated: timeEstimated, 
                             time_elapsed,
                             flag,
                         }
-                        console.log("TaskEditDetail - editTask updatedValues: ", updatedValues)
+        console.log("TaskEditDetail - editTask updatedValues: ", updatedValues)
         props.editTask(updatedValues);
     }
 
@@ -157,18 +158,22 @@ function TaskEditDetail(props) {
 
     const assignTimeEstimated = (event) => {
         console.log("event value is: ", event.target.value)
-        const re = /^[0-9\b]+$/;
+        const re = /^(\d+(\.\d+)?)+$/;
 
-        if (event.target.value === '' || re.test(event.target.value)) {
+        if (event.target.value === '') {
+            setTimeEstimated(null)
+        } else if (re.test(event.target.value)) {
             setTimeEstimated(event.target.value)
         }
     }
 
     const assignTimeCompleted = (event) => {
         console.log("event value is: ", event.target.value)
-        const re = /^[0-9\b]+$/;
+        const re = /^(\d+(\.\d+)?)+$/;
 
-        if (event.target.value === '' || re.test(event.target.value)) {
+        if (event.target.value === '') {
+            setTimeCompleted(null)
+        } else if (re.test(event.target.value)) {
             setTimeCompleted(event.target.value)
         }
     }
@@ -235,6 +240,7 @@ function TaskEditDetail(props) {
                     defaultValue={currValues.time_estimated}
                     variant="outlined"
                     onChange={assignTimeEstimated}
+                    inputProps={{step: 0.5}}
                 />
 
                 <TextField
@@ -245,6 +251,7 @@ function TaskEditDetail(props) {
                     type="number"
                     variant="outlined"
                     onChange={assignTimeCompleted}
+                    inputProps={{step: 0.5}}
                 />
             </div>
 

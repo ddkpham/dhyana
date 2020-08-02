@@ -5,7 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from "@material-ui/core/Button";
-import "./index.scss";
 import { makeStyles, Select } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
@@ -92,7 +91,7 @@ function TaskDetail(props) {
         // TODO: handle properly tagging users
         const assignedUserId = 4
         const assignedPriority = priority == "" ? null : priority.charAt(0)
-        const details = {name, description, userIdAssigned: assignedUserId, assignedPriority, timeEstimated, flag}
+        const details = {name, description, userIdAssigned: assignedUserId, assignedPriority, time_estimated: timeEstimated, flag}
         console.log("task details: ", details)
         props.addTask(details);
     }
@@ -114,9 +113,11 @@ function TaskDetail(props) {
 
     const assignTimeEstimated = (event) => {
         console.log("event value is: ", event.target.value)
-        const re = /^[0-9\b]+$/;
+        const re = /^(\d+(\.\d+)?)+$/;
 
-        if (event.target.value === '' || re.test(event.target.value)) {
+        if (event.target.value === '') {
+            setTimeEstimated(null)
+        } else if (re.test(event.target.value)) {
             setTimeEstimated(event.target.value)
         }
     }
@@ -181,6 +182,7 @@ function TaskDetail(props) {
                     type="number"
                     variant="outlined"
                     onChange={assignTimeEstimated}
+                    inputProps={{step: 0.5}}
                 />
 
                 <div className={classes.flagDiv}>

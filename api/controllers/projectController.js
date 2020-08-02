@@ -436,7 +436,7 @@ exports.edit_task = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("edit task req.body is: ", req.body);
 
-  const { id, name, description, flag, user_id_assigned, priority, time_elapsed } = req.body
+  const { id, name, description, flag, user_id_assigned, priority, time_elapsed, time_estimated } = req.body
   const date_modified = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
 
   if (!id) {
@@ -455,6 +455,7 @@ exports.edit_task = function (req, res, next) {
         priority,
         date_modified,
         time_elapsed,
+        time_estimated,
       },
       {
         where: { id, },
