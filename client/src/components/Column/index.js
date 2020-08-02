@@ -7,7 +7,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import Select from "@material-ui/core/Select";
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DragTarget from "./DragTarget";
@@ -70,7 +72,7 @@ const styles = (theme) => ({
 });
 
 
-const ColumnMenu = ({anchorEl, handleClose, setSort, setFilters}) => {
+const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, setFilters}) => {
   const sortOptions = [
     {name: 'Task Title', id: 'name'},
     {name: 'Date Created', id: 'date_created'},
@@ -89,6 +91,7 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, setFilters}) => {
       <MenuItem >
           Sort By:  
         <Select
+          id="sort-select"
           variant="outlined"
           value=""
           onChange={(event) => {
@@ -102,7 +105,28 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, setFilters}) => {
         </Select>
       </MenuItem>
       <MenuItem onClick={console.log('filtering not implemented yet')}>Filter By</MenuItem>
-      <MenuItem onClick={console.log('delete columns not implemented yet')}>Delete</MenuItem>
+      {filterOptions.map((f) => (
+        <MenuItem>
+          {f.name}: 
+          <Select
+            id={f.id}
+            multiple
+            variant="outlined"
+            value={filters[f.id] || []}
+            onChange={(event) => {
+              setFilters(event.target.value, f.id);
+            }}
+            renderValue={(selected) => selected.join(', ')}
+          >
+            {f.options.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                <Checkbox checked={filters[f.id]?.indexOf(option.id) > -1} />
+                <ListItemText primary={option.name} />
+              </MenuItem>
+            ))}
+          </Select>
+        </MenuItem>
+      ))}
     </Menu>
   );
 }
@@ -116,6 +140,7 @@ class Column extends React.Component {
     currDescription: "",
     sort: "",
     sortAsc: true,
+    filters: {},
   };
 
   componentDidMount() {
@@ -248,6 +273,16 @@ class Column extends React.Component {
       .catch((err) => console.log("Delete Task error", err));
   };
 
+  setFilters = (newFilter, filterId) => {
+    const { filters } = this.state;
+    filters[filterId] = newFilter;
+    this.setState({ filters });
+  }
+
+  filterTasks = () => {
+
+  }
+
   setSortBy = ({sortBy}) => {
     const { sort } = this.state;
     this.setState({sort: sortBy, sortAsc: true});
@@ -268,12 +303,26 @@ class Column extends React.Component {
 
   render() {
     const { column, classes } = this.props;
-    const { tasks, anchorTask, anchorMenu, sort, sortAsc } = this.state;
+    const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters } = this.state;
     const taskOpen = Boolean(anchorTask);
     console.log("Column -> render -> open", taskOpen);
     const id = taskOpen ? "simple-popover" : undefined;
 
+    const tempTeamMembers = [{ name: 'person 1', id: 1},  {name: 'person 2', id: 2}, {name: 'person 3', id: 3}]; //Should be passed in or called from api
+    const tempPriorities = [{name: '0', id: 0}, { name: '1', id: 1},  {name: '2', id: 2}, {name: '3', id: 3}, {name: '4', id: 4}, {name: '5', id: 5}] //should be read from constants file?
+
+    const filterOptions = [
+      {name: 'Assigned User', id: 'user_id_assigned', options: tempTeamMembers},
+      {name: 'Priority', id: 'priority', options: tempPriorities}
+    ];
+
     if(!!sort) tasks.sort(this.compareFunc);
+    if(filters.length) tasks.filter((t) => {
+      for(let f in filterOptions) {
+        if(filters[f.id].indexOf(t[f.id]) < 0) return false;
+      }
+      return true;
+    })
 
     return (
       <div className={classes.mainColumnDiv}>
@@ -293,7 +342,14 @@ class Column extends React.Component {
                 <Typography>{column.name}</Typography>
                 {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
                 <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
-                <ColumnMenu anchorEl={anchorMenu} handleClose={this.closeMenu} setSort={this.setSortBy}/>
+                <ColumnMenu
+                  anchorEl={anchorMenu}
+                  handleClose={this.closeMenu}
+                  setSort={this.setSortBy}
+                  filters={filters}
+                  filterOptions={filterOptions}
+                  setFilters={this.setFilters}
+                />
               </div>
               {tasks?.map((t) => (
                   <Task
