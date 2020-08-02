@@ -21,8 +21,9 @@ const styles = (theme) => ({
     width: props => props.width,
   },
   popover: {
-    padding: "5px",
-    height: "100%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   taskDetail: {
     padding: "5px",
@@ -184,15 +185,10 @@ class Column extends React.Component {
           open={open}
           anchorEl={anchorEl}
           onClose={this.handleClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "center",
+          anchorReference={"none"}
+          classes={{
+            root: classes.popover,
           }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-          className={classes.popover}
         >
           <TaskDetail addTask={this.addTask.bind(this)} className={classes.taskDetail}/>
         </Popover>

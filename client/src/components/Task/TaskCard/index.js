@@ -14,8 +14,9 @@ import { baseURL } from "../../../config/settings";
 
 const useStyles = makeStyles((theme) => ({
   popover: {
-    padding: "5px",
-    height: "100%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   taskDetail: {
     padding: "5px",
@@ -93,15 +94,10 @@ const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
         open={open}
         anchorEl={anchor}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        className={classes.popover}
+        anchorReference={"none"}
+          classes={{
+            root: classes.popover,
+          }}
       >
         <TaskEditDetail 
             className={classes.taskDetail} 
