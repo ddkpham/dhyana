@@ -1,5 +1,5 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
@@ -9,8 +9,14 @@ import Popover from "@material-ui/core/Popover";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import { baseURL, clientBaseURL } from "../../config/settings";
-import { postCall, getCall } from "../../apiCalls/apiCalls";
+import { baseURL } from "../../config/settings";
+import { getCall } from "../../apiCalls/apiCalls";
+
+const styles = (theme) => ({
+    popover: {
+        padding: "10px"
+    },
+});
 
 class ProjectToggle extends React.Component {
     state = {
@@ -37,6 +43,7 @@ class ProjectToggle extends React.Component {
 
     render(){
         const { anchorEl, loading, projects } = this.state;
+        const { classes } = this.props;
         const open = Boolean(anchorEl);
         const buttonIcon = open ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>;
 
@@ -49,6 +56,7 @@ class ProjectToggle extends React.Component {
                     open={open}
                     anchorEl={anchorEl}
                     onClose={this.handleClose}
+                    classes={{paper: classes.popover}}
                     anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -58,7 +66,7 @@ class ProjectToggle extends React.Component {
                     horizontal: 'left',
                     }}
                 >
-                    <Typography>Projects:</Typography>
+                    <Typography variant='h6'>Projects:</Typography>
                     {loading && <CircularProgress/>}
                     {!loading && !projects.length && <Typography>No Projects Found</Typography>}
                     <List>
@@ -74,4 +82,4 @@ class ProjectToggle extends React.Component {
     }
 }
 
-export default ProjectToggle;
+export default withStyles(styles)(ProjectToggle);
