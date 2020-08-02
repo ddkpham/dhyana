@@ -177,7 +177,7 @@ function TaskDetail(props) {
                 <TextField
                     className={classes.timeEstimated}
                     id="outlined-number"
-                    label="Time Estimated"
+                    label="Time Estimated (hr)"
                     type="number"
                     variant="outlined"
                     onChange={assignTimeEstimated}

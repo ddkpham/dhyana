@@ -230,7 +230,7 @@ function TaskEditDetail(props) {
                 <TextField
                     className={classes.timeField}
                     id="outlined-number"
-                    label="Time Estimated"
+                    label="Time Estimated (hr)"
                     type="number"
                     defaultValue={currValues.time_estimated}
                     variant="outlined"
@@ -240,7 +240,7 @@ function TaskEditDetail(props) {
                 <TextField
                     className={classes.timeField}
                     id="outlined-number"
-                    label="Time Completed"
+                    label="Time Completed (hr)"
                     defaultValue={currValues.time_elapsed}
                     type="number"
                     variant="outlined"
