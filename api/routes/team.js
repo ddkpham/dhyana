@@ -13,4 +13,6 @@ router.get(
   teamController.view_team
 );
 
+router.post("/addUser", teamController.add_user);
+
 module.exports = router;

@@ -23,7 +23,6 @@ exports.get_user_info = function (req, res, next) {
       where: {
         username,
       },
-      attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
         if (user.length) {
