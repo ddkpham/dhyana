@@ -72,7 +72,10 @@ const styles = (theme) => ({
 
 const ColumnMenu = ({anchorEl, handleClose, setSort, setFilters}) => {
   const sortOptions = [
-    {name: 'Task Title', id: 'name'}
+    {name: 'Task Title', id: 'name'},
+    {name: 'Date Created', id: 'date_created'},
+    {name: 'Priority', id: 'priority'},
+    {name: 'Assigned User', id: 'user_id_assigned'},
   ];
 
   return (
