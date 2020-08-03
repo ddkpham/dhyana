@@ -21,9 +21,11 @@ const styles = (theme) => ({
 class Home extends React.Component {
   state = {
     projects: [],
+    teams: [],
   };
   async componentDidMount() {
     this.getProjects();
+    this.getTeams();
   }
 
   getProjects = () => {
@@ -37,16 +39,32 @@ class Home extends React.Component {
       .catch((err) => console.log("project fetch error", err));
   };
 
+  getTeams = () => {
+    const url = `${baseURL}/team/all`;
+    getCall(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("teams", data);
+        this.setState({ teams: data.data });
+      })
+      .catch((err) => console.log("project fetch error", err));
+  };
+
   render() {
-    const { projects } = this.state;
+    const { projects, teams } = this.state;
     const { classes } = this.props;
 
     return (
       <div className={classes.homeRoot}>
         <div className={classes.projectWrapper}>
           <Typography variant="h4">Projects</Typography>
-          {projects.map((p) => (
-            <ProjectCard key={p.id} project={p} />
+          {teams.map((t) => (
+          <div>
+            {projects.map((p) => (
+              t.id === p.team_id ? 
+                (<ProjectCard key={p.id} project={p} />) : (<div></div>)
+            ))}
+          </div>
           ))}
           <Card raised>
             <CardActionArea href={"/project/new"}>
