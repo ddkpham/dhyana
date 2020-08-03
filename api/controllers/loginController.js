@@ -4,7 +4,7 @@ const { errorResponse, successResponse } = require("../utility/response");
 const sessionConfig = require("../config/session");
 
 exports.login_post = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.login_post -> req.body", req.body);
   const { username, password } = req.body;
 
   const errors = validationResult(req);
@@ -19,7 +19,7 @@ exports.login_post = function (req, res, next) {
     },
   })
     .then((users) => {
-      console.log(users);
+      console.log("exports.login_post -> users", users);
 
       if (users.length) {
         const user = users[0];
@@ -29,7 +29,7 @@ exports.login_post = function (req, res, next) {
         req.session.userId = userId;
         req.session.save((err) => {
           if (!err) {
-            console.log(req.session);
+            console.log("exports.login_post -> req.session", req.session);
             res.json({
               confirmation: "success",
               data: user,
@@ -46,7 +46,7 @@ exports.login_post = function (req, res, next) {
 };
 
 exports.clear_cookie = function (req, res, next) {
-  console.log("req.session", req.session);
+  console.log("exports.clear_cookie -> req.session", req.session);
   req.session.destroy((err) => {
     if (err) {
       res.json(

@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_team -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
@@ -26,7 +26,7 @@ exports.create_team = function (req, res, next) {
     name,
   })
     .then((team) => {
-      console.log(team);
+      console.log("exports.create_team -> team", team);
       res.status(200).json(successResponse("Team created successfully", team));
     })
     .catch((err) => {
@@ -54,6 +54,7 @@ exports.view_team = function (req, res, next) {
     },
   })
     .then((team) => {
+      console.log("exports.view_team -> team", team);
       if (team.length) {
         res.status(200).json(successResponse("Sucessfully found team", team));
       } else {

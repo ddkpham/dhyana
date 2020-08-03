@@ -5,6 +5,10 @@ const { errorResponse, successResponse } = require("../utility/response");
 var User = require("../models/User");
 
 exports.get_user_info = function (req, res, next) {
+  console.log(
+    "exports.get_user_info -> req.params.username",
+    req.params.username
+  );
   username = req.params.username;
   const errors = validationResult(username);
 
@@ -26,6 +30,7 @@ exports.get_user_info = function (req, res, next) {
       attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
+        console.log("exports.get_user_info -> user", user);
         if (user.length) {
           res.status(200).json(successResponse("user exists", user));
           return;
@@ -40,6 +45,7 @@ exports.get_user_info = function (req, res, next) {
 };
 
 exports.get_my_profile = function (req, res, next) {
+  console.log("exports.get_my_profile -> req.session", req.session);
   const { userId: id } = req.session;
   const errors = validationResult(id);
 
@@ -53,6 +59,7 @@ exports.get_my_profile = function (req, res, next) {
       },
     })
       .then((user) => {
+        console.log("exports.get_my_profile -> user", user);
         if (user.length) {
           res.status(200).json(successResponse("user exists", user));
           return;
@@ -70,6 +77,7 @@ exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
 
   input = req.body.input.trim();
+  console.log("exports.search_user -> input", input);
 
   if (!input.length) {
     res.status(400).json(errorResponse("no search criteria specified"));
@@ -107,6 +115,7 @@ exports.search_user = function (req, res, next) {
       attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
+        console.log("exports.search_user -> user", user);
         if (user.length > 0) {
           res.status(200).json(successResponse("user(s) found", user));
           return;
@@ -121,7 +130,7 @@ exports.search_user = function (req, res, next) {
 };
 
 exports.create_new_user = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_new_user -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
 
@@ -149,6 +158,7 @@ exports.create_new_user = function (req, res, next) {
       password,
     })
       .then((user) => {
+        console.log("exports.create_new_user -> user", user);
         res
           .status(200)
           .json(successResponse("user created successfully", user));
@@ -161,7 +171,7 @@ exports.create_new_user = function (req, res, next) {
 
 exports.edit_user = function (req, res, next) {
   const { userId: id } = req.session;
-  console.log("edit user to", req.body, id);
+  console.log("exports.edit_user -> req.body, id", req.body, id);
 
   body(req.body).trim().escape().not().isEmpty();
 
@@ -170,32 +180,32 @@ exports.edit_user = function (req, res, next) {
   const errors = validationResult(id);
 
   if (!errors.isEmpty() || !errorsBody.isEmpty()) {
-    console.log("error is not empty")
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
     const { password, first_name, last_name } = req.body;
-    console.log("attempting to update user")
     User.update(
-        { 
-          first_name, 
-          last_name, 
-          password, 
-        },
-        { 
-          where: { id, },
-        }
-      )
+      {
+        first_name,
+        last_name,
+        password,
+      },
+      {
+        where: { id },
+      }
+    )
       .then((user) => {
+        console.log("exports.edit_user -> user", user);
         if (user.length) {
-          res.status(200).json(successResponse("User modified successfully.", user));
+          res
+            .status(200)
+            .json(successResponse("User modified successfully.", user));
           return;
         }
 
         return Promise.reject();
       })
       .catch((err) => {
-        console.log("error in update", err)
         res.status(409).json(errorResponse("User couldn’t be modified.", err));
       });
   }
