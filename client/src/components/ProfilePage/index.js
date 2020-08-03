@@ -1,4 +1,4 @@
-import { baseURL } from "../../config/settings";
+import { baseURL, clientBaseURL } from "../../config/settings";
 import React, { useState, useEffect } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Button from "@material-ui/core/Button";
@@ -8,7 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import "./index.scss";
 import { useHistory } from "react-router-dom";
-import { getCall } from "../../apiCalls/apiCalls";
+import { postCall, getCall } from "../../apiCalls/apiCalls";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -27,6 +27,27 @@ function ProfilePage(props) {
   let history = useHistory();
   const [userInfo, setUser] = useState([]);
   const [teamInfo, showTeams] = useState([]);
+  const [team_id, getTeamId] = useState("");
+
+  console.log("Team id", team_id);
+  console.log("user_id", userInfo.id);
+
+  const addUserToTeam = async () => {
+    const url = `${baseURL}/team/addUser`;
+    const user_id = userInfo.id;
+    const body = { team_id, user_id };
+
+    const response = await postCall(url, body);
+
+    const data = await response.json();
+    const { confirmation, message } = data;
+    console.log(data)
+    if (confirmation === "success") {
+      window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert(message)
+    }
+  };
 
   useEffect(() => {
     function getUser() {
@@ -88,13 +109,24 @@ function ProfilePage(props) {
           <InputLabel>Team</InputLabel>
           <Select
             label="Team"
+            onChange={(event) => {
+              getTeamId(event.target.value);
+            }}
           >
             <MenuItem>
               <em>None</em>
             </MenuItem>
-            <MenuItem>Ten</MenuItem>
+            {
+              teamInfo.map((info) =>
+              <MenuItem value={info.id} key={info.id}>{info.name}</MenuItem>
+            )}
           </Select>
         </FormControl>
+        <div>
+          <Button variant="outlined" color="primary" onClick={addUserToTeam}>
+            Add User to Team
+          </Button>
+        </div>
         </div>
       </div>
     </div>
