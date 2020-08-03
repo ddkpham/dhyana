@@ -26,7 +26,7 @@ exports.create_team = function (req, res, next) {
     name,
   })
     .then((team) => {
-      console.log(team);
+      console.log("exports.create_team -> team", team);
       res.status(200).json(successResponse("Team created successfully", team));
     })
     .catch((err) => {
@@ -58,6 +58,7 @@ exports.add_user = function (req, res, next) {
     user_id,
   })
     .then((team) => {
+      console.log("exports.add_user -> team", team);
       res
         .status(200)
         .json(successResponse("User added to team successfully", team));
@@ -87,6 +88,7 @@ exports.view_team = function (req, res, next) {
     },
   })
     .then((team) => {
+      console.log("exports.view_team -> team", team);
       if (team.length) {
         res.status(200).json(successResponse("Sucessfully found team", team));
       } else {

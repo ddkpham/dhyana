@@ -19,7 +19,7 @@ exports.login_post = function (req, res, next) {
     },
   })
     .then((users) => {
-      console.log(users);
+      console.log("exports.login_post -> users", users);
 
       if (users.length) {
         const user = users[0];
@@ -29,7 +29,7 @@ exports.login_post = function (req, res, next) {
         req.session.userId = userId;
         req.session.save((err) => {
           if (!err) {
-            console.log(req.session);
+            console.log("exports.login_post -> req.session", req.session);
             res.json({
               confirmation: "success",
               data: user,

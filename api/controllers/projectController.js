@@ -32,7 +32,7 @@ exports.create_project = function (req, res, next) {
     team_id,
   })
     .then((team) => {
-      console.log(team);
+      console.log("exports.create_project -> team", team);
       res
         .status(200)
         .json(successResponse("Project created successfully", team));
@@ -64,6 +64,7 @@ exports.view_project = function (req, res, next) {
     },
   })
     .then((project) => {
+      console.log("exports.view_project -> project", project);
       if (project.length) {
         res
           .status(200)
@@ -85,6 +86,7 @@ exports.view_project = function (req, res, next) {
 };
 
 exports.view_user_specific = function (req, res, next) {
+  console.log("exports.view_user_specific -> req.session", req.session);
   const { userId } = req.session;
   console.log("exports.view_user_specific -> userId", userId);
 
@@ -110,6 +112,7 @@ exports.view_user_specific = function (req, res, next) {
   try {
     findProjects()
       .then((projects) => {
+        console.log("findProjects -> projects", projects);
         res
           .status(200)
           .json(successResponse("Sucessfully found projects", projects));
@@ -126,6 +129,7 @@ exports.view_all = function (req, res, next) {
   console.log("exports.view_all -> req", req);
   Project.findAll()
     .then((projects) => {
+      console.log("exports.view_all -> projects", projects);
       if (projects.length) {
         res
           .status(200)
