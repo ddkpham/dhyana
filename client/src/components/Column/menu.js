@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles((theme) => ({
 	select: {
@@ -14,10 +15,14 @@ const useStyles = makeStyles((theme) => ({
 	menuLabel: {
 		marginRight: "5px",
 		color: theme.colours.eerie_black
+	},
+	deleteButton: {
+		color: 'red',
+		borderColor: 'red',
 	}
 }));
 
-const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, setFilters}) => {
+const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, setFilters, deleteFunction}) => {
   const sortOptions = [
     {name: 'Task Title', id: 'name'},
     {name: 'Date Created', id: 'date_created'},
@@ -78,6 +83,7 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, set
 						</Select>
 					</MenuItem>
 				))}
+				<MenuItem><Button variant="outlined" classes={{outlined: classes.deleteButton}} onClick={deleteFunction}>Delete</Button></MenuItem>
     </Menu>
   );
 }

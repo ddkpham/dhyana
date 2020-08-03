@@ -381,6 +381,58 @@ exports.view_project_columns = function (req, res, next) {
     );
 };
 
+exports.delete_column = async function (req, res, next) {
+  console.log("exports.delete_column -> req.params", req.params);
+  const column_id = req.params.column_id.trim();
+
+  if (!column_id) {
+    res.status(400).json(errorResponse("missing column_id"));
+    return;
+  }
+
+  const tasks = await ColumnTask.findAll({
+    where: {
+      column_id,
+    },
+  });
+
+  const taskPromises = []
+
+  for(let t of tasks){
+    taskPromises.push(DeleteTask(t.task_id));
+  }
+
+  Promise.all(taskPromises)
+  .then(() => {
+    ProjectColumns.destroy({
+      where: {
+        column_id,
+      },
+    })
+    .then(() => {
+      Column.destroy({
+        where: {
+          id: column_id,
+        },
+      })
+        .then(() =>
+          res.status(200).json(successResponse("successfully deleted column"))
+        )
+        .catch((err) =>
+          res
+            .status(400)
+            .json(errorResponse("column destroy error: " + err.message))
+        );
+    })
+    .catch((err) =>
+      res
+        .status(400)
+        .json(errorResponse("projectcolumn destroy error: " + err.message))
+    );
+  })
+  .catch((error) => res.status(400).json(errorResponse(error)));
+};
+
 exports.create_new_task = function (req, res, next) {
   console.log("exports.create_new_task -> req.body", req.body);
 
@@ -554,6 +606,24 @@ exports.edit_task = function (req, res, next) {
     });
 };
 
+function DeleteTask(task_id){
+  return ColumnTask.destroy({
+    where: {
+      task_id,
+    },
+  })
+  .then(() => {
+    Task.destroy({
+      where: {
+        id: task_id,
+      },
+    })
+      .then(() =>1)
+      .catch((err) => { throw "task destroy error: " + err.message; });
+  })
+  .catch((err) => { throw "task destroy error: " + err.message; });
+}
+
 exports.delete_task = function (req, res, next) {
   console.log("exports.delete_task -> req.params", req.params);
   const task_id = req.params.task_id.trim();
@@ -563,29 +633,13 @@ exports.delete_task = function (req, res, next) {
     return;
   }
 
-  ColumnTask.destroy({
-    where: {
-      task_id,
-    },
+  DeleteTask(task_id)
+  .then(() => {
+    res.status(200).json(successResponse("successfully deleted task"))
   })
-    .then(() => {
-      Task.destroy({
-        where: {
-          id: task_id,
-        },
-      })
-        .then(() =>
-          res.status(200).json(successResponse("successfully deleted task"))
-        )
-        .catch((err) =>
-          res
-            .status(400)
-            .json(errorResponse("task destroy error: " + err.message))
-        );
-    })
-    .catch((err) =>
-      res
-        .status(400)
-        .json(errorResponse("columntask destroy error: " + err.message))
-    );
+  .catch((error) => {
+    res
+      .status(400)
+      .json(errorResponse(error))
+  })
 };

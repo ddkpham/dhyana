@@ -28,6 +28,8 @@ router.post("/create/column", projectController.create_project_column);
 
 router.get("/:projectId/columns", projectController.view_project_columns);
 
+router.delete("/column/:column_id", projectController.delete_column);
+
 router.post(
   "/create/task",
   [

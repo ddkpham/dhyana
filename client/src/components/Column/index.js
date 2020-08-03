@@ -14,6 +14,11 @@ import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 import ColumnMenu from './menu';
 
@@ -69,11 +74,36 @@ const styles = (theme) => ({
   }
 });
 
+const ConfirmDialog = ({message, open, confirm, deny}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={deny}
+    >
+      <DialogTitle>Are you sure?</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={deny} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={confirm} color="primary" autoFocus>
+          Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 class Column extends React.Component {
   state = {
     tasks: [],
     anchorTask: null,
     anchorMenu: null,
+    deleteOpen: false,
     currTaskName: "",
     currDescription: "",
     sort: "",
@@ -211,6 +241,26 @@ class Column extends React.Component {
       .catch((err) => console.log("Delete Task error", err));
   };
 
+  closeDelete = () => {
+    this.setState({ deleteOpen: false });
+  }
+
+  openDelete = () => {
+    this.setState({ deleteOpen: true });
+  }
+
+  deleteColumn = () => {
+    const { column, reload } = this.props;
+    const url = `${baseURL}/project/column/${column.id}`;
+    deleteCall(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("delete column success", data);
+        reload();
+      })
+      .catch((err) => console.log("delete column error", err));
+  };
+
   setFilters = (newFilter, filterId) => {
     const { filters } = this.state;
     filters[filterId] = newFilter;
@@ -241,7 +291,7 @@ class Column extends React.Component {
 
   render() {
     const { column, classes } = this.props;
-    const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters } = this.state;
+    const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters, deleteOpen } = this.state;
     const taskOpen = Boolean(anchorTask);
     console.log("Column -> render -> open", taskOpen);
     const id = taskOpen ? "simple-popover" : undefined;
@@ -274,6 +324,7 @@ class Column extends React.Component {
           </Button>
         </div>
         <Grid item key={column.id} className={classes.column}>
+          <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
           <DragTarget columnName={column.name} onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
               <div className={classes.columnHeader}>
@@ -287,6 +338,7 @@ class Column extends React.Component {
                   filters={filters}
                   filterOptions={filterOptions}
                   setFilters={this.setFilters}
+                  deleteFunction={this.openDelete}
                 />
               </div>
               {tasks?.map((t) => (
