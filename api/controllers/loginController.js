@@ -4,7 +4,7 @@ const { errorResponse, successResponse } = require("../utility/response");
 const sessionConfig = require("../config/session");
 
 exports.login_post = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.login_post -> req.body", req.body);
   const { username, password } = req.body;
 
   const errors = validationResult(req);
@@ -46,7 +46,7 @@ exports.login_post = function (req, res, next) {
 };
 
 exports.clear_cookie = function (req, res, next) {
-  console.log("req.session", req.session);
+  console.log("exports.clear_cookie -> req.session", req.session);
   req.session.destroy((err) => {
     if (err) {
       res.json(
@@ -60,6 +60,7 @@ exports.clear_cookie = function (req, res, next) {
 
 exports.session_check = function (req, res, next) {
   const { userId } = req.session;
+  console.log("exports.session_check -> userId", userId);
   if (!userId) {
     res.status(440).json(errorResponse("active session not found"));
   } else {

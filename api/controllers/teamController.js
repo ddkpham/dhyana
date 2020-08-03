@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_team -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
@@ -31,6 +31,39 @@ exports.create_team = function (req, res, next) {
     })
     .catch((err) => {
       res.status(409).json(errorResponse("Team exists already.", err));
+    });
+};
+
+exports.add_user = function (req, res, next) {
+  console.log("exports.add_user -> req.body", req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const team_id = req.body.team_id;
+  const user_id = req.body.user_id;
+
+  const errors = validationResult(req.body);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  }
+
+  if (!team_id || !user_id) {
+    res.status(400).json(errorResponse("missing team_id or user_id"));
+    return;
+  }
+
+  TeamsUsers.create({
+    team_id,
+    user_id,
+  })
+    .then((team) => {
+      res
+        .status(200)
+        .json(successResponse("User added to team successfully", team));
+    })
+    .catch((err) => {
+      res.status(409).json(errorResponse("Could not add user to team.", err));
     });
 };
 

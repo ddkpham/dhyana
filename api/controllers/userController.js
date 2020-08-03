@@ -6,6 +6,7 @@ var User = require("../models/User");
 
 exports.get_user_info = function (req, res, next) {
   username = req.params.username;
+  console.log("exports.get_user_info -> req.params", req.params);
   const errors = validationResult(username);
 
   if (!errors.isEmpty()) {
@@ -23,7 +24,6 @@ exports.get_user_info = function (req, res, next) {
       where: {
         username,
       },
-      attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
         if (user.length) {
@@ -41,6 +41,7 @@ exports.get_user_info = function (req, res, next) {
 
 exports.get_my_profile = function (req, res, next) {
   const { userId: id } = req.session;
+  console.log("exports.get_my_profile -> req.session", req.session);
   const errors = validationResult(id);
 
   if (!errors.isEmpty()) {
@@ -68,6 +69,7 @@ exports.get_my_profile = function (req, res, next) {
 
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.search_user -> req.body", req.body);
 
   input = req.body.input.trim();
 
@@ -121,7 +123,7 @@ exports.search_user = function (req, res, next) {
 };
 
 exports.create_new_user = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_new_user -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
 
@@ -170,32 +172,34 @@ exports.edit_user = function (req, res, next) {
   const errors = validationResult(id);
 
   if (!errors.isEmpty() || !errorsBody.isEmpty()) {
-    console.log("error is not empty")
+    console.log("error is not empty");
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
     const { password, first_name, last_name } = req.body;
-    console.log("attempting to update user")
+    console.log("attempting to update user");
     User.update(
-        { 
-          first_name, 
-          last_name, 
-          password, 
-        },
-        { 
-          where: { id, },
-        }
-      )
+      {
+        first_name,
+        last_name,
+        password,
+      },
+      {
+        where: { id },
+      }
+    )
       .then((user) => {
         if (user.length) {
-          res.status(200).json(successResponse("User modified successfully.", user));
+          res
+            .status(200)
+            .json(successResponse("User modified successfully.", user));
           return;
         }
 
         return Promise.reject();
       })
       .catch((err) => {
-        console.log("error in update", err)
+        console.log("error in update", err);
         res.status(409).json(errorResponse("User couldn’t be modified.", err));
       });
   }
