@@ -20,6 +20,10 @@ const styles = (theme) => ({
     height: "100%",
     backgroundColor: "inherit",
   },
+  column: {
+    minWidth: '300px',
+    marginBottom: '50px'
+  }
 });
 
 class Column extends React.Component {
@@ -115,7 +119,7 @@ class Column extends React.Component {
     return (
       <Grid item key={column.id} className={classes.column}>
         <DragTarget columnName={column.name} onDrop={this.onDrop}>
-          <Paper className={classes.columnPaper}>
+          <Paper elevation={4} className={classes.columnPaper}>
             <Typography>{column.name}</Typography>
             {tasks?.map((t) => (
               <Task task={t} key={t.id} columnId={column.id} />

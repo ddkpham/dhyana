@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     dropWrapper: {
         height: "100%",
+        margin: "10px"
     },
     onHover: {
         backgroundColor: theme.colours.mint
@@ -19,7 +20,6 @@ const DragTarget = ({ children, columnName, onDrop }) => {
         accept: "card",
         drop: (item, monitor) => {
             console.log(item, "dropped onto", columnName);
-            console.log("what's monitor?", monitor);
             onDrop(item)
         },
         collect: monitor => ({

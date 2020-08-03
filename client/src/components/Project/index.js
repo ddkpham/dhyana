@@ -4,11 +4,11 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import Modal from "@material-ui/core/Modal";
 import Column from "../Column";
 import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import withScrolling from 'react-dnd-scrolling';
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
@@ -19,8 +19,15 @@ const styles = (theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  root: {
+    display: 'flex',
+    flexWrap: 'nowrap',
+    overflowX: 'scroll',
+    overflow: "-moz-scrollbars-vertical"
+  }
 });
 
+const ScrollingComponent = withScrolling(Grid);
 class Project extends React.Component {
   state = {
     project: {},
@@ -98,7 +105,7 @@ class Project extends React.Component {
             </div>
             <ProjectToggle />
           </div>
-          <Grid container spacing={2}>
+          <ScrollingComponent container spacing={2} className={classes.root}>
             {columns.map((c) => (
               <Column
                 column={c}
@@ -107,7 +114,7 @@ class Project extends React.Component {
                 reload={this.getProject}
               />
             ))}
-          </Grid>
+          </ScrollingComponent>
         </DndProvider>
       </div>
     );
