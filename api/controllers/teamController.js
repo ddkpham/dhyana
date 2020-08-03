@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_team -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
@@ -34,13 +34,12 @@ exports.create_team = function (req, res, next) {
     });
 };
 
-exports.add_user = function(req, res, next) {
-  console.log(req.body);
+exports.add_user = function (req, res, next) {
+  console.log("exports.add_user -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const team_id = req.body.team_id;
   const user_id = req.body.user_id;
-
 
   const errors = validationResult(req.body);
 
@@ -58,9 +57,10 @@ exports.add_user = function(req, res, next) {
     team_id,
     user_id,
   })
-    .then((teamUser) => {
-      console.log(teamUser);
-      res.status(200).json(successResponse("User added to team successfully", team));
+    .then((team) => {
+      res
+        .status(200)
+        .json(successResponse("User added to team successfully", team));
     })
     .catch((err) => {
       res.status(409).json(errorResponse("Could not add user to team.", err));

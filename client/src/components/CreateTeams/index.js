@@ -32,43 +32,33 @@ function CreateTeam() {
     const url = `${baseURL}/team/create`;
     const body = { name };
 
-     postCall(url, body)
-     .then((response) => response.json())
-     .then((data) => {
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
         const { confirmation, message } = data;
 
         if (confirmation === "success") {
           const team_id = data.data.id;
           const user_id = userInfo.id;
           const addUserUrl = `${baseURL}/team/addUser`;
-          const addUserBody = {team_id, user_id};
+          const addUserBody = { team_id, user_id };
           console.log("body", addUserBody);
 
           postCall(addUserUrl, addUserBody)
-          .then((response) => response.json())
-          .then((payload) => {
-            const { confirmation, message } = payload;
-            console.log(payload);
-            // if (confirmation === "success") {
-            // } else {
-            //   alert(message)
-            // }
-            window.location.href = `${clientBaseURL}/home`;
-          })
-
-          
+            .then((response) => response.json())
+            .then((payload) => {
+              const { confirmation, message } = payload;
+              console.log(payload);
+              // if (confirmation === "success") {
+              // } else {
+              //   alert(message)
+              // }
+              window.location.href = `${clientBaseURL}/home`;
+            });
+        } else {
+          alert(`team was not created. Error: ${message}`);
         }
-    })
-    // const response = await postCall(url, body);
-
-    // const data = await response.json();
-    // const { confirmation, message } = data;
-    // console.log(data)
-    // if (confirmation === "success") {
-    //   // window.location.href = `${clientBaseURL}/home`;
-    // } else {
-    //   alert(message)
-    // }
+      });
   };
 
   return (
@@ -86,7 +76,6 @@ function CreateTeam() {
               setTeamName(event.target.value);
             }}
           />
-
         </div>
         <div className="sign-up-button">
           <Button variant="outlined" color="primary" onClick={create}>

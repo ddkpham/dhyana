@@ -9,7 +9,7 @@ const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
 
 exports.create_project = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_project -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
@@ -43,7 +43,7 @@ exports.create_project = function (req, res, next) {
 };
 
 exports.view_project = function (req, res, next) {
-  console.log(req.params);
+  console.log("exports.view_project -> req.params", req.params);
 
   const name = req.params.name.trim();
   console.log("exports.view_project -> name", name);
@@ -86,6 +86,7 @@ exports.view_project = function (req, res, next) {
 
 exports.view_user_specific = function (req, res, next) {
   const { userId } = req.session;
+  console.log("exports.view_user_specific -> userId", userId);
 
   const findProjects = async () => {
     const teams = await TeamsUsers.findAll({
@@ -122,6 +123,7 @@ exports.view_user_specific = function (req, res, next) {
 };
 
 exports.view_all = function (req, res, next) {
+  console.log("exports.view_all -> req", req);
   Project.findAll()
     .then((projects) => {
       if (projects.length) {
@@ -145,7 +147,7 @@ exports.view_all = function (req, res, next) {
 };
 
 exports.create_project_column = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_project_column -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const projectId = req.body.projectId;
@@ -217,7 +219,7 @@ exports.create_project_column = function (req, res, next) {
 };
 
 exports.view_project_columns = function (req, res, next) {
-  console.log(req.params);
+  console.log("exports.view_project_columns -> req.params", req.params);
 
   const projectId = req.params.projectId;
 
@@ -303,7 +305,7 @@ exports.view_project_columns = function (req, res, next) {
 };
 
 exports.create_new_task = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.create_new_task -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
@@ -352,7 +354,7 @@ exports.create_new_task = function (req, res, next) {
 };
 
 exports.get_all_tasks = function (req, res, next) {
-  console.log(req.body);
+  console.log("exports.get_all_tasks -> req.body", req.body);
 
   body(req.body).trim().escape().not().isEmpty();
   const task_ids = req.body.task_ids;
@@ -384,7 +386,7 @@ exports.get_all_tasks = function (req, res, next) {
 };
 
 exports.delete_task = function (req, res, next) {
-  console.log(req.params);
+  console.log("exports.delete_task -> req.params", req.params);
   const task_id = req.params.task_id.trim();
 
   if (!task_id) {
