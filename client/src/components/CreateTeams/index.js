@@ -1,5 +1,5 @@
 import { baseURL, clientBaseURL } from "../../config/settings";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
@@ -8,20 +8,53 @@ import "./index.scss";
 
 function CreateTeam() {
   const [name, setTeamName] = useState("");
+  const [userInfo, setUser] = useState([]);
+
+  useEffect(() => {
+    function getProfile() {
+      const url = `${baseURL}/user/myProfile`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("payload", payload);
+          setUser(payload.data[0]);
+        })
+        .catch((err) => console.log("project fetch error", err));
+    }
+    getProfile();
+  }, []);
+
+  useEffect(() => {
+    console.log("userInfo", userInfo);
+  }, [userInfo]);
 
   const create = async () => {
     const url = `${baseURL}/team/create`;
     const body = { name };
-    const response = await postCall(url, body);
 
-    const data = await response.json();
-    const { confirmation, message } = data;
-    console.log(data)
-    if (confirmation === "success") {
-      window.location.href = `${clientBaseURL}/home`;
-    } else {
-      alert(message)
-    }
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        const { confirmation, message } = data;
+
+        if (confirmation === "success") {
+          const team_id = data.data.id;
+          const user_id = userInfo.id;
+          const addUserUrl = `${baseURL}/team/addUser`;
+          const addUserBody = { team_id, user_id };
+          console.log("body", addUserBody);
+
+          postCall(addUserUrl, addUserBody)
+            .then((response) => response.json())
+            .then((payload) => {
+              const { confirmation, message } = payload;
+              console.log(payload);
+              window.location.href = `${clientBaseURL}/home`;
+            });
+        } else {
+          alert(`team was not created. Error: ${message}`);
+        }
+      });
   };
 
   return (
@@ -39,7 +72,6 @@ function CreateTeam() {
               setTeamName(event.target.value);
             }}
           />
-
         </div>
         <div className="sign-up-button">
           <Button variant="outlined" color="primary" onClick={create}>

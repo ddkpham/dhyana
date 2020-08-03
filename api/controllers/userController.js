@@ -10,6 +10,7 @@ exports.get_user_info = function (req, res, next) {
     req.params.username
   );
   username = req.params.username;
+  console.log("exports.get_user_info -> req.params", req.params);
   const errors = validationResult(username);
 
   if (!errors.isEmpty()) {
@@ -27,7 +28,6 @@ exports.get_user_info = function (req, res, next) {
       where: {
         username,
       },
-      attributes: [`username`, `first_name`, `last_name`],
     })
       .then((user) => {
         console.log("exports.get_user_info -> user", user);
@@ -47,6 +47,7 @@ exports.get_user_info = function (req, res, next) {
 exports.get_my_profile = function (req, res, next) {
   console.log("exports.get_my_profile -> req.session", req.session);
   const { userId: id } = req.session;
+  console.log("exports.get_my_profile -> req.session", req.session);
   const errors = validationResult(id);
 
   if (!errors.isEmpty()) {
@@ -75,6 +76,7 @@ exports.get_my_profile = function (req, res, next) {
 
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.search_user -> req.body", req.body);
 
   input = req.body.input.trim();
   console.log("exports.search_user -> input", input);

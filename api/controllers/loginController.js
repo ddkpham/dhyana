@@ -60,6 +60,7 @@ exports.clear_cookie = function (req, res, next) {
 
 exports.session_check = function (req, res, next) {
   const { userId } = req.session;
+  console.log("exports.session_check -> userId", userId);
   if (!userId) {
     res.status(440).json(errorResponse("active session not found"));
   } else {

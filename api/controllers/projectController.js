@@ -43,6 +43,8 @@ exports.create_project = function (req, res, next) {
 };
 
 exports.view_project = function (req, res, next) {
+  console.log("exports.view_project -> req.params", req.params);
+
   const name = req.params.name.trim();
   console.log("exports.view_project -> name", name);
 
@@ -86,6 +88,7 @@ exports.view_project = function (req, res, next) {
 exports.view_user_specific = function (req, res, next) {
   console.log("exports.view_user_specific -> req.session", req.session);
   const { userId } = req.session;
+  console.log("exports.view_user_specific -> userId", userId);
 
   const findProjects = async () => {
     const teams = await TeamsUsers.findAll({
@@ -123,6 +126,7 @@ exports.view_user_specific = function (req, res, next) {
 };
 
 exports.view_all = function (req, res, next) {
+  console.log("exports.view_all -> req", req);
   Project.findAll()
     .then((projects) => {
       console.log("exports.view_all -> projects", projects);
