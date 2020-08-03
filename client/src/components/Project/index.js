@@ -1,4 +1,5 @@
 import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
@@ -10,6 +11,16 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
+import ProjectToggle from "./projectToggle";
+
+const styles = (theme) => ({
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+});
+
 class Project extends React.Component {
   state = {
     project: {},
@@ -62,6 +73,7 @@ class Project extends React.Component {
 
   render() {
     const { project, columns, columnModalOpen } = this.state;
+    const { classes } = this.props;
     console.log("Project -> render -> project", project);
     return (
       <div>
@@ -72,15 +84,20 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
-          <Typography variant="h6" gutterBottom>
-            {project.name}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            {project.description}
-          </Typography>
-          <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
-            Add Column
-          </Button>
+          <div className={classes.header}>
+            <div>
+              <Typography variant="h6" gutterBottom>
+                {project.name}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                {project.description}
+              </Typography>
+              <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
+                Add Column
+              </Button>
+            </div>
+            <ProjectToggle />
+          </div>
           <Grid container spacing={2}>
             {columns.map((c) => (
               <Column
@@ -97,4 +114,4 @@ class Project extends React.Component {
   }
 }
 
-export default Project;
+export default withStyles(styles)(Project);
