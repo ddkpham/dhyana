@@ -5,11 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Select from '@material-ui/core/Select';
-import Checkbox from '@material-ui/core/Checkbox';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DragTarget from "./DragTarget";
@@ -17,7 +12,10 @@ import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import { postCall, deleteCall } from "../../apiCalls/apiCalls";
+import Card from "@material-ui/core/Card";
+import TextField from "@material-ui/core/TextField";
+import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
+import ColumnMenu from './menu';
 
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
@@ -70,66 +68,6 @@ const styles = (theme) => ({
     justifyContent: 'space-between'
   }
 });
-
-
-const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, setFilters}) => {
-  const sortOptions = [
-    {name: 'Task Title', id: 'name'},
-    {name: 'Date Created', id: 'date_created'},
-    {name: 'Priority', id: 'priority'},
-    {name: 'Assigned User', id: 'user_id_assigned'},
-  ];
-
-  return (
-    <Menu
-      id="simple-menu"
-      anchorEl={anchorEl}
-      keepMounted
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-    >
-      <MenuItem >
-          Sort By:  
-        <Select
-          id="sort-select"
-          variant="outlined"
-          value=""
-          onChange={(event) => {
-            setSort({ sortBy: event.target.value });
-            handleClose();
-          }}
-        >
-          {sortOptions.map((o) => {
-            return <MenuItem value={o.id}>{o.name}</MenuItem>;
-          })}
-        </Select>
-      </MenuItem>
-      <MenuItem onClick={console.log('filtering not implemented yet')}>Filter By</MenuItem>
-      {filterOptions.map((f) => (
-        <MenuItem>
-          {f.name}: 
-          <Select
-            id={f.id}
-            multiple
-            variant="outlined"
-            value={filters[f.id] || []}
-            onChange={(event) => {
-              setFilters(event.target.value, f.id);
-            }}
-            renderValue={(selected) => selected.join(', ')}
-          >
-            {f.options.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                <Checkbox checked={filters[f.id]?.indexOf(option.id) > -1} />
-                <ListItemText primary={option.name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </MenuItem>
-      ))}
-    </Menu>
-  );
-}
 
 class Column extends React.Component {
   state = {
