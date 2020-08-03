@@ -32,15 +32,22 @@ function CreateTeam() {
     const url = `${baseURL}/team/create`;
     const body = { name };
 
+<<<<<<< HEAD
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
+=======
+     postCall(url, body)
+     .then((response) => response.json())
+     .then((data) => {
+>>>>>>> ed626994ccceaf76816321cbe64e87da2be6c024
         const { confirmation, message } = data;
 
         if (confirmation === "success") {
           const team_id = data.data.id;
           const user_id = userInfo.id;
           const addUserUrl = `${baseURL}/team/addUser`;
+<<<<<<< HEAD
           const addUserBody = { team_id, user_id };
           console.log("body", addUserBody);
 
@@ -59,6 +66,36 @@ function CreateTeam() {
           alert(`team was not created. Error: ${message}`);
         }
       });
+=======
+          const addUserBody = {team_id, user_id};
+          console.log("body", addUserBody);
+
+          postCall(addUserUrl, addUserBody)
+          .then((response) => response.json())
+          .then((payload) => {
+            const { confirmation, message } = payload;
+            console.log(payload);
+            // if (confirmation === "success") {
+            // } else {
+            //   alert(message)
+            // }
+            window.location.href = `${clientBaseURL}/home`;
+          })
+
+          
+        }
+    })
+    // const response = await postCall(url, body);
+
+    // const data = await response.json();
+    // const { confirmation, message } = data;
+    // console.log(data)
+    // if (confirmation === "success") {
+    //   // window.location.href = `${clientBaseURL}/home`;
+    // } else {
+    //   alert(message)
+    // }
+>>>>>>> ed626994ccceaf76816321cbe64e87da2be6c024
   };
 
   return (
