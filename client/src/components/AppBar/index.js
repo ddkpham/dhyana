@@ -12,6 +12,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
+import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
@@ -96,6 +97,11 @@ export default function PrimarySearchAppBar() {
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleCreateTeamMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -141,6 +147,9 @@ export default function PrimarySearchAppBar() {
       <MenuItem onClick={() => {
               history.push("/myProfile");
             }}>Profile</MenuItem>
+      <MenuItem onClick={() => {
+              history.push("/createTeam");
+            }}>Create Team</MenuItem>
       <MenuItem onClick={notImplemented}>My account</MenuItem>
       <MenuItem onClick={logOut}>Log out</MenuItem>
     </Menu>
