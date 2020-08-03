@@ -61,7 +61,6 @@ function ProfilePage(props) {
         .catch((err) => console.log("project fetch error", err));
     }
     getUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

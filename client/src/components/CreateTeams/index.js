@@ -49,10 +49,6 @@ function CreateTeam() {
             .then((payload) => {
               const { confirmation, message } = payload;
               console.log(payload);
-              // if (confirmation === "success") {
-              // } else {
-              //   alert(message)
-              // }
               window.location.href = `${clientBaseURL}/home`;
             });
         } else {
