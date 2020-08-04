@@ -26,28 +26,36 @@ const styles = (theme) => ({
     overflow: "-moz-scrollbars-vertical",
     height: "100%",
     minHeight: "95%",
+    width: "95%",
+    justifyContent: 'center',
     border: "1px solid grey",
-    padding: 20,
+    // padding: 20,
     margin: 20,
     borderRadius: 4,
   },
   projectMainDiv: {
-    width: "95%",
+    width: "100%",
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
   },
   headerText: {
-    justifyContent: 'center',
-    alignContent: 'center',
+    textAlign: 'center',
+    marginRight: 20,
+    marginLeft: 20,
   },
   projectTitle: {
     justifyContent: "center",
     display: 'flex',
-    margin: 20,
   },
   addColumnButton: {
     marginLeft: 20,
+  },
+  projectToggle: {
+    textAlign: 'left',
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 15,
   }
 });
 
@@ -116,6 +124,11 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
+
+          <div className={classes.projectToggle}>
+            <ProjectToggle />
+          </div>
+
           <div className={classes.headerText}>
             <Typography variant="h3" gutterBottom className={classes.projectTitle}>
               {project.name}
