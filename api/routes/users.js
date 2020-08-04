@@ -36,6 +36,13 @@ router.get(
   userController.get_user_info
 );
 
+router.get(
+  "/info/:id",
+  authMiddleware,
+  [param("id").isLength({ min: 1 })],
+  userController.get_user_from_id
+);
+
 router.post(
   "/search/result",
   authMiddleware,

@@ -27,3 +27,7 @@
     align-content: center;
     display: flex;
 }
+
+html, body, #app, #app>div {
+    height: 100%
+  }

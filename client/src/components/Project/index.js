@@ -23,7 +23,31 @@ const styles = (theme) => ({
     display: 'flex',
     flexWrap: 'nowrap',
     overflowX: 'scroll',
-    overflow: "-moz-scrollbars-vertical"
+    overflow: "-moz-scrollbars-vertical",
+    height: "100%",
+    minHeight: "95%",
+    border: "1px solid grey",
+    padding: 20,
+    margin: 20,
+    borderRadius: 4,
+  },
+  projectMainDiv: {
+    width: "95%",
+    height: "100%",
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  headerText: {
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  projectTitle: {
+    justifyContent: "center",
+    display: 'flex',
+    margin: 20,
+  },
+  addColumnButton: {
+    marginLeft: 20,
   }
 });
 
@@ -84,7 +108,7 @@ class Project extends React.Component {
     const { classes } = this.props;
     console.log("Project -> render -> project", project);
     return (
-      <div className="projectMainDiv">
+      <div className={classes.projectMainDiv}>
         <DndProvider backend={HTML5Backend}>
           <AddColumnModal
             isOpen={columnModalOpen}
@@ -92,25 +116,29 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
-          <Typography variant="h6" gutterBottom>
-            {project.name}
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            {project.description}
-          </Typography>
-          <Button startIcon={<AddIcon />} onClick={this.openColumnModal}>
+          <div className={classes.headerText}>
+            <Typography variant="h3" gutterBottom className={classes.projectTitle}>
+              {project.name}
+            </Typography>
+            <Typography variant="h6" gutterBottom className={classes.projectTitle}>
+              {project.description}
+            </Typography>
+          </div>
+
+          <Button className={classes.addColumnButton} variant="outlined" startIcon={<AddIcon />} onClick={this.openColumnModal}>
             Add Column
           </Button>
-          <Grid 
-            container spacing={2} 
-            justify="center"
+          
+          <ScrollingComponent container spacing={2} className={classes.root} 
+            container spacing={3} 
             direction="row"
           >
             {columns.map((c) => (
               <Column
                 column={c}
                 key={c.id}
-                projectId={project?.id}
+                projectId={project.id}
+                teamId={project.team_id}
                 reload={this.getProject}
                 width={300}
               />

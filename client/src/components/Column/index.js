@@ -17,6 +17,7 @@ const styles = (theme) => ({
   columnPaper: {
     padding: "5px",
     height: "100%",
+    minHeight: 500,
     backgroundColor: "rgba(200,200,200,0.25)",
     width: props => props.width,
   },
@@ -31,10 +32,27 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: '300px',
-    marginBottom: '50px'
-  }
+    marginBottom: '50px',
+    minHeight: 400,
+  },
   addTaskButton: {
-    marginTop: 25,
+    marginBottom: 10,
+    justifyContent: 'center',
+  },
+  buttonDiv: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+  },
+  mainColumnDiv: {
+    height: "100%",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  columnName: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
   }
 });
 
@@ -167,32 +185,39 @@ class Column extends React.Component {
     const open = Boolean(anchorEl);
     const id = open ? "simple-popover" : undefined;
     return (
-      <Grid item key={column.id} className={classes.column}>
-        <DragTarget columnName={column.name} onDrop={this.onDrop}>
-          <Paper elevation={4} className={classes.columnPaper}>
-            <Typography>{column.name}</Typography>
-            {tasks?.map((t) => (
-              <Task task={t} key={t.id} columnId={column.id} 
-                  deleteTask={this.deleteTask.bind(this)} 
-                  editTask={this.editTask.bind(this)}
-                  />
-            ))}
-          </Paper>
-        </DragTarget>
-        <Button className={classes.addTaskButton} onClick={this.handleClick}>Add task</Button>
-        <Popover
-          id={id}
-          open={open}
-          anchorEl={anchorEl}
-          onClose={this.handleClose}
-          anchorReference={"none"}
-          classes={{
-            root: classes.popover,
-          }}
-        >
-          <TaskDetail addTask={this.addTask.bind(this)} className={classes.taskDetail}/>
-        </Popover>
-      </Grid>
+      <div className={classes.mainColumnDiv}>
+        <div className={classes.buttonDiv}>
+        <Button variant="outlined" className={classes.addTaskButton} onClick={this.handleClick}>Add task</Button>
+        </div>
+        <Grid item key={column.id} className={classes.column}>
+
+          <DragTarget columnName={column.name} onDrop={this.onDrop}>
+            <Paper elevation={4} className={classes.columnPaper}>
+              <Typography variant="h6" className={classes.columnName}>{column.name}</Typography>
+              
+              {tasks?.map((t) => (
+                <Task task={t} key={t.id} columnId={column.id} 
+                    deleteTask={this.deleteTask.bind(this)} 
+                    editTask={this.editTask.bind(this)}
+                    />
+              ))}
+            </Paper>
+          </DragTarget>
+          
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={this.handleClose}
+            anchorReference={"none"}
+            classes={{
+              root: classes.popover,
+            }}
+          >
+            <TaskDetail addTask={this.addTask.bind(this)} className={classes.taskDetail} team_id={this.props.teamId}/>
+          </Popover>
+        </Grid>
+      </div>
     );
   }
 }

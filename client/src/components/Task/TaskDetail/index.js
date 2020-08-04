@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { baseURL } from "../../../config/settings";
+import { getCall } from "../../../apiCalls/apiCalls";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
@@ -76,22 +78,38 @@ const useStyles = makeStyles((theme) => ({
 function TaskDetail(props) {
     const classes = useStyles();
 
+    const { team_id } = props
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [userIdAssigned, setUserAssigned] = useState(null);
     const [priority, setPriority] = useState("");
     const [timeEstimated, setTimeEstimated] = useState(null);
     const [flag, setFlag] = useState(false);
+    const [teamUserArray, setteamUserArray] = useState([]);
 
-    const tempUserArray = ["person1", "person2", "person3"]
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
 
+    useEffect(() => {
+        async function getTeamUserArray() {
+            console.log("getting team users for: ", team_id)
+            const url = `${baseURL}/team/${props.team_id}/getUsers`;
+            const response = await getCall(url);
+
+            const payload = await response.json();
+            const { data: teamMembers } = payload;
+            console.log(teamMembers);
+            if (response.status === 200) {
+                setteamUserArray(teamMembers);
+            }
+        }
+        getTeamUserArray(team_id);
+      },
+      [team_id]
+    );
 
     const createTask = () => {
-        // TODO: handle properly tagging users
-        const assignedUserId = 4
         const assignedPriority = priority == "" ? null : priority.charAt(0)
-        const details = {name, description, userIdAssigned: assignedUserId, assignedPriority, time_estimated: timeEstimated, flag}
+        const details = {name, description, userIdAssigned, assignedPriority, time_estimated: timeEstimated, flag}
         console.log("task details: ", details)
         props.addTask(details);
     }
@@ -155,8 +173,8 @@ function TaskDetail(props) {
                     onChange={assignUser}
                 >
                     <MenuItem value=""><em>None</em></MenuItem>
-                    {tempUserArray.map((user) => (
-                        <MenuItem value={user}>{user}</MenuItem>
+                    {teamUserArray.map((user) => (
+                        <MenuItem value={user.id}>{user.username} - {user.first_name} {user.last_name}</MenuItem>
                     ))}
                 </Select>
             </FormControl>

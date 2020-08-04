@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -32,6 +32,21 @@ const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
   const classes = useStyles();
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
   const [anchor, setAnchor] = useState(null);
+  const [userAssigned, setUserAssigned] = useState([]);
+
+  useEffect(() => {
+    function getUserAssignedInfo() {
+      const url = `${baseURL}/user/info/${task.user_id_assigned}`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("payload", payload);
+          setUserAssigned(payload.data[0]);
+        })
+        .catch((err) => console.log("project fetch error", err));
+    }
+    getUserAssignedInfo();
+  }, []);
 
   const handleClick = (event) => {
     console.log("Column -> handleClick -> event", event);
@@ -79,6 +94,9 @@ const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
           <CardContent>
             <Typography variant="body1" gutterBottom>
               {task.name}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {userAssigned.username}
             </Typography>
             <Typography variant="body2">{task.description}</Typography>
             <Typography variant="body2">{task.priority}</Typography>
