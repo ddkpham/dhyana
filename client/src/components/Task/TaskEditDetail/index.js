@@ -147,7 +147,7 @@ function TaskEditDetail(props) {
         getUserCreatedInfo();
         getTeamUserArray(team_id);
       },
-      [team_id, currValues]
+      [team_id, currValues.user_id_created]
     );
 
     const editTask = () => {
@@ -243,7 +243,7 @@ function TaskEditDetail(props) {
             <div className={classes.bottomStack}>
                 <TextField 
                     labelId="createdUserLabel"
-                    defaultValue={userCreated.username}
+                    value={`${userCreated.username} - ${userCreated.first_name} ${userCreated.last_name}`}
                     label="Created By"
                     InputProps={{
                         readOnly: true,
@@ -251,8 +251,6 @@ function TaskEditDetail(props) {
                     variant="outlined" 
                     className={classes.userField}
                 />
-                    {/* {userCreated.username} - {userCreated.first_name} {userCreated.last_name} */}
-                {/* </TextField> */}
 
                 <FormControl variant="outlined" className={classes.userField}>
                     <InputLabel id="assignUserLabel">Assigned User</InputLabel>
