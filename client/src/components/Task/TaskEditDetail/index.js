@@ -114,6 +114,7 @@ function TaskEditDetail(props) {
     const [time_elapsed, setTimeCompleted] = useState(currValues.time_elapsed);
     const [flag, setFlag] = useState(currValues.flag);
     const [teamUserArray, setteamUserArray] = useState([]);
+    const [userCreated, setUserCreated] = useState([]);
 
 
     function getPriority(p) {
@@ -133,21 +134,35 @@ function TaskEditDetail(props) {
                 setteamUserArray(teamMembers);
             }
         }
+        async function getUserCreatedInfo() {
+            const url = `${baseURL}/user/info/${currValues.user_id_created}`;
+            getCall(url)
+              .then((response) => response.json())
+              .then((payload) => {
+                console.log("payload", payload.data[0]);
+                setUserCreated(payload.data[0]);
+              })
+              .catch((err) => console.log("project fetch error", err));
+          }
+        getUserCreatedInfo();
         getTeamUserArray(team_id);
       },
-      [team_id]
+      [team_id, currValues]
     );
 
     const editTask = () => {
         const priorityInt = (priority == "" || priority == null) ? null : priority.charAt(0)
-        console.log("time estimated before parse: ", time_estimated)
         const timeEstimated = parseFloat(time_estimated)
+        console.log("user_id_assigned before parse: ", user_id_assigned)
+
+        const userIdAssigned = user_id_assigned == "" ? null : user_id_assigned
+
 
         const updatedValues = {
                             id: currValues.id,
                             name, 
                             description, 
-                            user_id_assigned, 
+                            user_id_assigned: userIdAssigned, 
                             priority: priorityInt, 
                             time_estimated: timeEstimated, 
                             time_elapsed,
@@ -228,7 +243,7 @@ function TaskEditDetail(props) {
             <div className={classes.bottomStack}>
                 <TextField 
                     labelId="createdUserLabel"
-                    defaultValue={currValues.user_id_created}
+                    defaultValue={userCreated.username}
                     label="Created By"
                     InputProps={{
                         readOnly: true,
@@ -236,6 +251,8 @@ function TaskEditDetail(props) {
                     variant="outlined" 
                     className={classes.userField}
                 />
+                    {/* {userCreated.username} - {userCreated.first_name} {userCreated.last_name} */}
+                {/* </TextField> */}
 
                 <FormControl variant="outlined" className={classes.userField}>
                     <InputLabel id="assignUserLabel">Assigned User</InputLabel>

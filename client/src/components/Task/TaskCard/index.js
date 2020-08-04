@@ -33,16 +33,19 @@ const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
   const [anchor, setAnchor] = useState(null);
   const [userAssigned, setUserAssigned] = useState([]);
-  const [reload, setReload] = useState();
 
   useEffect(() => {
-    function getUserAssignedInfo() {
+    async function getUserAssignedInfo() {
       const url = `${baseURL}/user/info/${task.user_id_assigned}`;
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
           console.log("payload", payload);
-          setUserAssigned(payload.data[0]);
+          if (payload.data[0]) {
+            setUserAssigned(payload.data[0]);
+          } else {
+            setUserAssigned([]);
+          }
         })
         .catch((err) => console.log("project fetch error", err));
     }
