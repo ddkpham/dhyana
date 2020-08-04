@@ -9,6 +9,30 @@ const Task = db.define("task", {
   description: {
     type: Sequelize.STRING,
   },
+  date_created: {
+    type: Sequelize.DATE,
+  },
+  date_modified: {
+    type: Sequelize.DATE,
+  },
+  user_id_created: {
+    type: Sequelize.INTEGER,
+  },
+  user_id_assigned: {
+    type: Sequelize.INTEGER,
+  },
+  priority: {
+    type: Sequelize.INTEGER,
+  },
+  time_estimated: {
+    type: Sequelize.DOUBLE,
+  },
+  time_elapsed: {
+    type: Sequelize.DOUBLE,
+  },
+  flag: {
+    type: Sequelize.BOOLEAN,
+  },
 });
 
 module.exports = Task;

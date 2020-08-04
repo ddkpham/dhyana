@@ -74,6 +74,30 @@ exports.get_my_profile = function (req, res, next) {
   }
 };
 
+exports.get_user_from_id = function (req, res) {
+  console.log("exports.get_user_info -> req.params", req.params);
+  const id = req.params.id;
+
+  User.findAll({
+    where: {
+      id: id
+    },
+    attributes: [`id`, `username`, `first_name`, `last_name`],
+    },
+  )
+  .then((user) => {
+    if (user.length > 0) {
+      res.status(200).json(successResponse("user found", user));
+      return;
+    }
+
+    return Promise.reject();
+  })
+  .catch((err) => {
+    res.status(404).json(errorResponse("no such user exists", err));
+  });
+}
+
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("exports.search_user -> req.body", req.body);

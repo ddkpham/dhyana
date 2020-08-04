@@ -313,9 +313,16 @@ exports.create_new_task = function (req, res, next) {
 
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
+  const description = req.body.description.trim();
+  const { userId: user_id_created } = req.session;
+  console.log("user_id_created: ", user_id_created);
+  const user_id_assigned = req.body.user_id_assigned;
+  const priority = req.body.priority;
+  const time_estimated = req.body.time_estimated;
+  const flag = req.body.flag == "" ? false : req.body.flag;
+  const date_created = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;
-  const description = req.body.description.trim();
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
@@ -332,6 +339,12 @@ exports.create_new_task = function (req, res, next) {
   Task.create({
     name,
     description,
+    date_created,
+    user_id_created,
+    user_id_assigned,
+    priority,
+    time_estimated,
+    flag,
   })
     .then((task) => {
       const {
@@ -387,6 +400,76 @@ exports.get_all_tasks = function (req, res, next) {
     .catch((err) =>
       res.status(400).json(errorResponse("Error in finding tasks", err))
     );
+};
+
+exports.move_task = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+  console.log("move task req.body is: ", req.body);
+  console.log("move task params: ", req.params);
+  const task_id = req.params.task_id.trim();
+  const column_id = req.body.column_id;
+
+  if (!task_id || !column_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  ColumnTask.update(
+      {
+        column_id,
+      },
+      {
+        where: { task_id,},
+      }
+    )
+    .then(() => {
+      res.status(200).json(successResponse("task moved successfully."));
+      return;
+    })
+    .catch((err) => {
+      console.log("error in update", err)
+      res.status(409).json(errorResponse("task couldn’t be moved.", err));
+    });
+};
+
+exports.edit_task = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+  console.log("edit task req.body is: ", req.body);
+
+  const { id, name, description, flag, user_id_assigned, priority, time_elapsed, time_estimated } = req.body
+  const date_modified = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  console.log("updating task with id: ", id);
+
+  Task.update(
+      {
+        name,
+        description,
+        flag,
+        user_id_assigned,
+        priority,
+        date_modified,
+        time_elapsed,
+        time_estimated,
+      },
+      {
+        where: { id, },
+      }
+    )
+    .then(() => {
+      console.log("UPDATE WAS SUCCESSFUL")
+      res.status(200).json(successResponse("task updated successfully."));
+      return;
+    })
+    .catch((err) => {
+      console.log("error in update", err)
+      res.status(409).json(errorResponse("task couldn’t be updated.", err));
+    });
 };
 
 exports.delete_task = function (req, res, next) {

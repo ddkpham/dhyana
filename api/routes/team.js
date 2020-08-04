@@ -15,4 +15,10 @@ router.get(
 
 router.post("/addUser", teamController.add_user);
 
+router.get(
+  "/:id/getUsers", 
+  [param("id").isLength({ min: 1 })],
+  teamController.get_users
+);
+
 module.exports = router;

@@ -50,7 +50,7 @@ class ProjectToggle extends React.Component {
         return (
             <div>
                 <Button endIcon={buttonIcon} variant="contained" color="primary" onClick={this.handleClick}>
-                    Switch Projects
+                    Projects
                 </Button>
                 <Popover
                     open={open}

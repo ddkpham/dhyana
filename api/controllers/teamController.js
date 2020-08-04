@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Team = require("../models/Team");
 const TeamsUsers = require("../models/TeamsUsers");
+var User = require("../models/User");
 const { Op } = require("sequelize");
 
 const { errorResponse, successResponse } = require("../utility/response");
@@ -33,6 +34,53 @@ exports.create_team = function (req, res, next) {
       res.status(409).json(errorResponse("Team exists already.", err));
     });
 };
+
+exports.get_users = function (req, res, next) {
+  console.log("exports.get_user -> req.params", req.params);
+  const team_id = req.params.id.trim();
+
+  TeamsUsers.findAll ({
+    where: {
+      team_id: team_id,
+    },
+    attributes: [`user_id`],
+    },
+  )
+    .then((data) => {
+      var usersArray = []
+      for (var i = 0; i < data.length; i++) {
+        const { dataValues: { user_id : userId } } = data[i]
+        console.log("userId is:", i, userId)
+        usersArray.push(userId)
+      }
+
+      if (!usersArray.length) {
+        res.status(400).json(errorResponse("Didn't find any users in Team"));
+        return;
+      } 
+
+      User.findAll({
+        where: {
+          id: {
+            [Op.in]: usersArray
+          }
+        },
+        attributes: [`id`, `username`, `first_name`, `last_name`],
+        },
+      )
+      .then((users) => {
+        if (users.length > 0) {
+          res.status(200).json(successResponse("user(s) found", users));
+          return;
+        }
+  
+        return Promise.reject();
+      })
+    })
+    .catch((err) => {
+      res.status(404).json(errorResponse("Didn't find any users in Team", err));
+    });
+}
 
 exports.add_user = function (req, res, next) {
   console.log("exports.add_user -> req.body", req.body);
