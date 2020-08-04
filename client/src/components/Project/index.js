@@ -12,6 +12,8 @@ import withScrolling from 'react-dnd-scrolling';
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
+import GridList from '@material-ui/core/GridList';
+
 
 const styles = (theme) => ({
   header: {
@@ -22,16 +24,17 @@ const styles = (theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    overflowX: 'scroll',
-    overflow: "-moz-scrollbars-vertical",
+    // overflowX: 'scroll',
+    // overflow: "-moz-scrollbars-vertical",
     height: "100%",
     minHeight: "95%",
     width: "95%",
-    justifyContent: 'center',
+    justifyContent: 'left',
     border: "1px solid grey",
     paddingTop: 20, 
     margin: 20,
     borderRadius: 4,
+    justify: "center",
   },
   projectMainDiv: {
     width: "100%",
@@ -50,6 +53,7 @@ const styles = (theme) => ({
   },
   addColumnButton: {
     marginLeft: 20,
+    marginBottom: 20,
   },
   projectToggle: {
     textAlign: 'left',
@@ -142,7 +146,7 @@ class Project extends React.Component {
             Add Column
           </Button>
           
-          <ScrollingComponent container spacing={2} className={classes.root} 
+          <GridList container spacing={2} className={classes.root} 
             container spacing={3} 
             direction="row"
           >
@@ -156,7 +160,7 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
-          </ScrollingComponent>
+          </GridList>
         </DndProvider>
       </div>
     );
