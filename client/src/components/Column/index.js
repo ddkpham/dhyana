@@ -29,9 +29,14 @@ const styles = (theme) => ({
   columnPaper: {
     padding: "5px",
     height: "100%",
-    minHeight: 500,
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
+    minWidth: '300px',
+    marginBottom: '50px',
+  },
+  taskContainer: {
+    overflowY: 'scroll',
+    maxHeight: '60vh'
   },
   popover: {
     display: "flex",
@@ -70,7 +75,7 @@ const styles = (theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }
 });
 
@@ -370,19 +375,20 @@ class Column extends React.Component {
                   deleteFunction={this.openDelete}
                 />
               </div>
-              
-              {filteredTasks?.map((t) => (
+              <div className={classes.taskContainer}>
+                {filteredTasks?.map((t) => (
                   <Task
-                    task={t}
-                    key={t.id}
-                    columnId={column.id}
-                    deleteTask={this.deleteTask.bind(this)}
-                    editTask={this.editTask.bind(this)}
-                    team={team}
-                    priorityColor={this.setPriorityTaskColor(t.priority)}
-                    backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
+                  task={t}
+                  key={t.id}
+                  columnId={column.id}
+                  deleteTask={this.deleteTask.bind(this)}
+                  editTask={this.editTask.bind(this)}
+                  team={team}
+                  priorityColor={this.setPriorityTaskColor(t.priority)}
+                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                   />
                 ))}
+              </div>
             </Paper>
           </DragTarget>
 
