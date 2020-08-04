@@ -319,8 +319,8 @@ function TaskEditDetail(props) {
             </div>
 
             <div className={classes.bottomStack}>
-                <Button variant="outlined" className={classes.editTaskButton} onClick={editTask}>Edit Task</Button>
                 <Button variant="outlined" classes={{ root: classes.root }} className={classes.deleteTaskButton} onClick={deleteTask}>Delete Task</Button>
+                <Button variant="outlined" className={classes.editTaskButton} onClick={editTask}>Edit Task</Button>
             </div>
         </div>
     </Card>
