@@ -15,9 +15,11 @@ import MailIcon from "@material-ui/icons/Mail";
 import AddIcon from "@material-ui/icons/Add";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import GroupIcon from "@material-ui/icons/Group";
 import { useHistory } from "react-router-dom";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { getCall } from "../../apiCalls/apiCalls";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { baseURL, clientBaseURL } from "../../config/settings";
 
 const useStyles = makeStyles((theme) => ({
@@ -144,14 +146,32 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => {
-              history.push("/myProfile");
-            }}>Profile</MenuItem>
-      <MenuItem onClick={() => {
-              history.push("/createTeam");
-            }}>Create Team</MenuItem>
-      <MenuItem onClick={notImplemented}>My account</MenuItem>
-      <MenuItem onClick={logOut}>Log out</MenuItem>
+      <MenuItem
+        onClick={() => {
+          history.push("/myProfile");
+        }}
+      >
+        <IconButton aria-label="account of current user" color="inherit">
+          <AccountCircle />
+        </IconButton>
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          history.push("/createTeam");
+        }}
+      >
+        <IconButton aria-label="account of current user" color="inherit">
+          <GroupIcon />
+        </IconButton>
+        Create Team
+      </MenuItem>
+      <MenuItem onClick={logOut}>
+        <IconButton aria-label="account of current user" color="inherit">
+          <ExitToAppIcon />
+        </IconButton>
+        Log out
+      </MenuItem>
     </Menu>
   );
 
@@ -166,32 +186,31 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
+      <MenuItem
+        onClick={() => {
+          history.push("/myProfile");
+        }}
+      >
+        <IconButton aria-label="account of current user" color="inherit">
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        Profile
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          history.push("/createTeam");
+        }}
+      >
+        <IconButton aria-label="account of current user" color="inherit">
+          <GroupIcon />
+        </IconButton>
+        Create Team
+      </MenuItem>
+      <MenuItem onClick={logOut}>
+        <IconButton aria-label="account of current user" color="inherit">
+          <ExitToAppIcon />
+        </IconButton>
+        Log out
       </MenuItem>
     </Menu>
   );
@@ -201,30 +220,14 @@ export default function PrimarySearchAppBar() {
       <AppBar position="static">
         <Toolbar>
           <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
             onClick={() => {
               history.push("/home");
             }}
           >
-            <MenuIcon />
+            <Typography className={classes.title} variant="h6" noWrap>
+              Dhyana
+            </Typography>
           </IconButton>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-            onClick={() => {
-              history.push("/searchUser");
-            }}
-          >
-            <PageviewIcon />
-          </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Dhyana
-          </Typography>
 
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
@@ -238,6 +241,17 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton> */}
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => {
+                history.push("/searchUser");
+              }}
+            >
+              <PageviewIcon />
+            </IconButton>
             <IconButton
               edge="end"
               aria-label="account of current user"
