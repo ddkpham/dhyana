@@ -27,7 +27,7 @@ class ProjectToggle extends React.Component {
 
     handleClick = (event) => {
         this.setState({anchorEl: event.currentTarget, loading: true});
-        const url = `${baseURL}/project/all`;
+        const url = `${baseURL}/project/all/userSpecific`;
         getCall(url)
         .then((response) => response.json())
         .then((payload) => this.setState({loading: false, projects: payload.data}))
