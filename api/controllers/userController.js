@@ -3,6 +3,9 @@ const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
 
 var User = require("../models/User");
+var TeamsUsers = require("../models/TeamsUsers");
+var Team = require("../models/Team");
+var Projects = require("../models/Project");
 
 exports.get_user_info = function (req, res, next) {
   console.log(
@@ -77,26 +80,57 @@ exports.get_my_profile = function (req, res, next) {
 exports.get_user_from_id = function (req, res) {
   console.log("exports.get_user_info -> req.params", req.params);
   const id = req.params.id;
+  var userInfo = {};
 
-  User.findAll({
-    where: {
-      id: id
-    },
-    attributes: [`id`, `username`, `first_name`, `last_name`],
-    },
-  )
-  .then((user) => {
-    if (user.length > 0) {
-      res.status(200).json(successResponse("user found", user));
-      return;
+  const getUserInfo = async () => {
+    try {
+      const user = await User.findAll({
+        where: {
+          id: id,
+        },
+        attributes: [`id`, `username`, `first_name`, `last_name`],
+      });
+
+      if (user.length > 0) {
+        userInfo = user[0].dataValues;
+
+        // get team info
+        const teams = await TeamsUsers.findAll({
+          where: {
+            user_id: id,
+          },
+          attributes: [`team_id`],
+        });
+        const teamQuery = teams.map((t) => ({ id: t.dataValues.team_id }));
+        const teamInfo = await Team.findAll({
+          where: {
+            [Op.or]: teamQuery,
+          },
+        });
+        userInfo.teams = teamInfo;
+
+        // get project info
+        const projects = await Projects.findAll({
+          where: {
+            [Op.or]: teams.map((t) => ({ team_id: t.dataValues.team_id })),
+          },
+        });
+        userInfo.projects = projects;
+
+        res
+          .status(200)
+          .json(
+            successResponse("successfully found user and user info", userInfo)
+          );
+      } else {
+        res.status(200).json(errorResponse("no such user exists"));
+      }
+    } catch (err) {
+      res.status(200).json(errorResponse("error in fetching user info", err));
     }
-
-    return Promise.reject();
-  })
-  .catch((err) => {
-    res.status(404).json(errorResponse("no such user exists", err));
-  });
-}
+  };
+  getUserInfo();
+};
 
 exports.search_user = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
