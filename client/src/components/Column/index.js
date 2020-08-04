@@ -199,6 +199,7 @@ class Column extends React.Component {
                 <Task task={t} key={t.id} columnId={column.id} 
                     deleteTask={this.deleteTask.bind(this)} 
                     editTask={this.editTask.bind(this)}
+                    team_id={this.props.teamId}
                     />
               ))}
             </Paper>

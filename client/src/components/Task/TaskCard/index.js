@@ -27,12 +27,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
+const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
   const ref = useRef(null);
   const classes = useStyles();
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
   const [anchor, setAnchor] = useState(null);
   const [userAssigned, setUserAssigned] = useState([]);
+  const [reload, setReload] = useState();
 
   useEffect(() => {
     function getUserAssignedInfo() {
@@ -46,7 +47,7 @@ const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
         .catch((err) => console.log("project fetch error", err));
     }
     getUserAssignedInfo();
-  }, []);
+  }, [task]);
 
   const handleClick = (event) => {
     console.log("Column -> handleClick -> event", event);
@@ -122,6 +123,7 @@ const Task = ({ task, index, moveItem, deleteTask, editTask }) => {
             currValues={task} 
             deleteTask={deleteT.bind(this)}
             editTask={editT.bind(this)}
+            team_id={team_id}
         />
       </Popover>
     </div>

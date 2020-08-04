@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { baseURL } from "../../../config/settings";
+import { getCall } from "../../../apiCalls/apiCalls";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
@@ -99,9 +101,8 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskEditDetail(props) {
     const classes = useStyles();
-    const { currValues } = props;
+    const { currValues, team_id } = props;
 
-    const tempUserArray = ["person1", "person2", "person3"]
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
     const currPriority = prioritiesArray.find(getPriority)
 
@@ -112,10 +113,30 @@ function TaskEditDetail(props) {
     const [time_estimated, setTimeEstimated] = useState(currValues.time_estimated);
     const [time_elapsed, setTimeCompleted] = useState(currValues.time_elapsed);
     const [flag, setFlag] = useState(currValues.flag);
+    const [teamUserArray, setteamUserArray] = useState([]);
+
 
     function getPriority(p) {
         return p.charAt(0) == currValues.priority
     }
+
+    useEffect(() => {
+        async function getTeamUserArray() {
+            console.log("getting team users for: ", team_id)
+            const url = `${baseURL}/team/${props.team_id}/getUsers`;
+            const response = await getCall(url);
+
+            const payload = await response.json();
+            const { data: teamMembers } = payload;
+            console.log(teamMembers);
+            if (response.status === 200) {
+                setteamUserArray(teamMembers);
+            }
+        }
+        getTeamUserArray(team_id);
+      },
+      [team_id]
+    );
 
     const editTask = () => {
         const priorityInt = (priority == "" || priority == null) ? null : priority.charAt(0)
@@ -224,9 +245,9 @@ function TaskEditDetail(props) {
                         onChange={assignUser}
                     >
                         <MenuItem value=""><em>None</em></MenuItem>
-                        {tempUserArray.map((user) => (
-                            <MenuItem value={user}>{user}</MenuItem>
-                        ))}
+                        {teamUserArray.map((user) => (
+                        <MenuItem value={user.id}>{user.username} - {user.first_name} {user.last_name}</MenuItem>
+                    ))}
                     </Select>
                 </FormControl>
             </div>
