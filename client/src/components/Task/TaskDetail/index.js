@@ -86,6 +86,7 @@ function TaskDetail(props) {
     const [timeEstimated, setTimeEstimated] = useState(null);
     const [flag, setFlag] = useState(false);
     const [teamUserArray, setteamUserArray] = useState([]);
+    const [btnDisabled, setBtnDisabled] = useState(true);
 
     const prioritiesArray = ["5 - blocker", "4 - critical", "3 - high", "2 - medium", "1 - low", "0 - None"]
 
@@ -140,18 +141,23 @@ function TaskDetail(props) {
         }
     }
 
+    const assignTitle = (event) => {
+        console.log("event value is: ", event.target.value)
+        setName(event.target.value);
+        setBtnDisabled(false);
+    }
+
   return (
     <Card className={classes.taskDetailMainWrapper}>
         <Typography className={classes.createTaskTitle} variant="h4">Create a Task. 🥅</Typography>
         <div className="col-input-wrapper">
             <TextField
+                required
                 className={classes.formControl}
                 id="outlined-basic"
                 label="Title"
                 variant="outlined"
-                onChange={(e) =>
-                    setName(e.target.value)
-                }
+                onChange={assignTitle}
             />
             <TextField
                 className={classes.formControl}
@@ -215,7 +221,7 @@ function TaskDetail(props) {
             </div>
 
             <div className={classes.bottomStack}>
-                <Button variant="outlined" className={classes.createTaskButton} onClick={createTask}>Create Task</Button>
+                <Button disabled={btnDisabled} variant="outlined" className={classes.createTaskButton} onClick={createTask}>Create Task</Button>
             </div>
         </div>
     </Card>
