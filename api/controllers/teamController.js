@@ -53,18 +53,38 @@ exports.add_user = function (req, res, next) {
     return;
   }
 
-  TeamsUsers.create({
-    team_id,
-    user_id,
+  // check if user is already in team
+
+  TeamsUsers.findAll({
+    where: {
+      team_id,
+      user_id,
+    },
   })
-    .then((team) => {
-      console.log("exports.add_user -> team", team);
-      res
-        .status(200)
-        .json(successResponse("User added to team successfully", team));
+    .then((data) => {
+      if (data.length) {
+        res.status(200).json(errorResponse("user is already in team"));
+        return;
+      }
+
+      TeamsUsers.create({
+        team_id,
+        user_id,
+      })
+        .then((team) => {
+          console.log("exports.add_user -> team", team);
+          res
+            .status(200)
+            .json(successResponse("User added to team successfully", team));
+        })
+        .catch((err) => {
+          res
+            .status(409)
+            .json(errorResponse("Could not add user to team.", err));
+        });
     })
     .catch((err) => {
-      res.status(409).json(errorResponse("Could not add user to team.", err));
+      res.status(400).json(errorResponse("error in adding user to team", err));
     });
 };
 
