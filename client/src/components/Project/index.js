@@ -29,7 +29,7 @@ const styles = (theme) => ({
     width: "95%",
     justifyContent: 'center',
     border: "1px solid grey",
-    // padding: 20,
+    paddingTop: 20, 
     margin: 20,
     borderRadius: 4,
   },
