@@ -5,9 +5,10 @@
   border: 1px solid lightgrey;
 }
 
-.container {
+.profile-page-container {
   width: 100%;
   display: flex;
+  justify-content: center;
 }
 
 .container:after {

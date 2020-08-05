@@ -115,12 +115,11 @@ function ProfilePage(props) {
         </Button>
       </div>
 
-      <div className="container">
+      <div className="profile-page-container">
         <div className="profileDiv">
           <h2 className="username">Username: {userInfo.username}</h2>
-          <h2 className="name">
-            Name: {userInfo.first_name} {userInfo.last_name}
-          </h2>
+          <h2 className="name">First name: {userInfo.first_name}</h2>
+          <h2 className="name">last name: {userInfo.last_name}</h2>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Team</InputLabel>
             <Select
