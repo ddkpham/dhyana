@@ -3,6 +3,7 @@ import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
 import { baseURL } from "../../../config/settings";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
@@ -40,13 +41,18 @@ class TeamCard extends React.Component {
       .catch((err) => console.log("project fetch error", err));
   };
 
+  navigateToUserPage = (username) => {
+    console.log("TeamCard -> navigateToUserPage -> username", username);
+    window.location.href = `${baseURL}/user/${username}`;
+  };
+
   render() {
     const { name, id } = this.props;
     const { info, users } = this.state;
     return (
       <Card raised>
-        <CardActionArea href={"#"}>
-          <CardContent>
+        <CardContent>
+          <CardActionArea href={"#"}>
             <Typography variant="h5" color="textPrimary" gutterBottom>
               {name}
             </Typography>
@@ -54,28 +60,32 @@ class TeamCard extends React.Component {
               projects: {info.projects ? info.projects.length : null}
             </Typography>
             <Typography variant="body2">members</Typography>
-            <div className="teamcard-members-wrapper">
-              {users.map((user) => {
-                const { first_name, last_name, username } = user;
-                if (first_name && last_name) {
-                  return (
+          </CardActionArea>
+          <div className="teamcard-members-wrapper">
+            {users.map((user) => {
+              const { first_name, last_name, username } = user;
+              if (first_name && last_name) {
+                return (
+                  <IconButton onClick={() => this.navigateToUserPage(username)}>
                     <Avatar>
                       {first_name.charAt(0)}
                       {last_name.charAt(0)}
                     </Avatar>
-                  );
-                } else {
-                  return (
+                  </IconButton>
+                );
+              } else {
+                return (
+                  <IconButton onClick={() => this.navigateToUserPage(username)}>
                     <Avatar>
                       {username.charAt(0)}
                       {username.charAt(1)}
                     </Avatar>
-                  );
-                }
-              })}
-            </div>
-          </CardContent>
-        </CardActionArea>
+                  </IconButton>
+                );
+              }
+            })}
+          </div>
+        </CardContent>
       </Card>
     );
   }
