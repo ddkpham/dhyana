@@ -148,7 +148,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem
         onClick={() => {
-          history.push("/myProfile");
+          history.push("/my-profile");
         }}
       >
         <IconButton aria-label="account of current user" color="inherit">
@@ -158,7 +158,7 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
       <MenuItem
         onClick={() => {
-          history.push("/createTeam");
+          history.push("/create-team");
         }}
       >
         <IconButton aria-label="account of current user" color="inherit">
@@ -188,7 +188,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem
         onClick={() => {
-          history.push("/myProfile");
+          history.push("/my-profile");
         }}
       >
         <IconButton aria-label="account of current user" color="inherit">
@@ -198,7 +198,7 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
       <MenuItem
         onClick={() => {
-          history.push("/createTeam");
+          history.push("/create-team");
         }}
       >
         <IconButton aria-label="account of current user" color="inherit">
@@ -247,7 +247,7 @@ export default function PrimarySearchAppBar() {
               color="inherit"
               aria-label="open drawer"
               onClick={() => {
-                history.push("/searchUser");
+                history.push("/search-user");
               }}
             >
               <PageviewIcon />
