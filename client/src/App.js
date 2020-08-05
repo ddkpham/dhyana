@@ -65,11 +65,11 @@ function App(props) {
                 <Route exact path="/">
                   {authenticated ? <Home /> : <Login />}
                 </Route>
-                <Route path="/createUser">{<CreateUser />}</Route>
-                <Route path="/createTeam">{<CreateTeam />}</Route>
-                <Route path="/myProfile">{<MyProfile />}</Route>
-                <Route path="/editProfile">{<EditProfile />}</Route>
-                <Route path="/searchUser">
+                <Route path="/create-user">{<CreateUser />}</Route>
+                <Route path="/create-team">{<CreateTeam />}</Route>
+                <Route path="/my-profile">{<MyProfile />}</Route>
+                <Route path="/edit-profile">{<EditProfile />}</Route>
+                <Route path="/search-user">
                   {authenticated ? <SearchUser /> : <Login />}
                 </Route>
 
