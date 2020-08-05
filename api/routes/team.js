@@ -13,10 +13,10 @@ router.get(
   teamController.view_team
 );
 
-router.post("/addUser", teamController.add_user);
+router.post("/add-user", teamController.add_user);
 
 router.get(
-  "/:id/getUsers", 
+  "/:id/users",
   [param("id").isLength({ min: 1 })],
   teamController.get_users
 );

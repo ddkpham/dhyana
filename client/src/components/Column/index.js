@@ -19,45 +19,44 @@ const styles = (theme) => ({
     height: "100%",
     minHeight: 500,
     backgroundColor: "rgba(200,200,200,0.25)",
-    width: props => props.width,
+    width: (props) => props.width,
   },
   popover: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   taskDetail: {
     padding: "5px",
     height: "100%",
   },
   column: {
-    minWidth: '300px',
-    marginBottom: '50px',
+    minWidth: "300px",
+    marginBottom: "50px",
     minHeight: 400,
   },
   addTaskButton: {
     marginBottom: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   buttonDiv: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
   },
   mainColumnDiv: {
     height: "100%",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   columnName: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-  }
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+  },
 });
 
 class Column extends React.Component {
-
   state = {
     tasks: [],
     anchorEl: null,
@@ -101,10 +100,17 @@ class Column extends React.Component {
   };
 
   addTask = (details) => {
-    console.log("sending addTask to server with details: ", details)
-    const {name, description, userIdAssigned, assignedPriority, time_estimated, flag} = details;
+    console.log("sending addTask to server with details: ", details);
+    const {
+      name,
+      description,
+      userIdAssigned,
+      assignedPriority,
+      time_estimated,
+      flag,
+    } = details;
     const { projectId, column } = this.props;
-    const url = `${baseURL}/project/task`;
+    const url = `${baseURL}/project/create/task`;
     const body = {
       name: name,
       description: description,
@@ -115,7 +121,7 @@ class Column extends React.Component {
       column_id: column.id,
       project_id: projectId,
     };
-    console.log("sending addTask to server with body: ", body)
+    console.log("sending addTask to server with body: ", body);
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -128,7 +134,7 @@ class Column extends React.Component {
 
   editTask = (task) => {
     const { column, projectId, reload } = this.props;
-    console.log("Column - entered editTask with: ", task)
+    console.log("Column - entered editTask with: ", task);
     const url = `${baseURL}/project/task/${task.id}/edit`;
     const body = {
       id: task.id,
@@ -138,7 +144,7 @@ class Column extends React.Component {
       user_id_assigned: task.user_id_assigned,
       time_estimated: task.time_estimated,
       time_elapsed: task.time_elapsed,
-      priority: task.priority
+      priority: task.priority,
     };
     postCall(url, body)
       .then((response) => response.json())
@@ -148,15 +154,15 @@ class Column extends React.Component {
         reload();
       })
       .catch((err) => console.log("Edit Task error", err));
-};
+  };
 
   onDrop = (task) => {
     const { column, reload } = this.props;
-    console.log("moved task ", task, "to column: ", column)
+    console.log("moved task ", task, "to column: ", column);
     const url = `${baseURL}/project/task/${task.id}/move`;
     const body = {
-      column_id: column.id
-    }
+      column_id: column.id,
+    };
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -167,7 +173,7 @@ class Column extends React.Component {
   };
 
   deleteTask = (taskId) => {
-    console.log("Column - entered deleteTask with taskId: ", taskId)
+    console.log("Column - entered deleteTask with taskId: ", taskId);
     const { reload } = this.props;
     const delUrl = `${baseURL}/project/task/${taskId}/delete`;
     deleteCall(delUrl)
@@ -187,24 +193,34 @@ class Column extends React.Component {
     return (
       <div className={classes.mainColumnDiv}>
         <div className={classes.buttonDiv}>
-        <Button variant="outlined" className={classes.addTaskButton} onClick={this.handleClick}>Add task</Button>
+          <Button
+            variant="outlined"
+            className={classes.addTaskButton}
+            onClick={this.handleClick}
+          >
+            Add task
+          </Button>
         </div>
         <Grid item key={column.id} className={classes.column}>
-
           <DragTarget columnName={column.name} onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
-              <Typography variant="h6" className={classes.columnName}>{column.name}</Typography>
-              
+              <Typography variant="h6" className={classes.columnName}>
+                {column.name}
+              </Typography>
+
               {tasks?.map((t) => (
-                <Task task={t} key={t.id} columnId={column.id} 
-                    deleteTask={this.deleteTask.bind(this)} 
-                    editTask={this.editTask.bind(this)}
-                    team_id={this.props.teamId}
-                    />
+                <Task
+                  task={t}
+                  key={t.id}
+                  columnId={column.id}
+                  deleteTask={this.deleteTask.bind(this)}
+                  editTask={this.editTask.bind(this)}
+                  team_id={this.props.teamId}
+                />
               ))}
             </Paper>
           </DragTarget>
-          
+
           <Popover
             id={id}
             open={open}
@@ -215,7 +231,11 @@ class Column extends React.Component {
               root: classes.popover,
             }}
           >
-            <TaskDetail addTask={this.addTask.bind(this)} className={classes.taskDetail} team_id={this.props.teamId}/>
+            <TaskDetail
+              addTask={this.addTask.bind(this)}
+              className={classes.taskDetail}
+              team_id={this.props.teamId}
+            />
           </Popover>
         </Grid>
       </div>

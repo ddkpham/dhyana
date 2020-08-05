@@ -122,7 +122,7 @@ export default function PrimarySearchAppBar() {
 
   const logOut = async () => {
     setAnchorEl(null);
-    const url = `${baseURL}/login/clearCookie`;
+    const url = `${baseURL}/login/clear-cookie`;
     const response = await getCall(url);
     const data = await response.json();
     const { confirmation } = data;
