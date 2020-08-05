@@ -32,7 +32,7 @@ function ProfilePage(props) {
   console.log("user_id", userInfo.id);
 
   const addUserToTeam = async () => {
-    const url = `${baseURL}/team/addUser`;
+    const url = `${baseURL}/team/add-user`;
     const user_id = userInfo.id;
     const body = { team_id, user_id };
 

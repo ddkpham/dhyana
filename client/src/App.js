@@ -33,7 +33,7 @@ function App(props) {
 
   useEffect(() => {
     const checkSession = async () => {
-      const url = `${baseURL}/login/sessionCheck`;
+      const url = `${baseURL}/login/session-check`;
       const response = await getCall(url);
       const data = await response.json();
       console.log("checkSession -> data", data);

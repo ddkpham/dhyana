@@ -13,8 +13,8 @@ router.post(
   loginController.login_post
 );
 
-router.get("/clearCookie", loginController.clear_cookie);
+router.get("/clear-cookie", loginController.clear_cookie);
 
-router.get("/sessionCheck", loginController.session_check);
+router.get("/session-check", loginController.session_check);
 
 module.exports = router;

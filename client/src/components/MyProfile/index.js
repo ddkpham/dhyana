@@ -11,8 +11,8 @@ function MyProfile() {
 
   useEffect(() => {
     function getProfile() {
-      console.log("GET from", `${baseURL}/user/myProfile`)
-      const url = `${baseURL}/user/myProfile`;
+      console.log("GET from", `${baseURL}/user/my-profile`);
+      const url = `${baseURL}/user/my-profile`;
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
