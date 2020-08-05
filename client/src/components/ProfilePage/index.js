@@ -25,6 +25,7 @@ function ProfilePage(props) {
   const { username } = props;
   let history = useHistory();
   const [userInfo, setUser] = useState([]);
+  const [detailedInfo, setUserInfo] = useState([]);
   const [teamInfo, showTeams] = useState([]);
   const [team_id, getTeamId] = useState("");
 
@@ -55,8 +56,16 @@ function ProfilePage(props) {
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
-          console.log("payload", payload);
           setUser(payload.data[0]);
+          //console.log("data->", payload.data[0].id);
+          const userId = payload.data[0].id;
+          const url = `${baseURL}/user/info/${userId}`;
+          getCall(url)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("detailedUserInfo", data);
+              setUserInfo(data.data[0]);
+            }).catch((err) => console.log("project fetch error", err));
         })
         .catch((err) => console.log("project fetch error", err));
     }
@@ -66,6 +75,21 @@ function ProfilePage(props) {
   useEffect(() => {
     console.log("userInfo", userInfo);
   }, [userInfo]);
+
+  // useEffect(() => {
+  //   function getUserInfo() {
+  //     const userId = userInfo.id;
+  //     const url = `${baseURL}/user/info/${userId}`;
+  //     getCall(url)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         console.log("payload", data);
+  //         setUserInfo(data.data[0]);
+  //       })
+  //       .catch((err) => console.log("project fetch error", err));
+  //   }
+  //   getUserInfo();
+  // }, []);
 
   useEffect(() => {
     function getTeams() {
@@ -100,10 +124,10 @@ function ProfilePage(props) {
 
       <div className="container">
         <div className="profileDiv">
-          <h2 className="username">Username: {userInfo.username}</h2>
-          <h2 className="name">
-            Name: {userInfo.first_name} {userInfo.last_name}
+          <h2>
+            {userInfo.first_name} {userInfo.last_name}
           </h2>
+          <p className="user">@{userInfo.username}</p>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel>Team</InputLabel>
             <Select
