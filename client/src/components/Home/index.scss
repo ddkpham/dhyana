@@ -1,0 +1,23 @@
+.home {
+  &-content-wrapper {
+    display: flex;
+  }
+
+  &-drawer {
+    margin-top: 200px;
+  }
+
+  &-projects-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 70vw;
+  }
+
+  &-project-add-btn {
+    width: 61vw;
+  }
+}
+
+.MuiDrawer-paperAnchorDockedLeft {
+  margin-top: 63px;
+}
