@@ -6,6 +6,10 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
+import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar";
+
 import "./index.scss";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
@@ -26,6 +30,8 @@ function ProfilePage(props) {
   let history = useHistory();
   const [userInfo, setUser] = useState([]);
   const [teamInfo, showTeams] = useState([]);
+  const [userProjects, setUserProjects] = useState([]);
+  const [userTeams, setUserTeams] = useState([]);
   const [team_id, getTeamId] = useState("");
 
   console.log("Team id", team_id);
@@ -50,16 +56,27 @@ function ProfilePage(props) {
   };
 
   useEffect(() => {
-    function getUser() {
-      const url = `${baseURL}/user/profile/${username}`;
-      getCall(url)
-        .then((response) => response.json())
-        .then((payload) => {
-          console.log("payload", payload);
-          setUser(payload.data[0]);
-        })
-        .catch((err) => console.log("project fetch error", err));
-    }
+    const getUser = async () => {
+      var url = `${baseURL}/user/profile/${username}`;
+      try {
+        var response = await getCall(url);
+        var payload = await response.json();
+        const userData = payload.data[0];
+        console.log("getUser -> userData", userData);
+        setUser(userData);
+
+        const { id } = userData;
+        url = `${baseURL}/user/info/${id}`;
+        response = await getCall(url);
+        payload = await response.json();
+        const { projects, teams } = payload.data;
+        setUserProjects(projects);
+        setUserTeams(teams);
+        console.log("getUser -> payload", payload);
+      } catch (err) {
+        console.log("project fetch error", err);
+      }
+    };
     getUser();
   }, []);
 
@@ -126,6 +143,42 @@ function ProfilePage(props) {
             <Button variant="outlined" color="primary" onClick={addUserToTeam}>
               Add User to Team
             </Button>
+          </div>
+        </div>
+        <div className="profileDiv">
+          <Typography variant="h4" color="primary">
+            Teams
+          </Typography>
+          <div className="profile-page-team-container">
+            {userTeams.map((team) => {
+              console.log("ProfilePage -> team", team);
+              return (
+                <Chip
+                  color="primary"
+                  avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
+                  label={team.name}
+                  onClick={() => console.log("clicked")}
+                  variant="outlined"
+                />
+              );
+            })}
+          </div>
+          <Typography variant="h4" color="secondary">
+            Projects
+          </Typography>
+          <div className="profile-page-team-container">
+            {userProjects.map((project) => {
+              console.log("ProfilePage -> project", project);
+              return (
+                <Chip
+                  color="secondary"
+                  avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
+                  label={project.name}
+                  onClick={() => console.log("clicked")}
+                  variant="outlined"
+                />
+              );
+            })}
           </div>
         </div>
       </div>

@@ -35,3 +35,10 @@
   width: 200px;
   margin: 5px auto;
 }
+
+.profile-page-team-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 400px;
+}
