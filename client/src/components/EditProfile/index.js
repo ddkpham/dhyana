@@ -15,16 +15,16 @@ function EditProfile() {
 
   useEffect(() => {
     function getProfile() {
-      console.log("GET from", `${baseURL}/user/myProfile`)
-      const url = `${baseURL}/user/myProfile`;
+      console.log("GET from", `${baseURL}/user/my-profile`);
+      const url = `${baseURL}/user/my-profile`;
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
           console.log("payload", payload);
-          const { password, first_name, last_name } = payload.data[0]
-          setPass(password)
-          setFirstName(first_name)
-          setLastName(last_name)
+          const { password, first_name, last_name } = payload.data[0];
+          setPass(password);
+          setFirstName(first_name);
+          setLastName(last_name);
         })
         .catch((err) => console.log("project fetch error", err));
     }
@@ -33,17 +33,17 @@ function EditProfile() {
   }, []);
 
   const update = async (user, name) => {
-    const url = `${baseURL}/user/editUser`;
+    const url = `${baseURL}/user/edit-user`;
     const body = { password, first_name, last_name };
     const response = await postCall(url, body);
 
     const data = await response.json();
     const { confirmation, message } = data;
-    console.log(data)
+    console.log(data);
     if (confirmation === "success") {
-      history.goBack()
+      history.goBack();
     } else {
-      alert(message)
+      alert(message);
     }
   };
 
@@ -60,7 +60,6 @@ function EditProfile() {
         </Button>
       </div>
       <div id="mainDiv">
-        
         <Card className={"edit-user-wrapper"}>
           <div className={"title"}>
             <h2>Edit Your Info</h2>

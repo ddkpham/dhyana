@@ -13,7 +13,7 @@ class AddColumnDialog extends React.Component {
   create = () => {
     const { close, projectId, order } = this.props;
     const { name } = this.state;
-    const url = `${baseURL}/project/column`;
+    const url = `${baseURL}/project/create/column`;
     const body = { columnName: name, projectId, columnOrder: order };
 
     postCall(url, body)

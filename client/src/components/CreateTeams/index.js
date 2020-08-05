@@ -12,7 +12,7 @@ function CreateTeam() {
 
   useEffect(() => {
     function getProfile() {
-      const url = `${baseURL}/user/myProfile`;
+      const url = `${baseURL}/user/my-profile`;
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
@@ -40,7 +40,7 @@ function CreateTeam() {
         if (confirmation === "success") {
           const team_id = data.data.id;
           const user_id = userInfo.id;
-          const addUserUrl = `${baseURL}/team/addUser`;
+          const addUserUrl = `${baseURL}/team/add-user`;
           const addUserBody = { team_id, user_id };
           console.log("body", addUserBody);
 

@@ -15,7 +15,7 @@ router.post(
 
 router.get("/all", projectController.view_all);
 
-router.get("/all/userSpecific", projectController.view_user_specific);
+router.get("/user-specific/all", projectController.view_user_specific);
 
 router.get(
   "/:name",
@@ -24,12 +24,12 @@ router.get(
 );
 
 //TEMP for debuggin
-router.post("/column", projectController.create_project_column);
+router.post("/create/column", projectController.create_project_column);
 
 router.get("/:projectId/columns", projectController.view_project_columns);
 
 router.post(
-  "/task",
+  "/create/task",
   [
     body("name").isLength({ min: 1 }).escape(),
     body("description").isLength({ min: 1 }).escape(),

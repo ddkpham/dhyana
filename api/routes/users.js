@@ -22,12 +22,9 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
-router.post("/editUser",
-  authMiddleware,
-  userController.edit_user
-);
+router.post("/edit-user", authMiddleware, userController.edit_user);
 
-router.get("/myProfile", userController.get_my_profile);
+router.get("/my-profile", userController.get_my_profile);
 
 router.get(
   "/profile/:username",

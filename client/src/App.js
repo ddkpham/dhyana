@@ -33,7 +33,7 @@ function App(props) {
 
   useEffect(() => {
     const checkSession = async () => {
-      const url = `${baseURL}/login/sessionCheck`;
+      const url = `${baseURL}/login/session-check`;
       const response = await getCall(url);
       const data = await response.json();
       console.log("checkSession -> data", data);
@@ -65,11 +65,11 @@ function App(props) {
                 <Route exact path="/">
                   {authenticated ? <Home /> : <Login />}
                 </Route>
-                <Route path="/createUser">{<CreateUser />}</Route>
-                <Route path="/createTeam">{<CreateTeam />}</Route>
-                <Route path="/myProfile">{<MyProfile />}</Route>
-                <Route path="/editProfile">{<EditProfile />}</Route>
-                <Route path="/searchUser">
+                <Route path="/create-user">{<CreateUser />}</Route>
+                <Route path="/create-team">{<CreateTeam />}</Route>
+                <Route path="/my-profile">{<MyProfile />}</Route>
+                <Route path="/edit-profile">{<EditProfile />}</Route>
+                <Route path="/search-user">
                   {authenticated ? <SearchUser /> : <Login />}
                 </Route>
 
