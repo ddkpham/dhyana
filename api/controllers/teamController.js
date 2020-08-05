@@ -16,8 +16,9 @@ exports.create_team = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
 
+  const errors = validationResult(req.body);
+
   if (!errors.isEmpty()) {
-    const errors = validationResult(req.body);
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   }
