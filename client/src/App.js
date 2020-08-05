@@ -65,9 +65,7 @@ function App(props) {
                 <Route exact path="/">
                   {authenticated ? <Home /> : <Login />}
                 </Route>
-                <Route path="/create-user">
-                  {authenticated ? <CreateUser /> : <Login />}
-                </Route>
+                <Route path="/create-user">{<CreateUser />}</Route>
                 <Route path="/create-team">
                   {authenticated ? <CreateTeam /> : <Login />}
                 </Route>
