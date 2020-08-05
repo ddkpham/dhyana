@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
     color: "white",
+    fontSize: "1em",
   },
   search: {
     position: "relative",
