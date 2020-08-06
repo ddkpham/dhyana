@@ -263,7 +263,7 @@ class Column extends React.Component {
 
   setFilters = (newFilter, filterId) => {
     const { filters } = this.state;
-    filters[filterId] = newFilter;
+    filters[filterId] = newFilter.length ? newFilter : undefined;
     this.setState({ filters });
   }
 
@@ -305,9 +305,11 @@ class Column extends React.Component {
     ];
 
     if(!!sort) tasks.sort(this.compareFunc);
-    if(filters.length) tasks.filter((t) => {
-      for(let f in filterOptions) {
-        if(filters[f.id].indexOf(t[f.id]) < 0) return false;
+
+    let filteredTasks = tasks;
+    if(!!Object.keys(filters).length) filteredTasks = tasks.filter((t) => {
+      for(let f of Object.keys(filters)) {
+        if(filters[f]?.indexOf(t[f]) < 0) return false;
       }
       return true;
     })
@@ -343,7 +345,7 @@ class Column extends React.Component {
                   deleteFunction={this.openDelete}
                 />
               </div>
-              {tasks?.map((t) => (
+              {filteredTasks?.map((t) => (
                   <Task
                     task={t}
                     key={t.id}
