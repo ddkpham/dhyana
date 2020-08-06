@@ -21,7 +21,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 import ColumnMenu from './menu';
-
+import { priorities } from '../constants';
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
 
@@ -161,7 +161,7 @@ class Column extends React.Component {
       name,
       description,
       userIdAssigned,
-      assignedPriority,
+      priority,
       time_estimated,
       flag,
     } = details;
@@ -171,7 +171,7 @@ class Column extends React.Component {
       name: name,
       description: description,
       user_id_assigned: userIdAssigned,
-      priority: assignedPriority,
+      priority,
       time_estimated: time_estimated,
       flag: flag,
       column_id: column.id,
@@ -297,11 +297,10 @@ class Column extends React.Component {
     const id = taskOpen ? "simple-popover" : undefined;
 
     const teamMembers = team.map((u) => ({id: u.id, name: u.username}));
-    const tempPriorities = [{name: '0', id: 0}, { name: '1', id: 1},  {name: '2', id: 2}, {name: '3', id: 3}, {name: '4', id: 4}, {name: '5', id: 5}] //should be read from constants file?
 
     const filterOptions = [
       {name: 'Assigned User', id: 'user_id_assigned', options: teamMembers},
-      {name: 'Priority', id: 'priority', options: tempPriorities}
+      {name: 'Priority', id: 'priority', options: priorities}
     ];
 
     if(!!sort) tasks.sort(this.compareFunc);

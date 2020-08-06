@@ -13,6 +13,7 @@ import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
 import { cyan, grey } from "@material-ui/core/colors";
+import { priorities } from '../../constants';
 
 const ColouredSwitch = withStyles({
   switchBase: {
@@ -85,22 +86,12 @@ function TaskDetail(props) {
   const [flag, setFlag] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
-  const prioritiesArray = [
-    "5 - blocker",
-    "4 - critical",
-    "3 - high",
-    "2 - medium",
-    "1 - low",
-    "0 - None",
-  ];
-
   const createTask = () => {
-    const assignedPriority = priority == "" ? null : priority.charAt(0);
     const details = {
       name,
       description,
       userIdAssigned,
-      assignedPriority,
+      priority,
       time_estimated: timeEstimated,
       flag,
     };
@@ -194,8 +185,8 @@ function TaskDetail(props) {
             value={priority}
             onChange={assignPriority}
           >
-            {prioritiesArray.map((priority) => (
-              <MenuItem value={priority}>{priority}</MenuItem>
+            {priorities.map((priority) => (
+              <MenuItem value={priority.id}>{priority.name}</MenuItem>
             ))}
           </Select>
         </FormControl>

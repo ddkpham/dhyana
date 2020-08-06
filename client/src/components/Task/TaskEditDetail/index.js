@@ -16,6 +16,7 @@ import { cyan, grey } from "@material-ui/core/colors";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Comment from "./commentCard";
+import { priorities } from '../../constants';
 
 const ColouredSwitch = withStyles({
   switchBase: {
@@ -144,15 +145,7 @@ function TaskEditDetail(props) {
   const { currValues, team } = props;
   const forceUpdate = useForceUpdate();
 
-  const prioritiesArray = [
-    "5 - blocker",
-    "4 - critical",
-    "3 - high",
-    "2 - medium",
-    "1 - low",
-    "0 - None",
-  ];
-  const currPriority = prioritiesArray.find(getPriority);
+  const currPriority = priorities.find(getPriority);
 
   const [name, setName] = useState(currValues.name);
   const [description, setDescription] = useState(currValues.description);
@@ -172,7 +165,7 @@ function TaskEditDetail(props) {
   const [commentDisabled, setCommentDisabled] = useState(true);
 
   function getPriority(p) {
-    return p.charAt(0) == currValues.priority;
+    return p.id == currValues.priority;
   }
 
   async function getAllComments(task_id, teamUserArray) {
@@ -204,8 +197,6 @@ function TaskEditDetail(props) {
   }, [currValues.id]);
 
   const editTask = () => {
-    const priorityInt =
-      priority == "" || priority == null ? null : priority.charAt(0);
     const timeEstimated = parseFloat(time_estimated);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
@@ -216,7 +207,7 @@ function TaskEditDetail(props) {
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: priorityInt,
+      priority,
       time_estimated: timeEstimated,
       time_elapsed,
       flag,
@@ -395,8 +386,8 @@ function TaskEditDetail(props) {
               onChange={assignPriority}
               className={classes.priority}
             >
-              {prioritiesArray.map((priority) => (
-                <MenuItem value={priority}>{priority}</MenuItem>
+              {priorities.map((priority) => (
+                <MenuItem value={priority.id}>{priority.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
