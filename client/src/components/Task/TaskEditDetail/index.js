@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { baseURL } from "../../../config/settings";
-import { getCall } from "../../../apiCalls/apiCalls";
+import { getCall, postCall } from "../../../apiCalls/apiCalls";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Select, Step } from "@material-ui/core";
+import { makeStyles, Select, Step, Hidden } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { fade, withStyles } from "@material-ui/core/styles";
-import { cyan } from "@material-ui/core/colors";
+import { cyan, grey } from "@material-ui/core/colors";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Comment from "./commentCard";
 
 const ColouredSwitch = withStyles({
   switchBase: {
@@ -38,17 +41,26 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+    height: 45,
   },
   userField: {
     width: 300,
+    height: 45,
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   timeField: {
     width: 300,
+    height: 45,
   },
   bottomStack: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 25,
+  },
+  middleStack: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -70,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
   priority: {
     width: 270,
+    height: 45,
   },
   priorityFlagStack: {
     display: "flex",
@@ -84,23 +97,52 @@ const useStyles = makeStyles((theme) => ({
   },
   createTaskTitle: {
     width: "100%",
-    marginTop: 25,
-    marginBottom: 25,
+    marginTop: 5,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   taskEditDetailMainWrapper: {
     width: 600,
-    height: 650,
+    maxHeight: 850,
+    minHeight: 650,
     alignItems: "center",
     alignItems: "center",
   },
+  addCommentButton: {
+    width: 100,
+    marginTop: 15,
+    marginRight: 5,
+    height: 45,
+  },
+  addCommentField: {
+    width: 450,
+    height: 45,
+  },
+  gridDiv: {
+    width: 565,
+    marginLeft: 15,
+    marginRight: 15,
+    overflow: "scroll",
+    height: 150,
+    border: "1px solid",
+    borderColor: grey[400],
+    borderRadius: 4,
+  },
 }));
+
+export function useForceUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick(tick => tick + 1);
+    }, [])
+    return update;
+  }
 
 function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team_id } = props;
+  const forceUpdate = useForceUpdate();
 
   const prioritiesArray = [
     "5 - blocker",
@@ -125,34 +167,62 @@ function TaskEditDetail(props) {
   const [flag, setFlag] = useState(currValues.flag);
   const [teamUserArray, setteamUserArray] = useState([]);
   const [userCreated, setUserCreated] = useState([]);
+  const [currComment, setCurrComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
+  const [receivedUserArray, setReceivedUserArray] = useState(false);
+
 
   function getPriority(p) {
     return p.charAt(0) == currValues.priority;
   }
 
-  useEffect(() => {
-    async function getTeamUserArray() {
-      console.log("getting team users for: ", team_id);
-      const url = `${baseURL}/team/${props.team_id}/users`;
-      const response = await getCall(url);
+    async function getAllComments(task_id, teamUserArray) {
+        console.log("getting all comments for: ", task_id);
+        const url = `${baseURL}/project/task/${task_id}/get-comments`;
+        const response = await getCall(url);
 
-      const payload = await response.json();
-      const { data: teamMembers } = payload;
-      console.log(teamMembers);
-      if (response.status === 200) {
-        setteamUserArray(teamMembers);
-        for (var i = 0; i<teamMembers.length; i++) {
-            console.log("currValues.user_id_created is: ", currValues.user_id_created)
-            console.log("teamMembers[i].id is: ", teamMembers[i].id)
-            if (teamMembers[i].id == currValues.user_id_created) {
-                setUserCreated(teamMembers[i]);
-                break;
+        const payload = await response.json();
+        const { data: comments } = payload;
+        console.log(comments);
+        if (response.status === 200) {
+            for (var i = 0; i<comments.length; i++) {
+                for (var j = 0; j<teamUserArray.length; j++) {
+                    if (comments[i].user_id == teamUserArray[j].id) {
+                        comments[i].username = teamUserArray[j].username
+                        break;
+                    }
+                }
+            }
+            setAllComments(comments);
+            // Scroll to bottom of comments
+            var gridDiv = document.getElementById("gridDiv");
+            gridDiv.scrollTop = gridDiv.scrollHeight
+        }
+    }
+
+    useEffect(() => {
+        async function getTeamUserArray() {
+        console.log("getting team users for: ", team_id);
+        const url = `${baseURL}/team/${props.team_id}/users`;
+        const response = await getCall(url);
+
+        const payload = await response.json();
+        const { data: teamMembers } = payload;
+        console.log(teamMembers);
+        if (response.status === 200) {
+            setteamUserArray(teamMembers);
+            setReceivedUserArray(true)
+            for (var i = 0; i<teamMembers.length; i++) {
+                if (teamMembers[i].id == currValues.user_id_created) {
+                    setUserCreated(teamMembers[i]);
+                    break;
+                }
             }
         }
-      }
-    }
-    getTeamUserArray(team_id);
-  }, [team_id, currValues.user_id_created]);
+        }
+        getTeamUserArray(team_id);
+        getAllComments(currValues.id, teamUserArray)
+    }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
 
   const editTask = () => {
     const priorityInt =
@@ -221,6 +291,30 @@ function TaskEditDetail(props) {
     }
   };
 
+  const setComment = (event) => {
+    console.log("event value is: ", event.target.value);
+    setCurrComment(event.target.value)
+  };
+
+  const submitComment = () => {
+    console.log("TaskEditDetail - entered submitComment with comment: ", currComment, ", task_id: ", currValues.id);
+    
+    const url = `${baseURL}/project/task/${currValues.id}/create-comment`;
+    console.log(url)
+    const body = {
+        description: currComment,
+    };
+
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Submit Comment Response", data);
+        setCurrComment("");
+        getAllComments(currValues.id, teamUserArray)
+      })
+      .catch((err) => console.log("Submit Comment Error", err));
+  };
+
   return (
     <Card className={classes.taskEditDetailMainWrapper}>
       <Typography className={classes.createTaskTitle} variant="h4">
@@ -240,12 +334,12 @@ function TaskEditDetail(props) {
           id="outlined-basic"
           label="Task description"
           multiline
-          rows={4}
+          rows={3}
           variant="outlined"
           defaultValue={currValues.description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <div className={classes.bottomStack}>
+        <div className={classes.middleStack}>
           <TextField
             labelId="createdUserLabel"
             value={`${userCreated.username} - ${userCreated.first_name} ${userCreated.last_name}`}
@@ -276,7 +370,7 @@ function TaskEditDetail(props) {
           </FormControl>
         </div>
 
-        <div className={classes.bottomStack}>
+        <div className={classes.middleStack}>
           <TextField
             className={classes.timeField}
             id="outlined-number"
@@ -330,6 +424,41 @@ function TaskEditDetail(props) {
               />
             </FormControl>
           </div>
+        </div>
+
+        { allComments.length > 0 ? (
+        <div id="gridDiv" className={classes.gridDiv}>
+            <Grid container zeroMinWidth className={classes.allCommentsTable}>
+                <Paper elevation={2}>
+                {allComments?.map((comment) => (
+                    <Comment
+                    description={comment.description}
+                    username={comment.username}
+                    />
+                ))}
+                </Paper>
+            </Grid>
+        </div>
+        ) : (null)}
+
+        <div className={classes.addCommentDiv}>
+            <TextField
+                className={classes.addCommentField}
+                id="outlined-basic"
+                label="Leave a Comment"
+                multiline
+                rows={1}
+                variant="outlined"
+                defaultValue=""
+                onChange={(e) => setComment(e)}
+            />
+            <Button
+                variant="outlined"
+                className={classes.addCommentButton}
+                onClick={submitComment}
+            >
+            Comment
+          </Button>
         </div>
 
         <div className={classes.bottomStack}>

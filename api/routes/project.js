@@ -44,16 +44,21 @@ router.post(
   projectController.create_new_task
 );
 
-router.post("/create/task-comment", [
-  body("description").isLength({ min: 1 }).escape(),
-  body("user_id").isLength({ min: 1 }),
-  projectController.create_task_comment,
-]);
-
 router.post(
   "/task/:task_id/move",
   [body("task_ids").isLength({ min: 1 })],
   projectController.move_task
+);
+
+router.get(
+  "/task/:task_id/get-comments",
+  projectController.get_task_comments
+);
+
+router.post(
+  "/task/:task_id/create-comment",
+  [body("description").isLength({ min: 1 }).escape()],
+  projectController.create_task_comment
 );
 
 router.post(

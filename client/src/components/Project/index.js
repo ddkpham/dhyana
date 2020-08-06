@@ -24,8 +24,6 @@ const styles = (theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    // overflowX: 'scroll',
-    // overflow: "-moz-scrollbars-vertical",
     height: "100%",
     minHeight: "95%",
     width: "95%",

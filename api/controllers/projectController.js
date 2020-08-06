@@ -45,37 +45,74 @@ exports.create_project = function (req, res, next) {
 
 exports.create_task_comment = function (req, res, next) {
   console.log("exports.create_task_comment -> req.body", req.body);
-
+  console.log("get_task_comments params: ", req.params);
+  const task_id = req.params.task_id.trim();
   body(req.body).trim().escape().not().isEmpty();
   const { description } = req.body;
   console.log("exports.create_task_comment -> body", description);
-  const user_id = req.body.user_id;
-  console.log("exports.create_task_comment -> user_id", user_id);
+  const { userId } = req.session;
+  const date_created = new Date().toISOString()
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
     res.status(400).json(errorResponse("errors in inputted data"));
   }
 
-  if (!body || !user_id) {
+  if (!body || !userId) {
     res.status(400).json(errorResponse("missing team id or project name"));
     return;
   }
 
-  const createTaskComment = async () => {
-    try {
-      const comment = await Comment.findAll();
-      console.log("createTaskComment -> comment", comment);
+  Comment.create({
+    task_id: task_id,
+    user_id: userId,
+    date_created: date_created,
+    description: description,
+  })
+  .then(() => {
+    res.status(200).json(successResponse("comment created successfully."));
+    return;
+  })
+  .catch((err) => {
+    console.log("error in update", err);
+    res.status(409).json(errorResponse("comment couldn’t be created.", err));
+  });
+};
+
+exports.get_task_comments = function (req, res, next) {
+  console.log("get_task_comments params: ", req.params);
+  const task_id = req.params.task_id.trim();
+
+  if (!task_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  Comment.findAll({
+    where: {
+      task_id: task_id,
+    },
+  })
+    .then((comments) => {
+      console.log("exports.get_task_comments -> comments", comments);
+      if (comments.length) {
+        res
+          .status(200)
+          .json(successResponse("Sucessfully found comments", comments));
+      } else {
+        res.status(404).json(errorResponse("Comments not found.", err));
+      }
+    })
+    .catch((err) => {
       res
-        .status(200)
-        .json(successResponse("comment created successfully", comment));
-    } catch (err) {
-      res
-        .status(400)
-        .json(errorResponse("Error in creating comment. Check query.", err));
-    }
-  };
-  createTaskComment();
+        .status(404)
+        .json(
+          errorResponse(
+            "Comments not found. error in request. Check query.",
+            err
+          )
+        );
+    });
 };
 
 exports.view_project = function (req, res, next) {
@@ -356,7 +393,7 @@ exports.create_new_task = function (req, res, next) {
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
   const flag = req.body.flag == "" ? false : req.body.flag;
-  const date_created = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+  const date_created = new Date().toISOString()
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;
 
@@ -482,7 +519,7 @@ exports.edit_task = function (req, res, next) {
     time_elapsed,
     time_estimated,
   } = req.body;
-  const date_modified = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+  const date_modified = new Date().toISOString()
 
   if (!id) {
     res.status(400).json(errorResponse("missing task_id"));
