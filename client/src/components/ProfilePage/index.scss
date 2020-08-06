@@ -5,9 +5,10 @@
   border: 1px solid lightgrey;
 }
 
-.container {
+.profile-page-container {
   width: 100%;
   display: flex;
+  justify-content: center;
 }
 
 .container:after {
@@ -34,4 +35,11 @@
 .sign-up-text-input .MuiFormControl-root {
   width: 200px;
   margin: 5px auto;
+}
+
+.profile-page-team-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 400px;
 }
