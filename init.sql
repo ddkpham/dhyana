@@ -130,7 +130,8 @@ CREATE TABLE public.comments (
     id integer NOT NULL,
     user_id integer NOT NULL,
     date_created date,
-    description character varying(250)
+    description character varying(1023),
+    task_id integer NOT NULL
 );
 
 
@@ -449,8 +450,8 @@ COPY public.columnstasks (column_id, task_id, id) FROM stdin;
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.comments (id, user_id, date_created, description) FROM stdin;
-1	9	1980-01-01	good work
+COPY public.comments (id, user_id, date_created, description, task_id) FROM stdin;
+1	9	2010-10-10	good work	22
 \.
 
 
@@ -797,6 +798,14 @@ ALTER TABLE ONLY public.taskstasks
 
 ALTER TABLE ONLY public.taskstasks
     ADD CONSTRAINT sub_task_id FOREIGN KEY (sub_task_id) REFERENCES public.tasks(id);
+
+
+--
+-- Name: comments task commented on ; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT "task commented on " FOREIGN KEY (task_id) REFERENCES public.tasks(id);
 
 
 --
