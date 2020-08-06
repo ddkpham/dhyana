@@ -1,6 +1,15 @@
 import { baseURL, clientBaseURL } from "../../config/settings";
 import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
+import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { useHistory } from "react-router-dom";
@@ -11,6 +20,7 @@ import { postCall } from "../../apiCalls/apiCalls";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPass] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
 
   const login = async (user, name) => {
@@ -45,14 +55,31 @@ function Login() {
               setUsername(event.target.value);
             }}
           />
-          <TextField
-            className="login-text-input"
-            label="password"
-            variant="outlined"
-            onChange={(event) => {
-              setPass(event.target.value);
-            }}
-          />
+
+          <FormControl className="password-textfield" variant="filled">
+            <InputLabel htmlFor="filled-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="filled-adornment-password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => {
+                setPass(e.target.value);
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
         </div>
         <div className={"button-container"}>
           <Button
