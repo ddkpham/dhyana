@@ -4,6 +4,7 @@ const Column = require("../models/Column");
 const ProjectColumns = require("../models/ProjectColumns");
 const ColumnTask = require("../models/ColumnsTasks");
 const TeamsUsers = require("../models/TeamsUsers");
+const Comment = require("../models/Comment");
 const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
@@ -40,6 +41,41 @@ exports.create_project = function (req, res, next) {
     .catch((err) => {
       res.status(409).json(errorResponse("Project exists already.", err));
     });
+};
+
+exports.create_task_comment = function (req, res, next) {
+  console.log("exports.create_task_comment -> req.body", req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const { description } = req.body;
+  console.log("exports.create_task_comment -> body", description);
+  const user_id = req.body.user_id;
+  console.log("exports.create_task_comment -> user_id", user_id);
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!body || !user_id) {
+    res.status(400).json(errorResponse("missing team id or project name"));
+    return;
+  }
+
+  const createTaskComment = async () => {
+    try {
+      const comment = await Comment.findAll();
+      console.log("createTaskComment -> comment", comment);
+      res
+        .status(200)
+        .json(successResponse("comment created successfully", comment));
+    } catch (err) {
+      res
+        .status(400)
+        .json(errorResponse("Error in creating comment. Check query.", err));
+    }
+  };
+  createTaskComment();
 };
 
 exports.view_project = function (req, res, next) {
@@ -415,19 +451,19 @@ exports.move_task = function (req, res, next) {
   }
 
   ColumnTask.update(
-      {
-        column_id,
-      },
-      {
-        where: { task_id,},
-      }
-    )
+    {
+      column_id,
+    },
+    {
+      where: { task_id },
+    }
+  )
     .then(() => {
       res.status(200).json(successResponse("task moved successfully."));
       return;
     })
     .catch((err) => {
-      console.log("error in update", err)
+      console.log("error in update", err);
       res.status(409).json(errorResponse("task couldn’t be moved.", err));
     });
 };
@@ -436,7 +472,16 @@ exports.edit_task = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("edit task req.body is: ", req.body);
 
-  const { id, name, description, flag, user_id_assigned, priority, time_elapsed, time_estimated } = req.body
+  const {
+    id,
+    name,
+    description,
+    flag,
+    user_id_assigned,
+    priority,
+    time_elapsed,
+    time_estimated,
+  } = req.body;
   const date_modified = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
 
   if (!id) {
@@ -447,27 +492,27 @@ exports.edit_task = function (req, res, next) {
   console.log("updating task with id: ", id);
 
   Task.update(
-      {
-        name,
-        description,
-        flag,
-        user_id_assigned,
-        priority,
-        date_modified,
-        time_elapsed,
-        time_estimated,
-      },
-      {
-        where: { id, },
-      }
-    )
+    {
+      name,
+      description,
+      flag,
+      user_id_assigned,
+      priority,
+      date_modified,
+      time_elapsed,
+      time_estimated,
+    },
+    {
+      where: { id },
+    }
+  )
     .then(() => {
-      console.log("UPDATE WAS SUCCESSFUL")
+      console.log("UPDATE WAS SUCCESSFUL");
       res.status(200).json(successResponse("task updated successfully."));
       return;
     })
     .catch((err) => {
-      console.log("error in update", err)
+      console.log("error in update", err);
       res.status(409).json(errorResponse("task couldn’t be updated.", err));
     });
 };
