@@ -14,6 +14,7 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
 import { useHistory } from "react-router-dom";
@@ -139,18 +140,16 @@ function ProfilePage(props) {
               job title:{" "}
               {userInfo.job_title ? userInfo.job_title : "CEO of mind your own"}
             </Typography>
-            <Typography variant="h6" color="secondary">
-              Biography:{" "}
-            </Typography>
-            <TextareaAutosize
+
+            <TextField
               rowsMax={5}
+              label="Biography"
+              multiline
+              rows={4}
               aria-label="maximum height"
               placeholder="Maximum 4 rows"
-              defaultValue={
-                userInfo.biography
-                  ? userInfo.biography
-                  : "Please respect my privacy. I'm a private person."
-              }
+              defaultValue={"Please respect my privacy. I'm a private person."}
+              value={userInfo.biography}
             />
             <FormControl className={classes.formControl} variant="outlined">
               <InputLabel>Team</InputLabel>
