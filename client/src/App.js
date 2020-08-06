@@ -66,21 +66,9 @@ function App(props) {
                   {authenticated ? <Home /> : <Login />}
                 </Route>
                 <Route path="/create-user">{<CreateUser />}</Route>
-<<<<<<< HEAD
                 <Route path="/create-team">
                   {authenticated ? <CreateTeam /> : <Login />}
                 </Route>
-=======
-                <Route
-                  path="/create-team"
-                  render={() => {
-                    if (authenticated) {
-                      return <CreateTeam />;
-                    }
-                    return <Login />;
-                  }}
-                />
->>>>>>> master
                 <Route path="/my-profile">
                   {authenticated ? <MyProfile /> : <Login />}
                 </Route>
