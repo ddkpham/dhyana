@@ -67,6 +67,7 @@ class Project extends React.Component {
   state = {
     project: {},
     columns: [],
+    teamMembers: [],
     columnModalOpen: false,
   };
 
@@ -87,6 +88,7 @@ class Project extends React.Component {
         console.log("fetch project success", data);
         const project = data.data[0];
         this.setState({ project });
+        this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
       })
       .catch((err) => console.log("project fetch error", err));
@@ -103,6 +105,18 @@ class Project extends React.Component {
       .catch((err) => console.log("column fetch error", err));
   };
 
+  getTeamUserArray = (team_id) => {
+    console.log("getting team users for: ", team_id);
+    const url = `${baseURL}/team/${team_id}/users`;
+    const response = getCall(url)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("fetch team success", data);
+      this.setState({ teamMembers: data.data });
+    })
+    .catch((err) => console.log("column fetch error", err));
+  };
+
   closeColumnModal = () => {
     const { project } = this.state;
     this.setState({ columnModalOpen: false });
@@ -114,7 +128,7 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, columnModalOpen } = this.state;
+    const { project, columns, teamMembers, columnModalOpen } = this.state;
     const { classes } = this.props;
     console.log("Project -> render -> project", project);
     return (
@@ -153,7 +167,7 @@ class Project extends React.Component {
                 column={c}
                 key={c.id}
                 projectId={project.id}
-                teamId={project.team_id}
+                team={teamMembers}
                 reload={this.getProject}
                 width={300}
               />

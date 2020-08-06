@@ -290,17 +290,17 @@ class Column extends React.Component {
   }
 
   render() {
-    const { column, classes } = this.props;
+    const { column, classes, team } = this.props;
     const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters, deleteOpen } = this.state;
     const taskOpen = Boolean(anchorTask);
     console.log("Column -> render -> open", taskOpen);
     const id = taskOpen ? "simple-popover" : undefined;
 
-    const tempTeamMembers = [{ name: 'person 1', id: 1},  {name: 'person 2', id: 2}, {name: 'person 3', id: 3}]; //Should be passed in or called from api
+    const teamMembers = team.map((u) => ({id: u.id, name: u.username}));
     const tempPriorities = [{name: '0', id: 0}, { name: '1', id: 1},  {name: '2', id: 2}, {name: '3', id: 3}, {name: '4', id: 4}, {name: '5', id: 5}] //should be read from constants file?
 
     const filterOptions = [
-      {name: 'Assigned User', id: 'user_id_assigned', options: tempTeamMembers},
+      {name: 'Assigned User', id: 'user_id_assigned', options: teamMembers},
       {name: 'Priority', id: 'priority', options: tempPriorities}
     ];
 
@@ -352,7 +352,7 @@ class Column extends React.Component {
                     columnId={column.id}
                     deleteTask={this.deleteTask.bind(this)}
                     editTask={this.editTask.bind(this)}
-                    team_id={this.props.teamId}
+                    team={team}
                   />
                 ))}
             </Paper>
@@ -371,7 +371,7 @@ class Column extends React.Component {
             <TaskDetail
               addTask={this.addTask.bind(this)}
               className={classes.taskDetail}
-              team_id={this.props.teamId}
+              team={team}
             />
           </Popover>
         </Grid>

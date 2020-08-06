@@ -76,14 +76,13 @@ const useStyles = makeStyles((theme) => ({
 function TaskDetail(props) {
   const classes = useStyles();
 
-  const { team_id } = props;
+  const { team } = props;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [userIdAssigned, setUserAssigned] = useState(null);
   const [priority, setPriority] = useState("");
   const [timeEstimated, setTimeEstimated] = useState(null);
   const [flag, setFlag] = useState(false);
-  const [teamUserArray, setteamUserArray] = useState([]);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
   const prioritiesArray = [
@@ -94,22 +93,6 @@ function TaskDetail(props) {
     "1 - low",
     "0 - None",
   ];
-
-  useEffect(() => {
-    async function getTeamUserArray() {
-      console.log("getting team users for: ", team_id);
-      const url = `${baseURL}/team/${props.team_id}/users`;
-      const response = await getCall(url);
-
-      const payload = await response.json();
-      const { data: teamMembers } = payload;
-      console.log(teamMembers);
-      if (response.status === 200) {
-        setteamUserArray(teamMembers);
-      }
-    }
-    getTeamUserArray(team_id);
-  }, [team_id]);
 
   const createTask = () => {
     const assignedPriority = priority == "" ? null : priority.charAt(0);
@@ -196,7 +179,7 @@ function TaskDetail(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {teamUserArray.map((user) => (
+            {team.map((user) => (
               <MenuItem value={user.id}>
                 {user.username} - {user.first_name} {user.last_name}
               </MenuItem>

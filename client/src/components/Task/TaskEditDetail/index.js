@@ -141,7 +141,7 @@ export function useForceUpdate() {
 
 function TaskEditDetail(props) {
   const classes = useStyles();
-  const { currValues, team_id } = props;
+  const { currValues, team } = props;
   const forceUpdate = useForceUpdate();
 
   const prioritiesArray = [
@@ -165,7 +165,6 @@ function TaskEditDetail(props) {
   );
   const [time_elapsed, setTimeCompleted] = useState(currValues.time_elapsed);
   const [flag, setFlag] = useState(currValues.flag);
-  const [teamUserArray, setteamUserArray] = useState([]);
   const [userCreated, setUserCreated] = useState([]);
   const [currComment, setCurrComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -201,28 +200,8 @@ function TaskEditDetail(props) {
   }
 
   useEffect(() => {
-    async function getTeamUserArray() {
-      console.log("getting team users for: ", team_id);
-      const url = `${baseURL}/team/${props.team_id}/users`;
-      const response = await getCall(url);
-
-      const payload = await response.json();
-      const { data: teamMembers } = payload;
-      console.log(teamMembers);
-      if (response.status === 200) {
-        setteamUserArray(teamMembers);
-        setReceivedUserArray(true);
-        for (var i = 0; i < teamMembers.length; i++) {
-          if (teamMembers[i].id == currValues.user_id_created) {
-            setUserCreated(teamMembers[i]);
-            break;
-          }
-        }
-      }
-    }
-    getTeamUserArray(team_id);
-    getAllComments(currValues.id, teamUserArray);
-  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
+    getAllComments(currValues.id, team);
+  }, [currValues.id]);
 
   const editTask = () => {
     const priorityInt =
@@ -323,7 +302,7 @@ function TaskEditDetail(props) {
         var addCommentField = document.getElementById("addCommentField");
         addCommentField.value = "";
         setCommentDisabled(true);
-        getAllComments(currValues.id, teamUserArray);
+        getAllComments(currValues.id, team);
       })
       .catch((err) => console.log("Submit Comment Error", err));
   };
@@ -374,7 +353,7 @@ function TaskEditDetail(props) {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {teamUserArray.map((user) => (
+              {team.map((user) => (
                 <MenuItem value={user.id}>
                   {user.username} - {user.first_name} {user.last_name}
                 </MenuItem>
