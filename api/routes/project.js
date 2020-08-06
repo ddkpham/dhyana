@@ -44,6 +44,12 @@ router.post(
   projectController.create_new_task
 );
 
+router.post("/create/task-comment", [
+  body("description").isLength({ min: 1 }).escape(),
+  body("user_id").isLength({ min: 1 }),
+  projectController.create_task_comment,
+]);
+
 router.post(
   "/task/:task_id/move",
   [body("task_ids").isLength({ min: 1 })],
