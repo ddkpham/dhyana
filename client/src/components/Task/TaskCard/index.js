@@ -1,10 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from '@material-ui/core/CardHeader';
-import MenuIcon from '@material-ui/icons/Menu';
 import { useDrag, useDrop } from "react-dnd";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from '@material-ui/core';
@@ -27,10 +24,11 @@ const useStyles = makeStyles((theme) => ({
   addTaskButton: {
     marginTop: 25,
   },
-  taskHeader: {
-    padding: '10px',
-    paddingBottom: '0px',
-    alignItems: 'normal'
+  card: {
+    zIndex: '1',
+    '&:hover': {
+      backgroundColor: 'lightgrey',
+    }
   }
 }));
 
@@ -92,40 +90,33 @@ const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
 
   drag(drop(ref));
 
-  if (isDragging) return null;
-
   const open = Boolean(anchor);
   // console.log("Column -> render -> open", open);
   const id = open ? "simple-popover" : undefined;
 
   return (
     <div>
-      <Card raised style={{ opacity: isDragging ? 0.2 : 1 }}>
-        <CardActionArea onClick={handleClick}>
-          <CardHeader
-            avatar={
-              <MenuIcon/>
-            }
-            title={task.name}
-            titleTypographyProps={{variant: 'body1'}}
-            classes={{root: classes.taskHeader}}
-            ref={ref}
-          />
-          <CardContent>
-            <Typography variant="body1" gutterBottom>
-              {task.name}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              {userAssigned.username}
-            </Typography>
-            <Typography variant="body2">{task.description}</Typography>
-            <Typography variant="body2">{task.priority}</Typography>
-            { task.time_estimated ? (
-              <Typography variant="body2">{timeElapsed}/{task.time_estimated} Hours Completed</Typography>
-            ) : (null)}
-            </CardContent>
-        </CardActionArea>
-      </Card>
+      <Card
+        raised
+        style={{ opacity: isDragging ? 0.2 : 1 }}
+        ref={ref}
+        className={classes.card}
+        onClick={handleClick}
+      >
+        <CardContent>
+          <Typography variant="body1" gutterBottom>
+            {task.name}
+          </Typography>
+          <Typography variant="body1" gutterBottom>
+            {userAssigned.username}
+          </Typography>
+          <Typography variant="body2">{task.description}</Typography>
+          <Typography variant="body2">{task.priority}</Typography>
+          { task.time_estimated ? (
+            <Typography variant="body2">{timeElapsed}/{task.time_estimated} Hours Completed</Typography>
+          ) : (null)}
+        </CardContent>
+    </Card>
 
       <Popover
         id={id}
