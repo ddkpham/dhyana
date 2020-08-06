@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 15,
     marginRight: 15,
     overflow: "scroll",
-    height: 150,
+    maxHeight: 150,
     border: "1px solid",
     borderColor: grey[400],
     borderRadius: 4,
