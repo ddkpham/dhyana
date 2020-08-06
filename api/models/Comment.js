@@ -3,6 +3,9 @@ const Sequelize = require("sequelize");
 const db = require("../config/database");
 
 const Comment = db.define("comment", {
+  task_id: {
+    type: Sequelize.INTEGER,
+  },
   user_id: {
     type: Sequelize.INTEGER,
   },
