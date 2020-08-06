@@ -141,19 +141,16 @@ function TaskEditDetail(props) {
       console.log(teamMembers);
       if (response.status === 200) {
         setteamUserArray(teamMembers);
+        for (var i = 0; i<teamMembers.length; i++) {
+            console.log("currValues.user_id_created is: ", currValues.user_id_created)
+            console.log("teamMembers[i].id is: ", teamMembers[i].id)
+            if (teamMembers[i].id == currValues.user_id_created) {
+                setUserCreated(teamMembers[i]);
+                break;
+            }
+        }
       }
     }
-    async function getUserCreatedInfo() {
-      const url = `${baseURL}/user/info/${currValues.user_id_created}`;
-      getCall(url)
-        .then((response) => response.json())
-        .then((payload) => {
-          console.log("payload", payload.data[0]);
-          setUserCreated(payload.data[0]);
-        })
-        .catch((err) => console.log("project fetch error", err));
-    }
-    getUserCreatedInfo();
     getTeamUserArray(team_id);
   }, [team_id, currValues.user_id_created]);
 

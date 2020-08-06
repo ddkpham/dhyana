@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -7,7 +7,10 @@ import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
+import TeamCard from "./TeamCard";
 import { getCall } from "../../apiCalls/apiCalls";
+
+import "./index.scss";
 
 const styles = (theme) => ({
   homeRoot: {
@@ -57,25 +60,46 @@ class Home extends React.Component {
     return (
       <div className={classes.homeRoot}>
         <div className={classes.projectWrapper}>
-          <Typography variant="h4">Projects</Typography>
-          {teams.map((t) => (
-          <div>
-            {projects.map((p) => (
-              t.id === p.team_id ? 
-                (<ProjectCard key={p.id} project={p} />) : (<div></div>)
-            ))}
+          <Typography variant="h4" color="primary">
+            Dashboard
+          </Typography>
+
+          <div className="home-content-wrapper">
+            <div className="home-teams">
+              <Typography variant="h4" color="secondary">
+                Teams
+              </Typography>
+              {teams.map((team) => (
+                <TeamCard name={team.name} id={team.id} />
+              ))}
+            </div>
+            <div className="home-projects-container">
+              <Typography variant="h4" color="secondary">
+                Projects
+              </Typography>
+              <div className="home-projects-wrapper">
+                {teams.map((t) => (
+                  <Fragment>
+                    {projects.map((p) =>
+                      t.id === p.team_id ? (
+                        <ProjectCard key={p.id} project={p} team={t.name} />
+                      ) : null
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+              <Card raised className="home-project-add-btn">
+                <CardActionArea href={"/project/new"}>
+                  <CardContent>
+                    <Typography variant="h5" color="textSecondary" gutterBottom>
+                      <AddIcon />
+                      Add Project
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </div>
           </div>
-          ))}
-          <Card raised>
-            <CardActionArea href={"/project/new"}>
-              <CardContent>
-                <Typography variant="h5" color="textSecondary" gutterBottom>
-                  <AddIcon />
-                  Add Project
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
         </div>
       </div>
     );

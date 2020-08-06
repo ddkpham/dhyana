@@ -8,6 +8,7 @@ import "./index.scss";
 
 function CreateUser() {
   const [username, setUsername] = useState("");
+  console.log("CreateUser -> username", username);
   const [password, setPass] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
@@ -19,11 +20,11 @@ function CreateUser() {
 
     const data = await response.json();
     const { confirmation, message } = data;
-    console.log(data)
+    console.log(data);
     if (confirmation === "success") {
       window.location.href = `${clientBaseURL}/home`;
     } else {
-      alert(message)
+      alert(message);
     }
   };
 
