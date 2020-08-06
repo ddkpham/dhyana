@@ -20,7 +20,7 @@ function Login() {
 
     const data = await response.json();
     const { confirmation, message } = data;
-    console.log(data)
+    console.log(data);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
 
@@ -68,7 +68,7 @@ function Login() {
             variant="outlined"
             color="primary"
             onClick={() => {
-              history.push("/createUser");
+              history.push("/create-user");
             }}
           >
             Sign Up
