@@ -123,6 +123,38 @@ ALTER SEQUENCE public.columnstasks_tasks_id_seq OWNED BY public.columnstasks.tas
 
 
 --
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    date_created date,
+    description character varying(250)
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.comments_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
+
+
+--
 -- Name: projectcolumns; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -350,6 +382,13 @@ ALTER TABLE ONLY public.columnstasks ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.comments_id_seq'::regclass);
+
+
+--
 -- Name: pcolumns id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -403,6 +442,15 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.columnstasks (column_id, task_id, id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.comments (id, user_id, date_created, description) FROM stdin;
+1	9	1980-01-01	good work
 \.
 
 
@@ -583,6 +631,13 @@ SELECT pg_catalog.setval('public.columnstasks_tasks_id_seq', 1, false);
 
 
 --
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.comments_id_seq', 1, true);
+
+
+--
 -- Name: projectcolumns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -638,6 +693,14 @@ ALTER TABLE ONLY public.pcolumns
 
 ALTER TABLE ONLY public.columnstasks
     ADD CONSTRAINT columnstasks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -758,6 +821,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.teamsusers
     ADD CONSTRAINT team_id FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
+-- Name: comments user who created comment; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT "user who created comment" FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
