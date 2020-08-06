@@ -170,7 +170,7 @@ function TaskEditDetail(props) {
   const [currComment, setCurrComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [receivedUserArray, setReceivedUserArray] = useState(false);
-
+  const [commentDisabled, setCommentDisabled] = useState(true);
 
   function getPriority(p) {
     return p.charAt(0) == currValues.priority;
@@ -294,6 +294,11 @@ function TaskEditDetail(props) {
   const setComment = (event) => {
     console.log("event value is: ", event.target.value);
     setCurrComment(event.target.value)
+    if (event.target.value != "") {
+        setCommentDisabled(false);
+      } else {
+        setCommentDisabled(true);
+      }
   };
 
   const submitComment = () => {
@@ -310,6 +315,9 @@ function TaskEditDetail(props) {
       .then((data) => {
         console.log("Submit Comment Response", data);
         setCurrComment("");
+        var addCommentField = document.getElementById("addCommentField");
+        addCommentField.value = ""
+        setCommentDisabled(true);
         getAllComments(currValues.id, teamUserArray)
       })
       .catch((err) => console.log("Submit Comment Error", err));
@@ -444,7 +452,7 @@ function TaskEditDetail(props) {
         <div className={classes.addCommentDiv}>
             <TextField
                 className={classes.addCommentField}
-                id="outlined-basic"
+                id="addCommentField"
                 label="Leave a Comment"
                 multiline
                 rows={1}
@@ -454,8 +462,10 @@ function TaskEditDetail(props) {
             />
             <Button
                 variant="outlined"
+                id="addCommentButton"
                 className={classes.addCommentButton}
                 onClick={submitComment}
+                disabled={commentDisabled}
             >
             Comment
           </Button>
