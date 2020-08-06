@@ -329,8 +329,10 @@ class Column extends React.Component {
             <Paper elevation={4} className={classes.columnPaper}>
               <div className={classes.columnHeader}>
                 <Typography>{column.name}</Typography>
-                {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
-                <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
+                <span>
+                  {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
+                  <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
+                </span>
                 <ColumnMenu
                   anchorEl={anchorMenu}
                   handleClose={this.closeMenu}
