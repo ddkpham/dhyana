@@ -15,10 +15,6 @@ const User = db.define("user", {
   password: {
     type: Sequelize.STRING,
   },
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-  },
 });
 
 module.exports = User;

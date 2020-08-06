@@ -210,6 +210,13 @@ exports.create_new_user = function (req, res, next) {
     }
 
     const { username, password, first_name, last_name } = req.body;
+    console.log(
+      "exports.create_new_user -> username, password, first_name, last_name",
+      username,
+      password,
+      first_name,
+      last_name
+    );
 
     User.create({
       first_name,
