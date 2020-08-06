@@ -33,6 +33,7 @@ class NewProject extends React.Component {
           window.location.href = `${clientBaseURL}/project/${data.data.name}`;
         } else {
           console.log("project create error", data.message);
+          alert("Project was not created. Error: missing project name or team.");
         }
       })
       .catch((err) => console.log("project create error", err));
