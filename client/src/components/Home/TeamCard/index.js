@@ -4,7 +4,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import { baseURL } from "../../../config/settings";
+import { baseURL, clientBaseURL } from "../../../config/settings";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
 import "./index.scss";
@@ -43,7 +43,7 @@ class TeamCard extends React.Component {
 
   navigateToUserPage = (username) => {
     console.log("TeamCard -> navigateToUserPage -> username", username);
-    window.location.href = `${baseURL}/user/${username}`;
+    window.location.href = `${clientBaseURL}/user/${username}`;
   };
 
   render() {
