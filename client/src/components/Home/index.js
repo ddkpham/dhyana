@@ -91,7 +91,7 @@ class Home extends React.Component {
               <Card raised className="home-project-add-btn">
                 <CardActionArea href={"/project/new"}>
                   <CardContent>
-                    <Typography variant="h5" color="textSecondary" gutterBottom>
+                    <Typography variant="h5" color="textSecondary">
                       <AddIcon />
                       Add Project
                     </Typography>

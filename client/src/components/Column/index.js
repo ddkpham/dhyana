@@ -22,6 +22,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 import ColumnMenu from './menu';
 import { priorities } from '../constants';
+import { postCall, deleteCall } from "../../apiCalls/apiCalls";
+import { red, cyan, grey } from "@material-ui/core/colors";
+
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
 
@@ -287,6 +290,34 @@ class Column extends React.Component {
     return 0;
   }
 
+  setPriorityTaskColor = (priority) => {
+    console.log("entered setPriorityTaskColor with priority: ", priority)
+    switch (priority) {
+        case 5:
+          return red[600]
+        case 4:
+          return red[300]
+        case 3:
+          return "orange"
+        case 2:
+          return "yellow"
+        case 1:
+          return "lightgreen"
+        default:
+          return cyan[50]
+    }
+  }
+
+  setNewBackgroundColor = (flag, isOverdue) => {
+    if (flag) {
+      return grey[200]
+    } else if (isOverdue) {
+      return red[100]
+    } else {
+      return "white"
+    }
+  }
+
   render() {
     const { column, classes, team } = this.props;
     const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters, deleteOpen } = this.state;
@@ -341,6 +372,20 @@ class Column extends React.Component {
                   filterOptions={filterOptions}
                   setFilters={this.setFilters}
                   deleteFunction={this.openDelete}
+              <Typography variant="h6" className={classes.columnName}>
+                {column.name}
+              </Typography>
+
+              {tasks?.map((t) => (
+                <Task
+                  task={t}
+                  key={t.id}
+                  columnId={column.id}
+                  deleteTask={this.deleteTask.bind(this)}
+                  editTask={this.editTask.bind(this)}
+                  team_id={this.props.teamId}
+                  priorityColor={this.setPriorityTaskColor(t.priority)}
+                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                 />
               </div>
               {filteredTasks?.map((t) => (
