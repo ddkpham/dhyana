@@ -150,7 +150,8 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetch Tasks Response", data);
-        this.setState({ tasks: data.data });
+        const tasks = data.data.map((t) => ({...t, date_created: new Date(t.date_created)}))
+        this.setState({ tasks: tasks });
       })
       .catch((err) => console.log("task fetch error", err));
   };
