@@ -132,12 +132,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function useForceUpdate() {
-    const [, setTick] = useState(0);
-    const update = useCallback(() => {
-      setTick(tick => tick + 1);
-    }, [])
-    return update;
-  }
+  const [, setTick] = useState(0);
+  const update = useCallback(() => {
+    setTick((tick) => tick + 1);
+  }, []);
+  return update;
+}
 
 function TaskEditDetail(props) {
   const classes = useStyles();
@@ -176,53 +176,53 @@ function TaskEditDetail(props) {
     return p.charAt(0) == currValues.priority;
   }
 
-    async function getAllComments(task_id, teamUserArray) {
-        console.log("getting all comments for: ", task_id);
-        const url = `${baseURL}/project/task/${task_id}/get-comments`;
-        const response = await getCall(url);
+  async function getAllComments(task_id, teamUserArray) {
+    console.log("getting all comments for: ", task_id);
+    const url = `${baseURL}/project/task/${task_id}/get-comments`;
+    const response = await getCall(url);
 
-        const payload = await response.json();
-        const { data: comments } = payload;
-        console.log(comments);
-        if (response.status === 200) {
-            for (var i = 0; i<comments.length; i++) {
-                for (var j = 0; j<teamUserArray.length; j++) {
-                    if (comments[i].user_id == teamUserArray[j].id) {
-                        comments[i].username = teamUserArray[j].username
-                        break;
-                    }
-                }
-            }
-            setAllComments(comments);
-            // Scroll to bottom of comments
-            var gridDiv = document.getElementById("gridDiv");
-            gridDiv.scrollTop = gridDiv.scrollHeight
+    const payload = await response.json();
+    const { data: comments } = payload;
+    console.log(comments);
+    if (response.status === 200) {
+      for (var i = 0; i < comments.length; i++) {
+        for (var j = 0; j < teamUserArray.length; j++) {
+          if (comments[i].user_id == teamUserArray[j].id) {
+            comments[i].username = teamUserArray[j].username;
+            break;
+          }
         }
+      }
+      setAllComments(comments);
+      // Scroll to bottom of comments
+      var gridDiv = document.getElementById("gridDiv");
+      gridDiv.scrollTop = gridDiv.scrollHeight;
     }
+  }
 
-    useEffect(() => {
-        async function getTeamUserArray() {
-        console.log("getting team users for: ", team_id);
-        const url = `${baseURL}/team/${props.team_id}/users`;
-        const response = await getCall(url);
+  useEffect(() => {
+    async function getTeamUserArray() {
+      console.log("getting team users for: ", team_id);
+      const url = `${baseURL}/team/${props.team_id}/users`;
+      const response = await getCall(url);
 
-        const payload = await response.json();
-        const { data: teamMembers } = payload;
-        console.log(teamMembers);
-        if (response.status === 200) {
-            setteamUserArray(teamMembers);
-            setReceivedUserArray(true)
-            for (var i = 0; i<teamMembers.length; i++) {
-                if (teamMembers[i].id == currValues.user_id_created) {
-                    setUserCreated(teamMembers[i]);
-                    break;
-                }
-            }
+      const payload = await response.json();
+      const { data: teamMembers } = payload;
+      console.log(teamMembers);
+      if (response.status === 200) {
+        setteamUserArray(teamMembers);
+        setReceivedUserArray(true);
+        for (var i = 0; i < teamMembers.length; i++) {
+          if (teamMembers[i].id == currValues.user_id_created) {
+            setUserCreated(teamMembers[i]);
+            break;
+          }
         }
-        }
-        getTeamUserArray(team_id);
-        getAllComments(currValues.id, teamUserArray)
-    }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
+      }
+    }
+    getTeamUserArray(team_id);
+    getAllComments(currValues.id, teamUserArray);
+  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
 
   const editTask = () => {
     const priorityInt =
@@ -293,21 +293,26 @@ function TaskEditDetail(props) {
 
   const setComment = (event) => {
     console.log("event value is: ", event.target.value);
-    setCurrComment(event.target.value)
+    setCurrComment(event.target.value);
     if (event.target.value != "") {
-        setCommentDisabled(false);
-      } else {
-        setCommentDisabled(true);
-      }
+      setCommentDisabled(false);
+    } else {
+      setCommentDisabled(true);
+    }
   };
 
   const submitComment = () => {
-    console.log("TaskEditDetail - entered submitComment with comment: ", currComment, ", task_id: ", currValues.id);
-    
+    console.log(
+      "TaskEditDetail - entered submitComment with comment: ",
+      currComment,
+      ", task_id: ",
+      currValues.id
+    );
+
     const url = `${baseURL}/project/task/${currValues.id}/create-comment`;
-    console.log(url)
+    console.log(url);
     const body = {
-        description: currComment,
+      description: currComment,
     };
 
     postCall(url, body)
@@ -316,9 +321,9 @@ function TaskEditDetail(props) {
         console.log("Submit Comment Response", data);
         setCurrComment("");
         var addCommentField = document.getElementById("addCommentField");
-        addCommentField.value = ""
+        addCommentField.value = "";
         setCommentDisabled(true);
-        getAllComments(currValues.id, teamUserArray)
+        getAllComments(currValues.id, teamUserArray);
       })
       .catch((err) => console.log("Submit Comment Error", err));
   };
@@ -434,39 +439,43 @@ function TaskEditDetail(props) {
           </div>
         </div>
 
-        { allComments.length > 0 ? (
-        <div id="gridDiv" className={classes.gridDiv}>
+        {allComments.length > 0 ? (
+          <div id="gridDiv" className={classes.gridDiv}>
             <Grid container zeroMinWidth className={classes.allCommentsTable}>
-                <Paper elevation={2}>
-                {allComments?.map((comment) => (
+              <Paper elevation={2}>
+                {allComments?.map((comment) => {
+                  console.log("TaskEditDetail -> comment", comment);
+                  return (
                     <Comment
-                    description={comment.description}
-                    username={comment.username}
+                      description={comment.description}
+                      username={comment.username}
+                      date_created={comment.date_created}
                     />
-                ))}
-                </Paper>
+                  );
+                })}
+              </Paper>
             </Grid>
-        </div>
-        ) : (null)}
+          </div>
+        ) : null}
 
         <div className={classes.addCommentDiv}>
-            <TextField
-                className={classes.addCommentField}
-                id="addCommentField"
-                label="Leave a Comment"
-                multiline
-                rows={1}
-                variant="outlined"
-                defaultValue=""
-                onChange={(e) => setComment(e)}
-            />
-            <Button
-                variant="outlined"
-                id="addCommentButton"
-                className={classes.addCommentButton}
-                onClick={submitComment}
-                disabled={commentDisabled}
-            >
+          <TextField
+            className={classes.addCommentField}
+            id="addCommentField"
+            label="Leave a Comment"
+            multiline
+            rows={1}
+            variant="outlined"
+            defaultValue=""
+            onChange={(e) => setComment(e)}
+          />
+          <Button
+            variant="outlined"
+            id="addCommentButton"
+            className={classes.addCommentButton}
+            onClick={submitComment}
+            disabled={commentDisabled}
+          >
             Comment
           </Button>
         </div>
