@@ -304,7 +304,7 @@ class Column extends React.Component {
     let filteredTasks = tasks.slice();
     if(!!sort) filteredTasks.sort(this.compareFunc);
 
-    if(!!Object.keys(filters).length) filteredTasks = tasks.filter((t) => {
+    if(!!Object.keys(filters).length) filteredTasks = filteredTasks.filter((t) => {
       for(let f of Object.keys(filters)) {
         if(filters[f]?.indexOf(t[f]) < 0) return false;
       }
