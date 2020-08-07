@@ -50,10 +50,7 @@ router.post(
   projectController.move_task
 );
 
-router.get(
-  "/task/:task_id/get-comments",
-  projectController.get_task_comments
-);
+router.get("/task/:task_id/get-comments", projectController.get_task_comments);
 
 router.post(
   "/task/:task_id/create-comment",

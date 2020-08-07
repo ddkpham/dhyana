@@ -236,8 +236,6 @@ exports.edit_user = function (req, res, next) {
   const { userId: id } = req.session;
   console.log("exports.edit_user -> req.body, id", req.body, id);
 
-  body(req.body).trim().escape().not().isEmpty();
-
   pass = req.body.password.trim();
   const errorsBody = validationResult(req.body);
   const errors = validationResult(id);

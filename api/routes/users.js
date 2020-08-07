@@ -20,16 +20,7 @@ router.get("/create", function (req, res, next) {
   });
 });
 
-router.post(
-  "/create",
-  [
-    body("password").trim().escape().isLength({ min: 1 }),
-    body("first_name").trim().escape(),
-    body("last_name").trim().escape(),
-    body("username").trim().escape().isLength({ min: 1 }),
-  ],
-  userController.create_new_user
-);
+router.post("/create", userController.create_new_user);
 
 router.post(
   "/edit-user",

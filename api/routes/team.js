@@ -3,11 +3,7 @@ var router = express.Router();
 var teamController = require("../controllers/teamController");
 const { body, param } = require("express-validator");
 
-router.post(
-  "/create",
-  [body("name").trim().escape().isLength({ min: 1 })],
-  teamController.create_team
-);
+router.post("/create", teamController.create_team);
 
 router.get("/all", teamController.view_all);
 
