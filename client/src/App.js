@@ -23,6 +23,7 @@ import Project from "./components/Project/index";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./styles/theme";
 import "./styles/styles.css";
+import TeamPage from "./components/TeamPage";
 
 // Simple auth
 
@@ -78,6 +79,20 @@ function App(props) {
                 <Route path="/search-user">
                   {authenticated ? <SearchUser /> : <Login />}
                 </Route>
+                <Route
+                  path="/team/:name"
+                  render={(props) => {
+                    const {
+                      match: {
+                        params: { name },
+                      },
+                    } = props;
+                    if (authenticated) {
+                      return <TeamPage name={name} />;
+                    }
+                    return <Login />;
+                  }}
+                />
 
                 <Route
                   path="/user/:username"
