@@ -156,7 +156,9 @@ function ProfilePage(props) {
                   color="primary"
                   avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
                   label={team.name}
-                  onClick={() => console.log("clicked")}
+                  onClick={() => {
+                    history.push("/team/"+ team.name);
+                  }}
                   variant="outlined"
                 />
               );

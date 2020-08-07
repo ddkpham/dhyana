@@ -28,7 +28,7 @@ function TeamPage(props) {
           console.log("payload", payload);
           setTeamInfo(payload.data.projects);
 
-          const teamId = payload.data.projects[0].team_id;
+          const teamId = payload.data.id;
           const userUrl = `${baseURL}/team/${teamId}/users`;
           getCall(userUrl)
             .then((response) => response.json())
