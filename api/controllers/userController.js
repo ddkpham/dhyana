@@ -243,12 +243,14 @@ exports.edit_user = function (req, res, next) {
     res.status(400).json(errorResponse("errors in inputted data"));
     return;
   } else {
-    const { password, first_name, last_name } = req.body;
+    const { password, first_name, last_name, biography, job_title } = req.body;
     User.update(
       {
         first_name,
         last_name,
         password,
+        biography,
+        job_title,
       },
       {
         where: { id },
