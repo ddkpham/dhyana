@@ -22,9 +22,21 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
-router.post("/edit-user", authMiddleware, userController.edit_user);
+router.post(
+  "/edit-user",
+  authMiddleware,
+  [
+    body("password").escape(),
+    body("first_name").escape(),
+    body("last_name").escape(),
+    body("biography").escape(),
+    body("job_title").escape(),
+  ],
 
-router.get("/my-profile", userController.get_my_profile);
+  userController.edit_user
+);
+
+router.get("/my-profile", authMiddleware, userController.get_my_profile);
 
 router.get(
   "/profile/:username",

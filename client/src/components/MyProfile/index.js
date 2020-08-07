@@ -2,12 +2,22 @@ import { baseURL } from "../../config/settings";
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import "./index.scss";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+
 import { useHistory } from "react-router-dom";
 import { getCall } from "../../apiCalls/apiCalls";
 
 function MyProfile() {
   let history = useHistory();
-  const [ProfileInfo, setProfile] = useState([]);
+  const [ProfileInfo, setProfile] = useState({});
+  console.log("MyProfile -> ProfileInfo", ProfileInfo);
 
   useEffect(() => {
     function getProfile() {
@@ -42,13 +52,37 @@ function MyProfile() {
         </Button>
       </div>
 
-      <div className="container">
-        <div className="profileDiv">
-          <h2 className="username">Username: {ProfileInfo.username}</h2>
-          <h2 className="name">
-            Name: {ProfileInfo.first_name} {ProfileInfo.last_name}
-          </h2>
-        </div>
+      <div className="profile-container">
+        <Card className="profile-profileDiv">
+          <CardContent>
+            <AccountBoxIcon />
+            <Typography variant="h5" color="primary">
+              Username: {ProfileInfo.username}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              first name: {ProfileInfo.first_name || "Click update to add."}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              last name: {ProfileInfo.last_name || "Click update to add."}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              job title:{" "}
+              {ProfileInfo.job_title || "No job title. Click update to add. "}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              Biography:{" "}
+            </Typography>
+            <TextField
+              id="outlined-multiline-static"
+              label="Biography"
+              multiline
+              rows={4}
+              defaultValue={"No biography. click update to add."}
+              value={ProfileInfo.biography}
+              variant="outlined"
+            />
+          </CardContent>
+        </Card>
       </div>
 
       <div className="container2">
@@ -58,7 +92,7 @@ function MyProfile() {
             variant="outlined"
             color="primary"
             onClick={() => {
-              history.push("/editProfile");
+              history.push("/edit-profile");
             }}
           >
             Edit Profile

@@ -6,9 +6,15 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Typography from "@material-ui/core/Typography";
+import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
 import { useHistory } from "react-router-dom";
@@ -116,34 +122,65 @@ function ProfilePage(props) {
       </div>
 
       <div className="profile-page-container">
-        <div className="profileDiv">
-          <h2 className="username">Username: {userInfo.username}</h2>
-          <h2 className="name">First name: {userInfo.first_name}</h2>
-          <h2 className="name">last name: {userInfo.last_name}</h2>
-          <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel>Team</InputLabel>
-            <Select
-              label="Team"
-              onChange={(event) => {
-                getTeamId(event.target.value);
-              }}
-            >
-              <MenuItem>
-                <em>None</em>
-              </MenuItem>
-              {teamInfo.map((info) => (
-                <MenuItem value={info.id} key={info.id}>
-                  {info.name}
+        <Card className="profileDiv">
+          <CardContent>
+            <AccountBoxIcon />
+            <Typography variant="h5" color="primary">
+              Username: {userInfo.username}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              first name:{" "}
+              {userInfo.first_name ? userInfo.first_name : "None of"}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              last name:{" "}
+              {userInfo.last_name ? userInfo.last_name : "Your business"}
+            </Typography>
+            <Typography variant="h6" color="secondary">
+              job title:{" "}
+              {userInfo.job_title ? userInfo.job_title : "CEO of mind your own"}
+            </Typography>
+
+            <TextField
+              rowsMax={5}
+              label="Biography"
+              multiline
+              rows={4}
+              aria-label="maximum height"
+              placeholder="Maximum 4 rows"
+              defaultValue={"Please respect my privacy. I'm a private person."}
+              value={userInfo.biography}
+            />
+            <FormControl className={classes.formControl} variant="outlined">
+              <InputLabel>Team</InputLabel>
+              <Select
+                label="Team"
+                onChange={(event) => {
+                  getTeamId(event.target.value);
+                }}
+              >
+                <MenuItem>
+                  <em>None</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <div>
-            <Button variant="outlined" color="primary" onClick={addUserToTeam}>
-              Add User to Team
-            </Button>
-          </div>
-        </div>
+                {teamInfo.map((info) => (
+                  <MenuItem value={info.id} key={info.id}>
+                    {info.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <div>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={addUserToTeam}
+              >
+                Add User to Team
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="profileDiv">
           <Typography variant="h4" color="primary">
             Teams
