@@ -91,7 +91,7 @@ function TaskDetail(props) {
       name,
       description,
       userIdAssigned,
-      priority,
+      priority: priority || null,
       time_estimated: timeEstimated,
       flag,
     };

@@ -193,8 +193,19 @@ function TaskEditDetail(props) {
   }
 
   useEffect(() => {
+    async function getUserCreatedInfo() {
+      const url = `${baseURL}/user/info/${currValues.user_id_created}`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("geUserCreated success", payload);
+          setUserCreated(payload.data);
+        })
+        .catch((err) => console.log("geUserCreated fetch error", err));
+    }
+    getUserCreatedInfo();
     getAllComments(currValues.id, team);
-  }, [currValues.id]);
+  }, [currValues.user_id_created, currValues.id]);
 
   const editTask = () => {
     const timeEstimated = parseFloat(time_estimated);
@@ -207,7 +218,7 @@ function TaskEditDetail(props) {
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority,
+      priority: priority || null,
       time_estimated: timeEstimated,
       time_elapsed,
       flag,
