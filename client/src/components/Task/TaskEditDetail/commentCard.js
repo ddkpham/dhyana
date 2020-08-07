@@ -25,6 +25,7 @@ const Comment = ({ description, username, date_created }) => {
         <Typography
           style={{
             paddingLeft: 3,
+            paddingRight: 5,
             textSizeAdjust: 0.1,
             fontSize: "0.6em",
             color: "lightgrey",

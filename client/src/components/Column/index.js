@@ -12,14 +12,11 @@ import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import TextField from "@material-ui/core/TextField";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 import ColumnMenu from './menu';
 import { priorities } from '../constants';
 import { postCall, deleteCall } from "../../apiCalls/apiCalls";
@@ -273,7 +270,6 @@ class Column extends React.Component {
   }
 
   setSortBy = ({sortBy}) => {
-    const { sort } = this.state;
     this.setState({sort: sortBy, sortAsc: true});
   }
 
@@ -372,22 +368,9 @@ class Column extends React.Component {
                   filterOptions={filterOptions}
                   setFilters={this.setFilters}
                   deleteFunction={this.openDelete}
-              <Typography variant="h6" className={classes.columnName}>
-                {column.name}
-              </Typography>
-
-              {tasks?.map((t) => (
-                <Task
-                  task={t}
-                  key={t.id}
-                  columnId={column.id}
-                  deleteTask={this.deleteTask.bind(this)}
-                  editTask={this.editTask.bind(this)}
-                  team_id={this.props.teamId}
-                  priorityColor={this.setPriorityTaskColor(t.priority)}
-                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                 />
               </div>
+              
               {filteredTasks?.map((t) => (
                   <Task
                     task={t}
@@ -396,6 +379,8 @@ class Column extends React.Component {
                     deleteTask={this.deleteTask.bind(this)}
                     editTask={this.editTask.bind(this)}
                     team={team}
+                    priorityColor={this.setPriorityTaskColor(t.priority)}
+                    backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                   />
                 ))}
             </Paper>

@@ -105,14 +105,15 @@ class Project extends React.Component {
   getTeamUserArray = (team_id) => {
     console.log("getting team users for: ", team_id);
     const url = `${baseURL}/team/${team_id}/users`;
-    const response = getCall(url)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("fetch team success", data);
-      this.setState({ teamMembers: data.data });
-    })
-    .catch((err) => console.log("column fetch error", err));
+    getCall(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("fetch team success", data);
+        this.setState({ teamMembers: data.data });
+      })
+      .catch((err) => console.log("column fetch error", err));
   };
+
 
   closeColumnModal = () => {
     const { project } = this.state;
