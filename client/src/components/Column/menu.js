@@ -99,6 +99,9 @@ const ColumnMenu = ({anchorEl, handleClose, sort, setSort, filters, filterOption
 									}
 									return selected.join(', ')
 								}}
+								MenuProps={{
+									getContentAnchorEl: () => null,
+								}}
 							>
 								{f.options.map((option) => (
 									<MenuItem key={option.id} value={option.id}>
