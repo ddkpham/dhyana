@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, setFilters, deleteFunction}) => {
+const ColumnMenu = ({anchorEl, handleClose, sort, setSort, filters, filterOptions, setFilters, deleteFunction}) => {
   const sortOptions = [
     {name: 'Task Title', id: 'name'},
     {name: 'Date Created', id: 'date_created'},
@@ -59,7 +59,7 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, set
 						<Select
 							id="sort-select"
 							label="sort-label"
-							value=""
+							value={sort}
 							shrink
 							classes={{ select: classes.select }}
 							onChange={(event) => {
@@ -70,6 +70,7 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, set
 							{sortOptions.map((o) => {
 								return <MenuItem value={o.id}>{o.name}</MenuItem>;
 							})}
+							<MenuItem value={""}>None</MenuItem>
 						</Select>
 					</form>
 				</MenuItem>

@@ -303,9 +303,9 @@ class Column extends React.Component {
       {name: 'Priority', id: 'priority', options: priorities}
     ];
 
-    if(!!sort) tasks.sort(this.compareFunc);
+    let filteredTasks = tasks.slice();
+    if(!!sort) filteredTasks.sort(this.compareFunc);
 
-    let filteredTasks = tasks;
     if(!!Object.keys(filters).length) filteredTasks = tasks.filter((t) => {
       for(let f of Object.keys(filters)) {
         if(filters[f]?.indexOf(t[f]) < 0) return false;
@@ -337,6 +337,7 @@ class Column extends React.Component {
                 <ColumnMenu
                   anchorEl={anchorMenu}
                   handleClose={this.closeMenu}
+                  sort={sort}
                   setSort={this.setSortBy}
                   filters={filters}
                   filterOptions={filterOptions}
