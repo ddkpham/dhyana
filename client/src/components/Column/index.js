@@ -193,7 +193,7 @@ class Column extends React.Component {
   };
 
   editTask = (task) => {
-    const { column, projectId, reload } = this.props;
+    const { reload } = this.props;
     console.log("Column - entered editTask with: ", task);
     const url = `${baseURL}/project/task/${task.id}/edit`;
     const body = {

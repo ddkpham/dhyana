@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
     height: 650,
     alignItems: "center",
-    alignItems: "center",
   },
 }));
 
@@ -84,9 +83,36 @@ function TaskDetail(props) {
   const [priority, setPriority] = useState("");
   const [timeEstimated, setTimeEstimated] = useState(null);
   const [flag, setFlag] = useState(false);
+  const [teamUserArray, setteamUserArray] = useState([]);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
+  const prioritiesArray = [
+    "5 - blocker",
+    "4 - critical",
+    "3 - high",
+    "2 - medium",
+    "1 - low",
+    "0 - None",
+  ];
+
+  useEffect(() => {
+    async function getTeamUserArray() {
+      console.log("getting team users for: ", team_id);
+      const url = `${baseURL}/team/${team_id}/users`;
+      const response = await getCall(url);
+
+      const payload = await response.json();
+      const { data: teamMembers } = payload;
+      console.log(teamMembers);
+      if (response.status === 200) {
+        setteamUserArray(teamMembers);
+      }
+    }
+    getTeamUserArray(team_id);
+  }, [team_id]);
+
   const createTask = () => {
+    const assignedPriority = priority === "" ? null : priority.charAt(0);
     const details = {
       name,
       description,
@@ -164,7 +190,7 @@ function TaskDetail(props) {
           <InputLabel id="assignUserLabel">Assign User</InputLabel>
           <Select
             labelId="assignUserLabel"
-            value={userIdAssigned}
+            value={userIdAssigned ?? 0}
             onChange={assignUser}
           >
             <MenuItem value="">
@@ -185,8 +211,8 @@ function TaskDetail(props) {
             value={priority}
             onChange={assignPriority}
           >
-            {priorities.map((priority) => (
-              <MenuItem value={priority.id}>{priority.name}</MenuItem>
+            {prioritiesArray.map((priority) => (
+              <MenuItem key={priority} value={priority}>{priority}</MenuItem>
             ))}
           </Select>
         </FormControl>

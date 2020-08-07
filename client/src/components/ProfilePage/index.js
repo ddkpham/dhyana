@@ -84,7 +84,7 @@ function ProfilePage(props) {
       }
     };
     getUser();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     console.log("userInfo", userInfo);

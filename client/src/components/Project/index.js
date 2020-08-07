@@ -1,14 +1,12 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import Column from "../Column";
 import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import withScrolling from 'react-dnd-scrolling';
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
@@ -61,7 +59,6 @@ const styles = (theme) => ({
   }
 });
 
-const ScrollingComponent = withScrolling(Grid);
 class Project extends React.Component {
 
   state = {
@@ -158,8 +155,9 @@ class Project extends React.Component {
             Add Column
           </Button>
           
-          <GridList container spacing={2} className={classes.root} 
-            container spacing={3} 
+          <GridList 
+            spacing={2} 
+            className={classes.root} 
             direction="row"
           >
             {columns.map((c) => (

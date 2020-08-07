@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 import { useDrag, useDrop } from "react-dnd";
 import Popover from "@material-ui/core/Popover";
 import { makeStyles } from '@material-ui/core';
@@ -55,8 +54,6 @@ const Task = ({ task, index, priorityColor, backgroundColor, deleteTask, editTas
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
   const [anchor, setAnchor] = useState(null);
   const [userAssigned, setUserAssigned] = useState([]);
-  const [prioColor, setPriorityColor] = useState(priorityColor);
-  const [fColor, setFlagColor] = useState(backgroundColor);
 
   useEffect(() => {
     async function getUserAssignedInfo() {
@@ -136,7 +133,7 @@ const Task = ({ task, index, priorityColor, backgroundColor, deleteTask, editTas
           return "yellow"
         case 1:
           return "lightgreen"
-        case 0:
+        default:
           return cyan[50]
     }
   }
@@ -160,7 +157,7 @@ const Task = ({ task, index, priorityColor, backgroundColor, deleteTask, editTas
     <div className={classes.mainDiv}>
       <Card
         raised
-        style={{ opacity: isDragging ? 0.2 : 1, minHeight: 0, backgroundColor: fColor }}
+        style={{ opacity: isDragging ? 0.2 : 1, minHeight: 0, backgroundColor: backgroundColor }}
         id={"cardDiv." + task.id}
         ref={ref}
         className={classes.card}
@@ -170,7 +167,7 @@ const Task = ({ task, index, priorityColor, backgroundColor, deleteTask, editTas
         <div 
             id={"prioDiv." + task.id} 
             className={classes.priorityColourDiv} 
-            style={{backgroundColor: prioColor}}
+            style={{backgroundColor: priorityColor}}
         />
         <div className={classes.contentDiv}>
           <div className={classes.nameDiv}>

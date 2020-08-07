@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Select, Step, Hidden } from "@material-ui/core";
+import { makeStyles, Select } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -142,8 +142,7 @@ export function useForceUpdate() {
 
 function TaskEditDetail(props) {
   const classes = useStyles();
-  const { currValues, team } = props;
-  const forceUpdate = useForceUpdate();
+  const { currValues, team_id } = props;
 
   const currPriority = priorities.find(getPriority);
 
@@ -193,25 +192,38 @@ function TaskEditDetail(props) {
   }
 
   useEffect(() => {
-    async function getUserCreatedInfo() {
-      const url = `${baseURL}/user/info/${currValues.user_id_created}`;
-      getCall(url)
-        .then((response) => response.json())
-        .then((payload) => {
-          console.log("geUserCreated success", payload);
-          setUserCreated(payload.data);
-        })
-        .catch((err) => console.log("geUserCreated fetch error", err));
+    async function getTeamUserArray() {
+      console.log("getting team users for: ", team_id);
+      const url = `${baseURL}/team/${team_id}/users`;
+      const response = await getCall(url);
+
+      const payload = await response.json();
+      const { data: teamMembers } = payload;
+      console.log(teamMembers);
+      if (response.status === 200) {
+        setteamUserArray(teamMembers);
+        setReceivedUserArray(true);
+        for (var i = 0; i < teamMembers.length; i++) {
+          if (teamMembers[i].id == currValues.user_id_created) {
+            setUserCreated(teamMembers[i]);
+            break;
+          }
+        }
+      }
     }
     getUserCreatedInfo();
     getAllComments(currValues.id, team);
   }, [currValues.user_id_created, currValues.id]);
+    getTeamUserArray(team_id);
+    getAllComments(currValues.id, teamUserArray);
+  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
 
   const editTask = () => {
+    const priorityInt = priority === "" || priority === null ? null : priority.charAt(0);
     const timeEstimated = parseFloat(time_estimated);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
-    const userIdAssigned = user_id_assigned == "" ? null : user_id_assigned;
+    const userIdAssigned = user_id_assigned === "" ? null : user_id_assigned;
 
     const updatedValues = {
       id: currValues.id,

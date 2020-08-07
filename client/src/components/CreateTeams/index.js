@@ -47,7 +47,6 @@ function CreateTeam() {
           postCall(addUserUrl, addUserBody)
             .then((response) => response.json())
             .then((payload) => {
-              const { confirmation, message } = payload;
               console.log(payload);
               window.location.href = `${clientBaseURL}/home`;
             });

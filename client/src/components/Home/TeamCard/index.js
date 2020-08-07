@@ -47,7 +47,7 @@ class TeamCard extends React.Component {
   };
 
   render() {
-    const { name, id } = this.props;
+    const { name } = this.props;
     const { info, users } = this.state;
     return (
       <Card raised>
