@@ -299,7 +299,7 @@ class Column extends React.Component {
     const teamMembers = team.map((u) => ({id: u.id, name: u.username}));
 
     const filterOptions = [
-      {name: 'Assigned User', id: 'user_id_assigned', options: teamMembers},
+      {name: 'Assigned User', id: 'user_id_assigned', displayName: true, options: teamMembers},
       {name: 'Priority', id: 'priority', options: priorities}
     ];
 

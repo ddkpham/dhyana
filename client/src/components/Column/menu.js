@@ -11,13 +11,14 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
 	select: {
-		minWidth: "100px",
+		width: "150px",
 		margin: 0,
+		overflow: "hidden",
+		textOverflow: "ellipsis",
 	},
 	menuHeader: {
 		color: theme.colours.teal,
 		fontWeight: 'bold',
-		opacity: 1
 	},
 	deleteButton: {
 		color: 'red',
@@ -90,7 +91,13 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, set
 								onChange={(event) => {
 									setFilters(event.target.value, f.id);
 								}}
-								renderValue={(selected) => selected.join(', ')}
+								renderValue={(selected) => {
+									if(f.displayName){
+										const selectNames = selected.map((s) => f.options.find((o) => o.id === s)?.name);
+										return selectNames.join(', ')
+									}
+									return selected.join(', ')
+								}}
 							>
 								{f.options.map((option) => (
 									<MenuItem key={option.id} value={option.id}>
