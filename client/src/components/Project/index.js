@@ -17,17 +17,18 @@ const styles = (theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 15,
+    alignItems: 'baseline',
   },
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
     height: "100%",
     minHeight: "95%",
-    width: "95%",
     justifyContent: 'left',
     border: "1px solid grey",
-    paddingTop: 20, 
+    paddingTop: 20,
     margin: 20,
     borderRadius: 4,
     justify: "center",
@@ -38,25 +39,11 @@ const styles = (theme) => ({
     justifyContent: 'center',
     alignContent: 'center',
   },
-  headerText: {
-    textAlign: 'center',
-    marginRight: 20,
-    marginLeft: 20,
-  },
-  projectTitle: {
-    justifyContent: "center",
-    display: 'flex',
-  },
   addColumnButton: {
-    marginLeft: 20,
-    marginBottom: 20,
+    margin: 10,
+    width: '200px',
+    height: '50px'
   },
-  projectToggle: {
-    textAlign: 'left',
-    marginRight: 20,
-    marginLeft: 20,
-    marginTop: 15,
-  }
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -139,24 +126,19 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
+          <div className={classes.header}>
+            <div>
+              <Typography variant="h4">
+                {project.name}
+              </Typography>
+              <Typography variant="h6">
+                {project.description}
+              </Typography>
+            </div>
 
-          <div className={classes.projectToggle}>
             <ProjectToggle />
           </div>
 
-          <div className={classes.headerText}>
-            <Typography variant="h3" gutterBottom className={classes.projectTitle}>
-              {project.name}
-            </Typography>
-            <Typography variant="h6" gutterBottom className={classes.projectTitle}>
-              {project.description}
-            </Typography>
-          </div>
-
-          <Button className={classes.addColumnButton} variant="outlined" startIcon={<AddIcon />} onClick={this.openColumnModal}>
-            Add Column
-          </Button>
-          
           <ScrollingComponent
             spacing={2}
             className={classes.root}
@@ -172,6 +154,16 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
+            <div>
+              <Button
+                className={classes.addColumnButton}
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={this.openColumnModal}
+              >
+                Add Column
+              </Button>
+            </div>
           </ScrollingComponent>
         </DndProvider>
       </div>
