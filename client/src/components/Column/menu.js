@@ -7,18 +7,27 @@ import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
 	select: {
 		minWidth: "100px",
+		margin: 0,
 	},
-	menuLabel: {
-		marginRight: "5px",
-		color: theme.colours.eerie_black
+	menuHeader: {
+		color: theme.colours.teal,
+		fontWeight: 'bold',
+		opacity: 1
 	},
 	deleteButton: {
 		color: 'red',
 		borderColor: 'red',
+	},
+	menuItem: {
+		marginLeft: '10px',
+	},
+	menuSection: {
+		marginBottom: '10px',
 	}
 }));
 
@@ -40,49 +49,60 @@ const ColumnMenu = ({anchorEl, handleClose, setSort, filters, filterOptions, set
       open={Boolean(anchorEl)}
       onClose={handleClose}
     >
-      <MenuItem >
-				<InputLabel color="primary" id="sort-label" classes={{root: classes.menuLabel}}>Sort By:</InputLabel>
-        <Select
-					id="sort-select"
-					labelId="sort-label"
-          variant="outlined"
-					value=""
-					classes={{ select: classes.select }}
-          onChange={(event) => {
-            setSort({ sortBy: event.target.value });
-            handleClose();
-          }}
-        >
-          {sortOptions.map((o) => {
-            return <MenuItem value={o.id}>{o.name}</MenuItem>;
-          })}
-        </Select>
-      </MenuItem>
-      <MenuItem classes={{root: classes.menuLabel}}>Filter By:</MenuItem>
-				{filterOptions.map((f) => (
-					<MenuItem>
-						<InputLabel id={`${f.name}-label`} classes={{root: classes.menuLabel}}>{f.name}:</InputLabel>
+			<div className={classes.menuSection}>
+				<MenuItem disabled>
+					<Typography className={classes.menuHeader}>Sort By</Typography>
+				</MenuItem>
+				<MenuItem className={classes.menuItem}>
+					<form>
 						<Select
-							id={f.id}
-							labelId={`${f.name}-label`}
-							multiple
-							variant="outlined"
-							value={filters[f.id] || []}
-							classes={{select: classes.select}}
+							id="sort-select"
+							label="sort-label"
+							value=""
+							shrink
+							classes={{ select: classes.select }}
 							onChange={(event) => {
-								setFilters(event.target.value, f.id);
+								setSort({ sortBy: event.target.value });
+								handleClose();
 							}}
-							renderValue={(selected) => selected.join(', ')}
 						>
-							{f.options.map((option) => (
-								<MenuItem key={option.id} value={option.id}>
-									<Checkbox checked={filters[f.id]?.indexOf(option.id) > -1} />
-									<ListItemText primary={option.name} />
-								</MenuItem>
-							))}
+							{sortOptions.map((o) => {
+								return <MenuItem value={o.id}>{o.name}</MenuItem>;
+							})}
 						</Select>
+					</form>
+				</MenuItem>
+			</div>
+			<div className={classes.menuSection}>
+      <MenuItem disabled>
+				<Typography className={classes.menuHeader}>Filter By</Typography>
+			</MenuItem>
+				{filterOptions.map((f) => (
+					<MenuItem className={classes.menuItem}>
+						<form>
+							<InputLabel id={`${f.name}-label`} shrink margin='dense'>{f.name}</InputLabel>
+							<Select
+								id={f.id}
+								label={f.name}
+								multiple
+								value={filters[f.id] || []}
+								classes={{select: classes.select}}
+								onChange={(event) => {
+									setFilters(event.target.value, f.id);
+								}}
+								renderValue={(selected) => selected.join(', ')}
+							>
+								{f.options.map((option) => (
+									<MenuItem key={option.id} value={option.id}>
+										<Checkbox checked={filters[f.id]?.indexOf(option.id) > -1} />
+										<ListItemText primary={option.name} />
+									</MenuItem>
+								))}
+							</Select>
+						</form>
 					</MenuItem>
 				))}
+				</div>
 				<MenuItem><Button variant="outlined" classes={{outlined: classes.deleteButton}} onClick={deleteFunction}>Delete</Button></MenuItem>
     </Menu>
   );
