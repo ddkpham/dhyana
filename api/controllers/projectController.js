@@ -10,9 +10,9 @@ const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
 
 exports.create_project = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_project -> req.body", req.body);
 
-  body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
   const description = req.body.description.trim();
   const team_id = req.body.team_id;
@@ -44,14 +44,14 @@ exports.create_project = function (req, res, next) {
 };
 
 exports.create_task_comment = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_task_comment -> req.body", req.body);
   console.log("get_task_comments params: ", req.params);
   const task_id = req.params.task_id.trim();
-  body(req.body).trim().escape().not().isEmpty();
   const { description } = req.body;
   console.log("exports.create_task_comment -> body", description);
   const { userId } = req.session;
-  const date_created = new Date().toISOString()
+  const date_created = new Date().toISOString();
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
@@ -69,17 +69,18 @@ exports.create_task_comment = function (req, res, next) {
     date_created: date_created,
     description: description,
   })
-  .then(() => {
-    res.status(200).json(successResponse("comment created successfully."));
-    return;
-  })
-  .catch((err) => {
-    console.log("error in update", err);
-    res.status(409).json(errorResponse("comment couldn’t be created.", err));
-  });
+    .then(() => {
+      res.status(200).json(successResponse("comment created successfully."));
+      return;
+    })
+    .catch((err) => {
+      console.log("error in update", err);
+      res.status(400).json(errorResponse("comment couldn’t be created.", err));
+    });
 };
 
 exports.get_task_comments = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("get_task_comments params: ", req.params);
   const task_id = req.params.task_id.trim();
 
@@ -116,6 +117,7 @@ exports.get_task_comments = function (req, res, next) {
 };
 
 exports.view_project = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.view_project -> req.params", req.params);
 
   const name = req.params.name.trim();
@@ -159,6 +161,7 @@ exports.view_project = function (req, res, next) {
 };
 
 exports.view_user_specific = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.view_user_specific -> req.session", req.session);
   const { userId } = req.session;
   console.log("exports.view_user_specific -> userId", userId);
@@ -191,14 +194,15 @@ exports.view_user_specific = function (req, res, next) {
           .json(successResponse("Sucessfully found projects", projects));
       })
       .catch((err) => {
-        res.status(400).json(errorResponse("No projects found", err));
+        res.status(404).json(errorResponse("No projects found", err));
       });
   } catch (err) {
-    res.status(400).json(errorResponse("No projects found", err));
+    res.status(404).json(errorResponse("No projects found", err));
   }
 };
 
 exports.view_all = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.view_all -> req", req);
   Project.findAll()
     .then((projects) => {
@@ -224,9 +228,9 @@ exports.view_all = function (req, res, next) {
 };
 
 exports.create_project_column = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_project_column -> req.body", req.body);
 
-  body(req.body).trim().escape().not().isEmpty();
   const projectId = req.body.projectId;
   const columnName = req.body.columnName.trim();
   const columnOrder = req.body.columnOrder;
@@ -266,7 +270,7 @@ exports.create_project_column = function (req, res, next) {
           })
           .catch((err) => {
             res
-              .status(404)
+              .status(400)
               .json(
                 errorResponse(
                   "Error in creating project column. Please double check query.",
@@ -275,17 +279,19 @@ exports.create_project_column = function (req, res, next) {
               );
           });
       } else {
-        res.json(
-          errorResponse(
-            "Error in generating column. Message API developers.",
-            err
-          )
-        );
+        res
+          .status(400)
+          .json(
+            errorResponse(
+              "Error in generating column. Message API developers.",
+              err
+            )
+          );
       }
     })
     .catch((err) => {
       res
-        .status(404)
+        .status(400)
         .json(
           errorResponse(
             "Error in creating column. Please double check query.",
@@ -296,6 +302,7 @@ exports.create_project_column = function (req, res, next) {
 };
 
 exports.view_project_columns = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.view_project_columns -> req.params", req.params);
 
   const projectId = req.params.projectId;
@@ -382,9 +389,9 @@ exports.view_project_columns = function (req, res, next) {
 };
 
 exports.create_new_task = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_new_task -> req.body", req.body);
 
-  body(req.body).trim().escape().not().isEmpty();
   const name = req.body.name.trim();
   const description = req.body.description.trim();
   const { userId: user_id_created } = req.session;
@@ -393,7 +400,7 @@ exports.create_new_task = function (req, res, next) {
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
   const flag = req.body.flag == "" ? false : req.body.flag;
-  const date_created = new Date().toISOString()
+  const date_created = new Date().toISOString();
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;
 
@@ -444,9 +451,9 @@ exports.create_new_task = function (req, res, next) {
 };
 
 exports.get_all_tasks = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_all_tasks -> req.body", req.body);
 
-  body(req.body).trim().escape().not().isEmpty();
   const task_ids = req.body.task_ids;
   console.log("exports.get_all_tasks -> task_ids", task_ids);
 
@@ -501,7 +508,7 @@ exports.move_task = function (req, res, next) {
     })
     .catch((err) => {
       console.log("error in update", err);
-      res.status(409).json(errorResponse("task couldn’t be moved.", err));
+      res.status(400).json(errorResponse("task couldn’t be moved.", err));
     });
 };
 
@@ -519,7 +526,7 @@ exports.edit_task = function (req, res, next) {
     time_elapsed,
     time_estimated,
   } = req.body;
-  const date_modified = new Date().toISOString()
+  const date_modified = new Date().toISOString();
 
   if (!id) {
     res.status(400).json(errorResponse("missing task_id"));
@@ -550,11 +557,12 @@ exports.edit_task = function (req, res, next) {
     })
     .catch((err) => {
       console.log("error in update", err);
-      res.status(409).json(errorResponse("task couldn’t be updated.", err));
+      res.status(400).json(errorResponse("task couldn’t be updated.", err));
     });
 };
 
 exports.delete_task = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.delete_task -> req.params", req.params);
   const task_id = req.params.task_id.trim();
 

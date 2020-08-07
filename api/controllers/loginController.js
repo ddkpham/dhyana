@@ -4,6 +4,7 @@ const { errorResponse, successResponse } = require("../utility/response");
 const sessionConfig = require("../config/session");
 
 exports.login_post = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.login_post -> req.body", req.body);
   const { username, password } = req.body;
 
@@ -30,7 +31,7 @@ exports.login_post = function (req, res, next) {
         req.session.save((err) => {
           if (!err) {
             console.log("exports.login_post -> req.session", req.session);
-            res.json({
+            res.status(200).json({
               confirmation: "success",
               data: user,
             });
@@ -46,12 +47,13 @@ exports.login_post = function (req, res, next) {
 };
 
 exports.clear_cookie = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.clear_cookie -> req.session", req.session);
   req.session.destroy((err) => {
     if (err) {
-      res.json(
-        errorResponse("error: session was not closed. Try again. ", err)
-      );
+      res
+        .status(440)
+        .json(errorResponse("error: session was not closed. Try again. ", err));
     }
     res.clearCookie(sessionConfig.name);
     res.status(200).json(successResponse("successfully logged out"));
@@ -59,6 +61,7 @@ exports.clear_cookie = function (req, res, next) {
 };
 
 exports.session_check = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   const { userId } = req.session;
   console.log("exports.session_check -> userId", userId);
   if (!userId) {

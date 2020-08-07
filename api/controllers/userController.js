@@ -8,6 +8,7 @@ var Team = require("../models/Team");
 var Projects = require("../models/Project");
 
 exports.get_user_info = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log(
     "exports.get_user_info -> req.params.username",
     req.params.username
@@ -48,6 +49,7 @@ exports.get_user_info = function (req, res, next) {
 };
 
 exports.get_my_profile = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_my_profile -> req.session", req.session);
   const { userId: id } = req.session;
   console.log("exports.get_my_profile -> req.session", req.session);
@@ -72,12 +74,13 @@ exports.get_my_profile = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("user doesn't exist", err));
+        res.status(404).json(errorResponse("user doesn't exist", err));
       });
   }
 };
 
 exports.get_user_from_id = function (req, res) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_user_info -> req.params", req.params);
   const id = req.params.id;
   var userInfo = {};
@@ -123,10 +126,10 @@ exports.get_user_from_id = function (req, res) {
             successResponse("successfully found user and user info", userInfo)
           );
       } else {
-        res.status(200).json(errorResponse("no such user exists"));
+        res.status(404).json(errorResponse("no such user exists"));
       }
     } catch (err) {
-      res.status(200).json(errorResponse("error in fetching user info", err));
+      res.status(400).json(errorResponse("error in fetching user info", err));
     }
   };
   getUserInfo();
@@ -190,9 +193,8 @@ exports.search_user = function (req, res, next) {
 };
 
 exports.create_new_user = function (req, res, next) {
-  console.log("exports.create_new_user -> req.body", req.body);
-
   body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.create_new_user -> req.body", req.body);
 
   user = req.body.username.trim();
   pass = req.body.password.trim();
@@ -230,6 +232,7 @@ exports.create_new_user = function (req, res, next) {
 };
 
 exports.edit_user = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   const { userId: id } = req.session;
   console.log("exports.edit_user -> req.body, id", req.body, id);
 
@@ -268,7 +271,7 @@ exports.edit_user = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(409).json(errorResponse("User couldn’t be modified.", err));
+        res.status(400).json(errorResponse("User couldn’t be modified.", err));
       });
   }
 };
