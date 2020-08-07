@@ -264,12 +264,9 @@ class Column extends React.Component {
 
   setFilters = (newFilter, filterId) => {
     const { filters } = this.state;
-    filters[filterId] = newFilter.length ? newFilter : undefined;
+    if(newFilter.length) filters[filterId] = newFilter;
+    else delete filters[filterId]
     this.setState({ filters });
-  }
-
-  filterTasks = () => {
-
   }
 
   setSortBy = ({sortBy}) => {
