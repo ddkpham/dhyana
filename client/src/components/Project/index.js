@@ -11,7 +11,7 @@ import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
-
+import withScrolling from 'react-dnd-scrolling';
 
 const styles = (theme) => ({
   header: {
@@ -59,6 +59,7 @@ const styles = (theme) => ({
   }
 });
 
+const ScrollingComponent = withScrolling(GridList);
 class Project extends React.Component {
 
   state = {
@@ -156,9 +157,9 @@ class Project extends React.Component {
             Add Column
           </Button>
           
-          <GridList 
-            spacing={2} 
-            className={classes.root} 
+          <ScrollingComponent
+            spacing={2}
+            className={classes.root}
             direction="row"
           >
             {columns.map((c) => (
@@ -171,7 +172,7 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
-          </GridList>
+          </ScrollingComponent>
         </DndProvider>
       </div>
     );
