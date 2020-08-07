@@ -1,7 +1,5 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 
 const Comment = ({ description, username, date_created }) => {
   console.log("Comment -> date_created", date_created);

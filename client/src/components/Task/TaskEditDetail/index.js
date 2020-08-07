@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { baseURL } from "../../../config/settings";
 import { getCall, postCall } from "../../../apiCalls/apiCalls";
 import Typography from "@material-ui/core/Typography";
@@ -108,7 +108,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 850,
     minHeight: 650,
     alignItems: "center",
-    alignItems: "center",
   },
   addCommentButton: {
     width: 100,
@@ -178,7 +177,7 @@ function TaskEditDetail(props) {
     if (response.status === 200) {
       for (var i = 0; i < comments.length; i++) {
         for (var j = 0; j < teamUserArray.length; j++) {
-          if (comments[i].user_id == teamUserArray[j].id) {
+          if (comments[i].user_id === teamUserArray[j].id) {
             comments[i].username = teamUserArray[j].username;
             break;
           }
@@ -204,7 +203,7 @@ function TaskEditDetail(props) {
         setteamUserArray(teamMembers);
         setReceivedUserArray(true);
         for (var i = 0; i < teamMembers.length; i++) {
-          if (teamMembers[i].id == currValues.user_id_created) {
+          if (teamMembers[i].id === currValues.user_id_created) {
             setUserCreated(teamMembers[i]);
             break;
           }
@@ -216,7 +215,7 @@ function TaskEditDetail(props) {
   }, [currValues.user_id_created, currValues.id]);
     getTeamUserArray(team_id);
     getAllComments(currValues.id, teamUserArray);
-  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
+  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray, teamUserArray]);
 
   const editTask = () => {
     const priorityInt = priority === "" || priority === null ? null : priority.charAt(0);
@@ -287,7 +286,7 @@ function TaskEditDetail(props) {
   const setComment = (event) => {
     console.log("event value is: ", event.target.value);
     setCurrComment(event.target.value);
-    if (event.target.value != "") {
+    if (event.target.value !== "") {
       setCommentDisabled(false);
     } else {
       setCommentDisabled(true);
