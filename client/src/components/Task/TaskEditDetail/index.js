@@ -16,6 +16,7 @@ import { cyan, grey } from "@material-ui/core/colors";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Comment from "./commentCard";
+import { priorities } from '../../constants';
 
 const ColouredSwitch = withStyles({
   switchBase: {
@@ -141,18 +142,10 @@ export function useForceUpdate() {
 
 function TaskEditDetail(props) {
   const classes = useStyles();
-  const { currValues, team_id } = props;
+  const { currValues, team } = props;
   const forceUpdate = useForceUpdate();
 
-  const prioritiesArray = [
-    "5 - blocker",
-    "4 - critical",
-    "3 - high",
-    "2 - medium",
-    "1 - low",
-    "0 - None",
-  ];
-  const currPriority = prioritiesArray.find(getPriority);
+  const currPriority = priorities.find(getPriority);
 
   const [name, setName] = useState(currValues.name);
   const [description, setDescription] = useState(currValues.description);
@@ -165,7 +158,6 @@ function TaskEditDetail(props) {
   );
   const [time_elapsed, setTimeCompleted] = useState(currValues.time_elapsed);
   const [flag, setFlag] = useState(currValues.flag);
-  const [teamUserArray, setteamUserArray] = useState([]);
   const [userCreated, setUserCreated] = useState([]);
   const [currComment, setCurrComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -173,7 +165,7 @@ function TaskEditDetail(props) {
   const [commentDisabled, setCommentDisabled] = useState(true);
 
   function getPriority(p) {
-    return p.charAt(0) == currValues.priority;
+    return p.id == currValues.priority;
   }
 
   async function getAllComments(task_id, teamUserArray) {
@@ -201,32 +193,21 @@ function TaskEditDetail(props) {
   }
 
   useEffect(() => {
-    async function getTeamUserArray() {
-      console.log("getting team users for: ", team_id);
-      const url = `${baseURL}/team/${props.team_id}/users`;
-      const response = await getCall(url);
-
-      const payload = await response.json();
-      const { data: teamMembers } = payload;
-      console.log(teamMembers);
-      if (response.status === 200) {
-        setteamUserArray(teamMembers);
-        setReceivedUserArray(true);
-        for (var i = 0; i < teamMembers.length; i++) {
-          if (teamMembers[i].id == currValues.user_id_created) {
-            setUserCreated(teamMembers[i]);
-            break;
-          }
-        }
-      }
+    async function getUserCreatedInfo() {
+      const url = `${baseURL}/user/info/${currValues.user_id_created}`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("geUserCreated success", payload);
+          setUserCreated(payload.data);
+        })
+        .catch((err) => console.log("geUserCreated fetch error", err));
     }
-    getTeamUserArray(team_id);
-    getAllComments(currValues.id, teamUserArray);
-  }, [team_id, currValues.user_id_created, currValues.id, receivedUserArray]);
+    getUserCreatedInfo();
+    getAllComments(currValues.id, team);
+  }, [currValues.user_id_created, currValues.id]);
 
   const editTask = () => {
-    const priorityInt =
-      priority == "" || priority == null ? null : priority.charAt(0);
     const timeEstimated = parseFloat(time_estimated);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
@@ -237,7 +218,7 @@ function TaskEditDetail(props) {
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: priorityInt,
+      priority: priority || null,
       time_estimated: timeEstimated,
       time_elapsed,
       flag,
@@ -323,7 +304,7 @@ function TaskEditDetail(props) {
         var addCommentField = document.getElementById("addCommentField");
         addCommentField.value = "";
         setCommentDisabled(true);
-        getAllComments(currValues.id, teamUserArray);
+        getAllComments(currValues.id, team);
       })
       .catch((err) => console.log("Submit Comment Error", err));
   };
@@ -374,7 +355,7 @@ function TaskEditDetail(props) {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {teamUserArray.map((user) => (
+              {team.map((user) => (
                 <MenuItem value={user.id}>
                   {user.username} - {user.first_name} {user.last_name}
                 </MenuItem>
@@ -416,8 +397,8 @@ function TaskEditDetail(props) {
               onChange={assignPriority}
               className={classes.priority}
             >
-              {prioritiesArray.map((priority) => (
-                <MenuItem value={priority}>{priority}</MenuItem>
+              {priorities.map((priority) => (
+                <MenuItem value={priority.id}>{priority.name}</MenuItem>
               ))}
             </Select>
           </FormControl>

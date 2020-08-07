@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
+const Task = ({ task, index, moveItem, deleteTask, editTask, team }) => {
   const ref = useRef(null);
   const classes = useStyles();
   const timeElapsed = task.time_elapsed ? task.time_elapsed : 0
@@ -133,7 +133,7 @@ const Task = ({ task, index, moveItem, deleteTask, editTask, team_id }) => {
             currValues={task} 
             deleteTask={deleteT.bind(this)}
             editTask={editT.bind(this)}
-            team_id={team_id}
+            team={team}
         />
       </Popover>
     </div>
