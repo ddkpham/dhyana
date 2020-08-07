@@ -1,13 +1,7 @@
 import { baseURL } from "../../config/settings";
 import React, { useState, useEffect, Fragment } from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import FolderIcon from '@material-ui/icons/Folder';
-import ListItemText from '@material-ui/core/ListItemText';
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar";
 
 import "./index.scss";
 import ProjectCard from "../Project/card";
@@ -19,8 +13,8 @@ function TeamPage(props) {
   let history = useHistory();
   const [TeamInfo, setTeamInfo] = useState([]);
   const { name } = props;
-  console.log("team", name);
-  console.log("projects", TeamInfo)
+  const [TeamUsers, getTeamUsers] = useState([]);
+  console.log("TeamUsers", TeamUsers);
 
   useEffect(() => {
     function getTeam() {
@@ -31,6 +25,16 @@ function TeamPage(props) {
         .then((payload) => {
           console.log("payload", payload);
           setTeamInfo(payload.data.projects);
+
+          const teamId = payload.data.projects[0].team_id;
+          const userUrl = `${baseURL}/team/${teamId}/users`;
+          getCall(userUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("user info", data);
+                getTeamUsers(data.data);
+            })
+            .catch((err) => console.log("project fetch error", err));
         })
         .catch((err) => console.log("team fetch error", err));
     }
@@ -60,7 +64,26 @@ function TeamPage(props) {
             <Typography variant="h4" color="primary">
                 {name}
             </Typography>
-            <Typography variant="h5" color="secondary">
+            <div className="usersContainer">
+            <Typography variant="h5" color="primary">
+                Users
+            </Typography>
+            {TeamUsers.map((user) => {
+              console.log("TeamPage -> team", user);
+              return (
+                <Chip
+                  color="secondary"
+                  avatar={<Avatar>
+                      {user.first_name.charAt(0)}
+                      {user.last_name.charAt(0)}</Avatar>}
+                  label={user.first_name + " " + user.last_name}
+                  onClick={() => console.log("clicked")}
+                  variant="outlined"
+                />
+              );
+            })}
+            </div>
+            <Typography variant="h5" color="primary">
                 Projects
             </Typography>
             <div className="home-projects-wrapper">
@@ -70,17 +93,6 @@ function TeamPage(props) {
                 )}
                 </Fragment>
             </div>
-            {/* <List dense="false">
-                <ListItem button>
-                  <ListItemIcon>
-                    <FolderIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary="Single-line item"
-                    secondary=""
-                  />
-                </ListItem>
-            </List> */}
         </div>
       </div>
     </div>
