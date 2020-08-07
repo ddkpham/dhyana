@@ -154,7 +154,12 @@ function TaskDetail(props) {
   const assignTitle = (event) => {
     console.log("event value is: ", event.target.value);
     setName(event.target.value);
-    setBtnDisabled(false);
+    if (event.target.value != "") {
+      setBtnDisabled(false);
+    } else {
+      setBtnDisabled(true);
+    }
+    
   };
 
   return (

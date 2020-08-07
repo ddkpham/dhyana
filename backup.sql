@@ -130,7 +130,8 @@ CREATE TABLE public.comments (
     id integer NOT NULL,
     user_id integer NOT NULL,
     date_created date,
-    description character varying(250)
+    description character varying(1023),
+    task_id integer NOT NULL
 );
 
 
@@ -336,7 +337,9 @@ CREATE TABLE public.users (
     username character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
     first_name character varying(255),
-    last_name character varying(255)
+    last_name character varying(255),
+    job_title character varying(255),
+    biography character varying(1023)
 );
 
 
@@ -449,8 +452,8 @@ COPY public.columnstasks (column_id, task_id, id) FROM stdin;
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.comments (id, user_id, date_created, description) FROM stdin;
-1	9	1980-01-01	good work
+COPY public.comments (id, user_id, date_created, description, task_id) FROM stdin;
+1	9	2010-10-10	good work	22
 \.
 
 
@@ -560,45 +563,45 @@ COPY public.teamsusers (team_id, user_id, id) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.users (id, username, password, first_name, last_name) FROM stdin;
-4	123	123	\N	\N
-6	zz	zz	\N	\N
-7	kingkong	kingkong	king	kong
-8	jmayer	jmayer	john	mayer
-9	prepFuture	prepFuture	prep	future
-10	snowybird	snowybird	adele	bird
-11	sbarer	sbarer	simon	barer
-12	jcameron	jcameron	james	cameron
-13	jkrasinski	jkrasinski	john	krasinski
-14	scarrel	scarrel	steve	carrel
-15	jfischer	jfischer	jenna	fischer
-16	rwilson	rwilson	rainn	wilson
-17	akinsey	akinsey	angela	kinsey
-18	mKaling	mKaling	Mindy	Kaling
-19	ehelms	ehelms	ed	helms
-20	bbaumgartner	bbaumgartner	brian	baumgartner
-21	bjnovak	bjnovak	bj	novak
-22	kflannery	kflannery	kate	flannery
-23	psmith	psmith	phyllis	smith
-24	onunez	onunez	oscar	nunez
-25	cbratton	cbratton	creed	bratton
-26	ekemper	ekemper	ellie	kemper
-27	shudson	shudson	stanley	hudson
-28	plieberstein	plieberstein	paul	lieberstein
-29	crobinson	crobinson	craig	robinson
-30	rjones	rjones	rashida	jones
-31	zwoods	zwoods	zack	woods
-32	randerson	randerson	roy	anderson
-33	abuckley	abuckley	andy	buckley
-34	jspader	jspader	james	spader
-35	aryan	aryan	amy	ryan
-36	wferrell	wferrell	will	ferrell
-37	aadams	aadams	amy	adams
-38	jchan	jchan	jackie	chan
-39	jchanny	jchanny	jackie	channy
-40	rbobby	rbobby	ricky	bobby
-41	sb1	1234	simon	barer
-1	tlou2	tlo	tlo	u2
+COPY public.users (id, username, password, first_name, last_name, job_title, biography) FROM stdin;
+4	123	123	\N	\N	\N	\N
+6	zz	zz	\N	\N	\N	\N
+7	kingkong	kingkong	king	kong	\N	\N
+8	jmayer	jmayer	john	mayer	\N	\N
+9	prepFuture	prepFuture	prep	future	\N	\N
+10	snowybird	snowybird	adele	bird	\N	\N
+11	sbarer	sbarer	simon	barer	\N	\N
+12	jcameron	jcameron	james	cameron	\N	\N
+13	jkrasinski	jkrasinski	john	krasinski	\N	\N
+14	scarrel	scarrel	steve	carrel	\N	\N
+15	jfischer	jfischer	jenna	fischer	\N	\N
+16	rwilson	rwilson	rainn	wilson	\N	\N
+17	akinsey	akinsey	angela	kinsey	\N	\N
+18	mKaling	mKaling	Mindy	Kaling	\N	\N
+19	ehelms	ehelms	ed	helms	\N	\N
+20	bbaumgartner	bbaumgartner	brian	baumgartner	\N	\N
+21	bjnovak	bjnovak	bj	novak	\N	\N
+22	kflannery	kflannery	kate	flannery	\N	\N
+23	psmith	psmith	phyllis	smith	\N	\N
+24	onunez	onunez	oscar	nunez	\N	\N
+25	cbratton	cbratton	creed	bratton	\N	\N
+26	ekemper	ekemper	ellie	kemper	\N	\N
+27	shudson	shudson	stanley	hudson	\N	\N
+28	plieberstein	plieberstein	paul	lieberstein	\N	\N
+29	crobinson	crobinson	craig	robinson	\N	\N
+30	rjones	rjones	rashida	jones	\N	\N
+31	zwoods	zwoods	zack	woods	\N	\N
+32	randerson	randerson	roy	anderson	\N	\N
+33	abuckley	abuckley	andy	buckley	\N	\N
+34	jspader	jspader	james	spader	\N	\N
+35	aryan	aryan	amy	ryan	\N	\N
+36	wferrell	wferrell	will	ferrell	\N	\N
+37	aadams	aadams	amy	adams	\N	\N
+38	jchan	jchan	jackie	chan	\N	\N
+39	jchanny	jchanny	jackie	channy	\N	\N
+40	rbobby	rbobby	ricky	bobby	\N	\N
+41	sb1	1234	simon	barer	\N	\N
+1	tlou2	tlo	tlo	u2	\N	\N
 \.
 
 
@@ -797,6 +800,14 @@ ALTER TABLE ONLY public.taskstasks
 
 ALTER TABLE ONLY public.taskstasks
     ADD CONSTRAINT sub_task_id FOREIGN KEY (sub_task_id) REFERENCES public.tasks(id);
+
+
+--
+-- Name: comments task commented on ; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT "task commented on " FOREIGN KEY (task_id) REFERENCES public.tasks(id);
 
 
 --
