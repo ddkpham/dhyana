@@ -25,7 +25,12 @@ const Comment = ({ description, username, date_created }) => {
           {username}
         </Typography>
         <Typography
-          style={{ paddingLeft: 3, textSizeAdjust: 0.1 }}
+          style={{
+            paddingLeft: 3,
+            textSizeAdjust: 0.1,
+            fontSize: "0.6em",
+            color: "lightgrey",
+          }}
           variant="caption"
           gutterBottom
         >
