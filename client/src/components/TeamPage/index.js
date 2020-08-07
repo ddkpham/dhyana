@@ -66,7 +66,7 @@ function TeamPage(props) {
             </Typography>
             <div className="usersContainer">
             <Typography variant="h5" color="primary">
-                Users
+                Team Members
             </Typography>
             {TeamUsers.map((user) => {
               console.log("TeamPage -> team", user);
