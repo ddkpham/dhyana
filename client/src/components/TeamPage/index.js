@@ -72,13 +72,22 @@ function TeamPage(props) {
             </Typography>
             {TeamUsers.map((user) => {
               console.log("TeamPage -> team", user);
+              let nameExists = true;
+              if (user.first_name === null || user.last_name === null)
+              {
+                  nameExists = false;
+              }
               return (
                 <Chip
                   color="secondary"
-                  avatar={<Avatar>
+                  avatar={nameExists ? <Avatar>
                       {user.first_name.charAt(0)}
-                      {user.last_name.charAt(0)}</Avatar>}
-                  label={user.first_name + " " + user.last_name}
+                      {user.last_name.charAt(0)}</Avatar>:
+                      <Avatar>
+                      {user.username.charAt(0)}
+                      {user.username.charAt(1)}</Avatar>}
+                  label=
+                  {nameExists ? user.first_name + " " + user.last_name: user.username}
                   onClick={() => console.log("clicked")}
                   variant="outlined"
                 />
