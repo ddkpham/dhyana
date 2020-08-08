@@ -5,7 +5,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
-import { baseURL, clientBaseURL } from "../../config/settings";
+import { baseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
 import TeamCard from "./TeamCard";
 import { getCall } from "../../apiCalls/apiCalls";
@@ -91,7 +91,7 @@ class Home extends React.Component {
               <Card raised className="home-project-add-btn">
                 <CardActionArea href={"/project/new"}>
                   <CardContent>
-                    <Typography variant="h5" color="textSecondary" gutterBottom>
+                    <Typography variant="h5" color="textSecondary">
                       <AddIcon />
                       Add Project
                     </Typography>

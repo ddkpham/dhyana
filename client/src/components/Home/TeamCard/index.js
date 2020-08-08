@@ -47,13 +47,13 @@ class TeamCard extends React.Component {
   };
 
   render() {
-    const { name, id } = this.props;
+    const { name } = this.props;
     const { info, users } = this.state;
     return (
       <Card raised>
         <CardContent>
           <CardActionArea href={"#"}>
-            <Typography variant="h5" color="textPrimary" gutterBottom>
+            <Typography variant="h5" color="textPrimary">
               {name}
             </Typography>
             <Typography variant="body1" color="textSecondary">

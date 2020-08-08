@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { baseURL } from "../../../config/settings";
 import { getCall, postCall } from "../../../apiCalls/apiCalls";
 import Typography from "@material-ui/core/Typography";
@@ -7,7 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Select, Step, Hidden } from "@material-ui/core";
+import { makeStyles, Select } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -108,7 +108,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 850,
     minHeight: 650,
     alignItems: "center",
-    alignItems: "center",
   },
   addCommentButton: {
     width: 100,
@@ -132,20 +131,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function useForceUpdate() {
-  const [, setTick] = useState(0);
-  const update = useCallback(() => {
-    setTick((tick) => tick + 1);
-  }, []);
-  return update;
-}
-
 function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team } = props;
-  const forceUpdate = useForceUpdate();
 
   const currPriority = priorities.find(getPriority);
+  console.log("currPriority is: ", currPriority)
 
   const [name, setName] = useState(currValues.name);
   const [description, setDescription] = useState(currValues.description);
@@ -161,14 +152,14 @@ function TaskEditDetail(props) {
   const [userCreated, setUserCreated] = useState([]);
   const [currComment, setCurrComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-  const [receivedUserArray, setReceivedUserArray] = useState(false);
   const [commentDisabled, setCommentDisabled] = useState(true);
+  const [teamMembers, setTeamMembers] = useState(team);
 
   function getPriority(p) {
-    return p.id == currValues.priority;
+    return p.id === currValues.priority;
   }
 
-  async function getAllComments(task_id, teamUserArray) {
+  async function getAllComments(task_id, team) {
     console.log("getting all comments for: ", task_id);
     const url = `${baseURL}/project/task/${task_id}/get-comments`;
     const response = await getCall(url);
@@ -178,9 +169,9 @@ function TaskEditDetail(props) {
     console.log(comments);
     if (response.status === 200) {
       for (var i = 0; i < comments.length; i++) {
-        for (var j = 0; j < teamUserArray.length; j++) {
-          if (comments[i].user_id == teamUserArray[j].id) {
-            comments[i].username = teamUserArray[j].username;
+        for (var j = 0; j < team.length; j++) {
+          if (comments[i].user_id === team[j].id) {
+            comments[i].username = team[j].username;
             break;
           }
         }
@@ -194,24 +185,24 @@ function TaskEditDetail(props) {
 
   useEffect(() => {
     async function getUserCreatedInfo() {
-      const url = `${baseURL}/user/info/${currValues.user_id_created}`;
-      getCall(url)
-        .then((response) => response.json())
-        .then((payload) => {
-          console.log("geUserCreated success", payload);
-          setUserCreated(payload.data);
-        })
-        .catch((err) => console.log("geUserCreated fetch error", err));
-    }
+        const url = `${baseURL}/user/info/${currValues.user_id_created}`;
+        getCall(url)
+          .then((response) => response.json())
+          .then((payload) => {
+            console.log("getUserCreated success", payload);
+            setUserCreated(payload.data);
+          })
+          .catch((err) => console.log("getUserCreated fetch error", err));
+    }  
     getUserCreatedInfo();
     getAllComments(currValues.id, team);
-  }, [currValues.user_id_created, currValues.id]);
+  }, [currValues.user_id_created, currValues.id, team]);
 
   const editTask = () => {
     const timeEstimated = parseFloat(time_estimated);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
-    const userIdAssigned = user_id_assigned == "" ? null : user_id_assigned;
+    const userIdAssigned = user_id_assigned === "" ? null : user_id_assigned;
 
     const updatedValues = {
       id: currValues.id,
@@ -275,7 +266,7 @@ function TaskEditDetail(props) {
   const setComment = (event) => {
     console.log("event value is: ", event.target.value);
     setCurrComment(event.target.value);
-    if (event.target.value != "") {
+    if (event.target.value !== "") {
       setCommentDisabled(false);
     } else {
       setCommentDisabled(true);
@@ -355,7 +346,7 @@ function TaskEditDetail(props) {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {team.map((user) => (
+              {teamMembers.map((user) => (
                 <MenuItem value={user.id}>
                   {user.username} - {user.first_name} {user.last_name}
                 </MenuItem>
@@ -393,7 +384,7 @@ function TaskEditDetail(props) {
             <InputLabel id="assignPriorityLabel">Priority</InputLabel>
             <Select
               labelId="assignPriorityLabel"
-              defaultValue={currPriority}
+              defaultValue={priority}
               onChange={assignPriority}
               className={classes.priority}
             >

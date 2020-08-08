@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { baseURL } from "../../../config/settings";
-import { getCall } from "../../../apiCalls/apiCalls";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
@@ -12,7 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
-import { cyan, grey } from "@material-ui/core/colors";
+import { cyan } from "@material-ui/core/colors";
 import { priorities } from '../../constants';
 
 const ColouredSwitch = withStyles({
@@ -69,7 +67,6 @@ const useStyles = makeStyles((theme) => ({
   taskDetailMainWrapper: {
     width: 600,
     height: 650,
-    alignItems: "center",
     alignItems: "center",
   },
 }));
@@ -128,7 +125,7 @@ function TaskDetail(props) {
   const assignTitle = (event) => {
     console.log("event value is: ", event.target.value);
     setName(event.target.value);
-    if (event.target.value != "") {
+    if (event.target.value !== "") {
       setBtnDisabled(false);
     } else {
       setBtnDisabled(true);

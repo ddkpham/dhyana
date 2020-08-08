@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import { postCall, getCall } from "../../apiCalls/apiCalls";
+import { postCall } from "../../apiCalls/apiCalls";
 import "./index.scss";
 
 function CreateUser() {

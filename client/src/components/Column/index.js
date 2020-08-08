@@ -12,16 +12,16 @@ import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import TextField from "@material-ui/core/TextField";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { postCall, getCall, deleteCall } from "../../apiCalls/apiCalls";
 import ColumnMenu from './menu';
 import { priorities } from '../constants';
+import { postCall, deleteCall } from "../../apiCalls/apiCalls";
+import { red, cyan, grey } from "@material-ui/core/colors";
+
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
 
@@ -190,7 +190,7 @@ class Column extends React.Component {
   };
 
   editTask = (task) => {
-    const { column, projectId, reload } = this.props;
+    const { reload } = this.props;
     console.log("Column - entered editTask with: ", task);
     const url = `${baseURL}/project/task/${task.id}/edit`;
     const body = {
@@ -270,7 +270,6 @@ class Column extends React.Component {
   }
 
   setSortBy = ({sortBy}) => {
-    const { sort } = this.state;
     this.setState({sort: sortBy, sortAsc: true});
   }
 
@@ -285,6 +284,34 @@ class Column extends React.Component {
     if(a[sort] < b[sort]) return sortAsc ? -1 : 1;
 
     return 0;
+  }
+
+  setPriorityTaskColor = (priority) => {
+    console.log("entered setPriorityTaskColor with priority: ", priority)
+    switch (priority) {
+        case 5:
+          return red[600]
+        case 4:
+          return red[300]
+        case 3:
+          return "orange"
+        case 2:
+          return "yellow"
+        case 1:
+          return "lightgreen"
+        default:
+          return cyan[50]
+    }
+  }
+
+  setNewBackgroundColor = (flag, isOverdue) => {
+    if (flag) {
+      return grey[200]
+    } else if (isOverdue) {
+      return red[100]
+    } else {
+      return "white"
+    }
   }
 
   render() {
@@ -343,6 +370,7 @@ class Column extends React.Component {
                   deleteFunction={this.openDelete}
                 />
               </div>
+              
               {filteredTasks?.map((t) => (
                   <Task
                     task={t}
@@ -351,6 +379,8 @@ class Column extends React.Component {
                     deleteTask={this.deleteTask.bind(this)}
                     editTask={this.editTask.bind(this)}
                     team={team}
+                    priorityColor={this.setPriorityTaskColor(t.priority)}
+                    backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                   />
                 ))}
             </Paper>

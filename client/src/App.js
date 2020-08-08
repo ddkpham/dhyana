@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   withRouter,
 } from "react-router-dom";
 import Home from "./components/Home/index";
@@ -14,8 +13,7 @@ import SearchUser from "./components/SearchUser/index";
 import ProfilePage from "./components/ProfilePage/index";
 import MyProfile from "./components/MyProfile/index";
 import EditProfile from "./components/EditProfile/index";
-import Button from "@material-ui/core/Button";
-import { clientBaseURL, baseURL } from "./config/settings";
+import { baseURL } from "./config/settings";
 import { getCall } from "./apiCalls/apiCalls";
 import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";

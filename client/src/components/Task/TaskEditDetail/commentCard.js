@@ -1,7 +1,5 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
 
 const Comment = ({ description, username, date_created }) => {
   console.log("Comment -> date_created", date_created);
@@ -27,6 +25,7 @@ const Comment = ({ description, username, date_created }) => {
         <Typography
           style={{
             paddingLeft: 3,
+            paddingRight: 5,
             textSizeAdjust: 0.1,
             fontSize: "0.6em",
             color: "lightgrey",
