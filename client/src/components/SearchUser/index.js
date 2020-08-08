@@ -9,14 +9,15 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
   mainDiv: {
     
   },
   searchField: {
-    width: 250,
+    width: 350,
     mx: "auto",
   },
   searchDiv: {
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     // height: 200,
   },
   buttonDiv: {
-    marginBottom: 50,
+    marginBottom: 10,
   },
   buttonPrev: {
     marginRight: 5,
@@ -125,7 +126,7 @@ function SearchUser() {
             setFirstIndexPresented(firstIndexPresented + numResultsToShow)
           }
         >
-          Next
+          <ArrowForwardIcon/>
         </Button>
       );
     } else {
@@ -144,7 +145,7 @@ function SearchUser() {
             setFirstIndexPresented(firstIndexPresented - numResultsToShow)
           }
         >
-          Previous
+          <ArrowBackIcon/>
         </Button>
       );
     } else {
@@ -168,7 +169,7 @@ function SearchUser() {
         <Grid container className={classes.searchGrid}>
           <div className={classes.searchCardDiv}>
           <Card elevation={4} className={classes.searchCard}>
-            <Typography variant="h4" className={classes.title}>Search User</Typography>
+            <Typography variant="h4" className={classes.title}>Search for Users</Typography>
             <TextField
               className={classes.searchField}
               variant="outlined"
