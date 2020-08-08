@@ -180,7 +180,7 @@ const Task = ({ task, index, priorityColor, backgroundColor, deleteTask, editTas
               {userAssigned.username}
             </Typography>
             { task.time_estimated ? (
-              <Typography variant="body2">{timeElapsed}/{task.time_estimated} Hrs Completed</Typography>
+              <Typography variant="body2">{task.time_elapsed ?? 0}/{task.time_estimated} Hrs Completed</Typography>
             ) : (null)}
           </div>
         </div>
