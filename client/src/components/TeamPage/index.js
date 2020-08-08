@@ -61,8 +61,8 @@ function TeamPage(props) {
         </Button>
       </div>
       
-      <div className="container">
-        <div className="profileDiv">
+      <div className="outer-team-page-container">
+        <div className="inner-team-page-container">
             <Typography variant="h4" color="primary">
                 {name}
             </Typography>
@@ -97,7 +97,7 @@ function TeamPage(props) {
             <Typography variant="h5" color="primary">
                 Projects
             </Typography>
-            <div className="home-projects-wrapper">
+            <div className="team-projects-container">
                 <Fragment>
                 {TeamInfo.map((project) =>
                     <ProjectCard key={project.id} project={project} team="" />
