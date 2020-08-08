@@ -135,7 +135,8 @@ function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team } = props;
 
-  const currPriority = getPriority(currValues.priority)
+  console.log("currValues.priority is: ", currValues.priority)
+  const currPriority = priorities.find(priorityQuery);
   console.log("currPriority is: ", currPriority)
 
   const [name, setName] = useState(currValues.name);
@@ -155,16 +156,15 @@ function TaskEditDetail(props) {
   const [commentDisabled, setCommentDisabled] = useState(true);
   const [teamMembers, setTeamMembers] = useState(team);
 
-  function getPriority(prio) {
-    console.log("currValues.priority is: ", prio)
-    const prioVal = priorities.find(priorityQuery);
-    console.log("prioVal is: ", prioVal)
-    return 
-    // return p.id === currValues.priority;
-  }
+//   function getPriority() {
+//     const prioVal = priorities.find(priorityQuery);
+//     console.log("prioVal is: ", prioVal)
+//     return 
+//     // return p.id === currValues.priority;
+//   }
 
   function priorityQuery(p) {
-      return p.id === currValues.Priority
+      return p.id == (currValues.priority ?? 0)
   }
 
   async function getAllComments(task_id, team) {
@@ -394,7 +394,7 @@ function TaskEditDetail(props) {
             <InputLabel id="assignPriorityLabel">Priority</InputLabel>
             <Select
               labelId="assignPriorityLabel"
-              defaultValue={priority.id ?? ""}
+              defaultValue={priority.id}
               onChange={assignPriority}
               className={classes.priority}
             >

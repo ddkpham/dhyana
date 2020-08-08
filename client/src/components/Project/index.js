@@ -38,15 +38,12 @@ const styles = (theme) => ({
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
-    // height: 600,
+    height: 600,
   },
   addColumnButton: {
     margin: 10,
     width: '200px',
     height: '50px',
-  },
-  addColumnButtonDiv: {
-    marginTop: 35,
   }
 });
 
@@ -58,6 +55,7 @@ class Project extends React.Component {
     columns: [],
     teamMembers: [],
     columnModalOpen: false,
+    showColumns: false,
   };
 
   async componentWillMount() {
@@ -81,6 +79,8 @@ class Project extends React.Component {
         this.getColumns(project.id);
       })
       .catch((err) => console.log("project fetch error", err));
+    
+    this.state.showColumns = true;
   };
 
   getColumns = (projectId) => {
@@ -147,6 +147,7 @@ class Project extends React.Component {
             spacing={2}
             className={classes.root}
             direction="row"
+            hidden={this.state.showColumns}
           >
             {columns.map((c) => (
               <Column
@@ -158,7 +159,7 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
-            <div className={classes.addColumnButtonDiv}>
+            <div>
               <Button
                 className={classes.addColumnButton}
                 variant="contained"
