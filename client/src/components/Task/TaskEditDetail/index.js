@@ -135,7 +135,7 @@ function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team } = props;
 
-  const currPriority = priorities.find(getPriority);
+  const currPriority = getPriority(currValues.priority)
   console.log("currPriority is: ", currPriority)
 
   const [name, setName] = useState(currValues.name);
@@ -155,32 +155,38 @@ function TaskEditDetail(props) {
   const [commentDisabled, setCommentDisabled] = useState(true);
   const [teamMembers, setTeamMembers] = useState(team);
 
-  function getPriority(p) {
-    return p.id === currValues.priority;
+  function getPriority(prio) {
+    console.log("currValues.priority is: ", prio)
+    const prioVal = priorities.find(prio);
+    console.log("prioVal is: ", prioVal)
+    return 
+    // return p.id === currValues.priority;
   }
 
   async function getAllComments(task_id, team) {
     console.log("getting all comments for: ", task_id);
     const url = `${baseURL}/project/task/${task_id}/get-comments`;
-    const response = await getCall(url);
-
-    const payload = await response.json();
-    const { data: comments } = payload;
-    console.log(comments);
-    if (response.status === 200) {
-      for (var i = 0; i < comments.length; i++) {
-        for (var j = 0; j < team.length; j++) {
-          if (comments[i].user_id === team[j].id) {
-            comments[i].username = team[j].username;
-            break;
-          }
-        }
-      }
-      setAllComments(comments);
-      // Scroll to bottom of comments
-      var gridDiv = document.getElementById("gridDiv");
-      gridDiv.scrollTop = gridDiv.scrollHeight;
-    }
+    getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+            const { data: comments } = payload;
+            if (comments.length) {
+                for (var i = 0; i < comments.length; i++) {
+                    for (var j = 0; j < team.length; j++) {
+                    if (comments[i].user_id === team[j].id) {
+                        comments[i].username = team[j].username;
+                        break;
+                    }
+                    }
+                }
+                console.log("comments are: ", comments);
+                setAllComments(comments);
+                // Scroll to bottom of comments
+                var gridDiv = document.getElementById("gridDiv");
+                gridDiv.scrollTop = gridDiv.scrollHeight;
+            }
+        })
+        .catch((err) => console.log("getUserCreated fetch error", err));
   }
 
   useEffect(() => {
@@ -384,7 +390,7 @@ function TaskEditDetail(props) {
             <InputLabel id="assignPriorityLabel">Priority</InputLabel>
             <Select
               labelId="assignPriorityLabel"
-              defaultValue={priority}
+              defaultValue={priority.id ?? ""}
               onChange={assignPriority}
               className={classes.priority}
             >

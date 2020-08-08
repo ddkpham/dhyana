@@ -32,6 +32,7 @@ const styles = (theme) => ({
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
     minWidth: '300px',
+    minHeight: 500,
   },
   taskContainer: {
     overflowY: 'scroll',
@@ -51,6 +52,7 @@ const styles = (theme) => ({
   column: {
     minWidth: "300px",
     minHeight: 400,
+    marginBottom: "50px",
   },
   buttonDiv: {
     margin: '10px',
@@ -65,7 +67,17 @@ const styles = (theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  }
+  },
+  addTaskButton: {
+    marginBottom: 10,
+    justifyContent: "center",
+  },
+  buttonDiv: {
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+  },
+
 });
 
 const ConfirmDialog = ({message, open, confirm, deny}) => {
@@ -336,6 +348,14 @@ class Column extends React.Component {
       <div className={classes.mainColumnDiv}>
         <Grid item key={column.id} className={classes.column}>
           <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
+          <div className={classes.buttonDiv}>
+            <Button
+              variant="outlined"
+              onClick={this.openTaskPopover}
+            >
+              Add task
+            </Button>
+          </div>
           <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
               <div className={classes.columnHeader}>
@@ -371,14 +391,7 @@ class Column extends React.Component {
               </div>
             </Paper>
           </DragTarget>
-          <div className={classes.buttonDiv}>
-            <Button
-              variant="outlined"
-              onClick={this.openTaskPopover}
-            >
-              Add task
-            </Button>
-          </div>
+          
           <Popover
             id={id}
             open={taskOpen}

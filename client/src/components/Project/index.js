@@ -42,8 +42,11 @@ const styles = (theme) => ({
   addColumnButton: {
     margin: 10,
     width: '200px',
-    height: '50px'
+    height: '50px',
   },
+  addColumnButtonDiv: {
+    marginTop: 35,
+  }
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -56,7 +59,7 @@ class Project extends React.Component {
     columnModalOpen: false,
   };
 
-  async componentDidMount() {
+  async componentWillMount() {
     this.getProject();
   }
 
@@ -154,7 +157,7 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
-            <div>
+            <div className={classes.addColumnButtonDiv}>
               <Button
                 className={classes.addColumnButton}
                 variant="contained"
