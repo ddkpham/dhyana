@@ -217,7 +217,7 @@ function TaskEditDetail(props) {
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: newPriority ?? 0,
+      priority: newPriority ?? priority.id ?? 0,
       time_estimated: timeEstimated,
       time_elapsed: timeElapsed,
       flag,
