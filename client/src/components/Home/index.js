@@ -19,6 +19,9 @@ const styles = (theme) => ({
   projectWrapper: {
     display: "inline-block",
   },
+  title: {
+    textAlign: "center",
+  },
 });
 
 class Home extends React.Component {
@@ -66,7 +69,11 @@ class Home extends React.Component {
 
           <div className="home-content-wrapper">
             <div className="home-teams">
-              <Typography variant="h4" color="secondary">
+              <Typography
+                variant="h4"
+                color="secondary"
+                className={classes.title}
+              >
                 Teams
               </Typography>
               {teams.map((team) => (
@@ -74,7 +81,11 @@ class Home extends React.Component {
               ))}
             </div>
             <div className="home-projects-container">
-              <Typography variant="h4" color="secondary">
+              <Typography
+                variant="h4"
+                color="secondary"
+                className={classes.title}
+              >
                 Projects
               </Typography>
               <div className="home-projects-wrapper">
@@ -88,16 +99,18 @@ class Home extends React.Component {
                   </Fragment>
                 ))}
               </div>
-              <Card raised className="home-project-add-btn">
-                <CardActionArea href={"/project/new"}>
-                  <CardContent>
-                    <Typography variant="h5" color="textSecondary">
-                      <AddIcon />
-                      Add Project
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <div className="home-add-project-btn">
+                <Card raised className="home-project-add-btn">
+                  <CardActionArea href={"/project/new"}>
+                    <CardContent>
+                      <Typography variant="h5" color="textSecondary">
+                        <AddIcon />
+                        Add Project
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </div>
             </div>
           </div>
         </div>

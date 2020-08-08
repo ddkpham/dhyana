@@ -16,6 +16,15 @@
   &-project-add-btn {
     width: 61vw;
   }
+
+  &-title {
+    text-align: center;
+  }
+
+  &-add-project-btn {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .MuiDrawer-paperAnchorDockedLeft {
