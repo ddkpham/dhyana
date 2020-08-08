@@ -11,6 +11,19 @@
   align-items: center;
 }
 
+.profile-container-center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.profile-my-avatar {
+  width: 100px;
+  height: 100px;
+  border: lavender;
+}
+
 .container2 {
   width: 100%;
   display: flex;
