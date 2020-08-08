@@ -135,7 +135,6 @@ function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team } = props;
 
-  console.log("currValues.priority is: ", currValues.priority)
   const currPriority = priorities.find(priorityQuery);
   console.log("currPriority is: ", currPriority)
 
@@ -155,13 +154,6 @@ function TaskEditDetail(props) {
   const [allComments, setAllComments] = useState([]);
   const [commentDisabled, setCommentDisabled] = useState(true);
   const [teamMembers, setTeamMembers] = useState(team);
-
-//   function getPriority() {
-//     const prioVal = priorities.find(priorityQuery);
-//     console.log("prioVal is: ", prioVal)
-//     return 
-//     // return p.id === currValues.priority;
-//   }
 
   function priorityQuery(p) {
       return p.id == (currValues.priority ?? 0)
