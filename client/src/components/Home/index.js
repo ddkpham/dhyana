@@ -66,6 +66,7 @@ class Home extends React.Component {
           <Typography variant="h4" color="primary">
             Dashboard
           </Typography>
+          <br />
 
           <div className="home-content-wrapper">
             <div className="home-teams">

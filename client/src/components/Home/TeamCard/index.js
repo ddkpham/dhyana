@@ -81,7 +81,7 @@ class TeamCard extends React.Component {
           />
           <div className="team-card-content">
             <CardActionArea href={"#"}>
-              <Typography variant="h5" color="textPrimary">
+              <Typography variant="h5" color="primary">
                 {name}
               </Typography>
               <Typography variant="body1" color="textSecondary">
