@@ -29,9 +29,15 @@ const styles = (theme) => ({
   columnPaper: {
     padding: "5px",
     height: "100%",
-    minHeight: 500,
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
+    minWidth: '300px',
+  },
+  taskContainer: {
+    overflowY: 'scroll',
+    maxHeight: '60vh',
+    paddingBottom: '15px',
+    paddingRight: '10px'
   },
   popover: {
     display: "flex",
@@ -44,33 +50,21 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    marginBottom: "50px",
     minHeight: 400,
   },
-  addTaskButton: {
-    marginBottom: 10,
-    justifyContent: "center",
-  },
   buttonDiv: {
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
+    margin: '10px',
   },
   mainColumnDiv: {
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
-  columnName: {
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-  },
   columnHeader: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   }
 });
 
@@ -340,18 +334,9 @@ class Column extends React.Component {
 
     return (
       <div className={classes.mainColumnDiv}>
-        <div className={classes.buttonDiv}>
-          <Button
-            variant="outlined"
-            className={classes.addTaskButton}
-            onClick={this.openTaskPopover}
-          >
-            Add task
-          </Button>
-        </div>
         <Grid item key={column.id} className={classes.column}>
           <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
-          <DragTarget columnName={column.name} onDrop={this.onDrop}>
+          <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
               <div className={classes.columnHeader}>
                 <Typography>{column.name}</Typography>
@@ -370,22 +355,30 @@ class Column extends React.Component {
                   deleteFunction={this.openDelete}
                 />
               </div>
-              
-              {filteredTasks?.map((t) => (
+              <div className={classes.taskContainer}>
+                {filteredTasks?.map((t) => (
                   <Task
-                    task={t}
-                    key={t.id}
-                    columnId={column.id}
-                    deleteTask={this.deleteTask.bind(this)}
-                    editTask={this.editTask.bind(this)}
-                    team={team}
-                    priorityColor={this.setPriorityTaskColor(t.priority)}
-                    backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
+                  task={t}
+                  key={t.id}
+                  columnId={column.id}
+                  deleteTask={this.deleteTask.bind(this)}
+                  editTask={this.editTask.bind(this)}
+                  team={team}
+                  priorityColor={this.setPriorityTaskColor(t.priority)}
+                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
                   />
                 ))}
+              </div>
             </Paper>
           </DragTarget>
-
+          <div className={classes.buttonDiv}>
+            <Button
+              variant="outlined"
+              onClick={this.openTaskPopover}
+            >
+              Add task
+            </Button>
+          </div>
           <Popover
             id={id}
             open={taskOpen}
