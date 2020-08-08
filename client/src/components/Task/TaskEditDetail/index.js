@@ -146,6 +146,7 @@ function TaskEditDetail(props) {
     currValues.user_id_assigned
   );
   const [priority, setPriority] = useState(currPriority);
+  const [newPriority, setNewPriority] = useState();
   const [time_estimated, setTimeEstimated] = useState(
     currValues.time_estimated
   );
@@ -209,12 +210,14 @@ function TaskEditDetail(props) {
 
     const userIdAssigned = user_id_assigned === "" ? null : user_id_assigned;
 
+    console.log("editTask newPriority is: ", newPriority)
+
     const updatedValues = {
       id: currValues.id,
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: priority.id ?? 0,
+      priority: newPriority ?? 0,
       time_estimated: timeEstimated,
       time_elapsed: timeElapsed,
       flag,
@@ -243,7 +246,7 @@ function TaskEditDetail(props) {
 
   const assignPriority = (event) => {
     console.log("event value is: ", event.target.value);
-    setPriority(event.target.value);
+    setNewPriority(event.target.value);
   };
 
   const assignTimeEstimated = (event) => {
