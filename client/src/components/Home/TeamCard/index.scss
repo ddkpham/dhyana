@@ -2,3 +2,20 @@
   display: flex;
   justify-content: flex-start;
 }
+
+.teamcard-card-media {
+  width: 100px;
+}
+
+.teamcard-container {
+  display: flex;
+  height: 100%;
+  padding: 0;
+  padding-bottom: 0 !important;
+  align-items: stretch;
+  width: 20vw;
+}
+
+.team-card-content {
+  margin-left: 10px;
+}
