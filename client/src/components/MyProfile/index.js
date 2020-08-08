@@ -74,7 +74,7 @@ function MyProfile() {
                 {ProfileInfo.job_title || "No job title. Click update to add. "}
               </Typography>
               <Typography variant="h6" color="secondary">
-                Biography:{" "}
+                About me:{" "}
               </Typography>
               <TextField
                 id="outlined-multiline-static"
