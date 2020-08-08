@@ -12,6 +12,7 @@ import bomb_img from "../../static/bomb.jpg";
 import waterfall_img from "../../static/waterfall.jpg";
 import wolves_img from "../../static/wolves.jpg";
 import cub_img from "../../static/cub.jpg";
+import { useHistory } from "react-router-dom";
 
 import "./card.scss";
 
@@ -21,11 +22,13 @@ const useStyles = makeStyles({
   },
   media: {
     height: 140,
+    cursor: "pointer",
   },
 });
 
 function ProjectCard(props) {
   const classes = useStyles();
+  const history = useHistory();
   const images = [
     motion_img,
     elephant_img,
@@ -47,6 +50,7 @@ function ProjectCard(props) {
         className={classes.media}
         image={images[imgIndex]}
         title="Contemplative Reptile"
+        onClick={() => history.push("/project/" + name)}
       />
       <CardActionArea href={"/project/" + name}>
         <CardContent>

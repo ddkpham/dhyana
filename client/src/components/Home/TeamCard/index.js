@@ -78,6 +78,9 @@ class TeamCard extends React.Component {
             className="teamcard-card-media"
             image={images[imgIndex]}
             title="Live from space album cover"
+            onClick={() => {
+              window.location.href = `${clientBaseURL}/#`;
+            }}
           />
           <div className="team-card-content">
             <CardActionArea href={"#"}>
