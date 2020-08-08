@@ -33,6 +33,8 @@ const styles = (theme) => ({
     width: (props) => props.width,
     minWidth: '300px',
     minHeight: 500,
+    maxHeight: 500,
+    overflowY: "scroll",
   },
   taskContainer: {
     overflowY: 'scroll',
@@ -51,8 +53,7 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    minHeight: 400,
-    marginBottom: "50px",
+    marginBottom: 25,
   },
   buttonDiv: {
     margin: '10px',

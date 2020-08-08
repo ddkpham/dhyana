@@ -157,10 +157,14 @@ function TaskEditDetail(props) {
 
   function getPriority(prio) {
     console.log("currValues.priority is: ", prio)
-    const prioVal = priorities.find(prio);
+    const prioVal = priorities.find(priorityQuery);
     console.log("prioVal is: ", prioVal)
     return 
     // return p.id === currValues.priority;
+  }
+
+  function priorityQuery(p) {
+      return p.id === currValues.Priority
   }
 
   async function getAllComments(task_id, team) {

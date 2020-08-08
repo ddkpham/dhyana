@@ -38,6 +38,7 @@ const styles = (theme) => ({
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
+    height: 600,
   },
   addColumnButton: {
     margin: 10,
