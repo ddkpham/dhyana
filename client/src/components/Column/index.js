@@ -32,15 +32,14 @@ const styles = (theme) => ({
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
     minWidth: '300px',
-    minHeight: 500,
-    maxHeight: 500,
-    overflowY: "scroll",
+    minHeight: 550,
   },
   taskContainer: {
     overflowY: 'scroll',
     maxHeight: '60vh',
     paddingBottom: '15px',
-    paddingRight: '10px'
+    paddingRight: '10px',
+    maxHeight: 450,
   },
   popover: {
     display: "flex",
@@ -68,6 +67,10 @@ const styles = (theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingLeft: 3,
+  },
+  columnName: {
+    overflowX: "scroll",
   },
   addTaskButton: {
     marginBottom: 10,
@@ -77,6 +80,7 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
+    marginTop: 1,
   },
 
 });
@@ -349,18 +353,19 @@ class Column extends React.Component {
       <div className={classes.mainColumnDiv}>
         <Grid item key={column.id} className={classes.column}>
           <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
-          <div className={classes.buttonDiv}>
-            <Button
-              variant="outlined"
-              onClick={this.openTaskPopover}
-            >
-              Add task
-            </Button>
-          </div>
+          
           <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
+              <div className={classes.buttonDiv}>
+                <Button
+                  variant="outlined"
+                  onClick={this.openTaskPopover}
+                >
+                  Add task
+                </Button>
+              </div>
               <div className={classes.columnHeader}>
-                <Typography>{column.name}</Typography>
+                <Typography className={classes.columnName}>{column.name}</Typography>
                 <span>
                   {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
                   <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
