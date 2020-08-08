@@ -35,7 +35,7 @@ function ProjectCard(props) {
     wolves_img,
     cub_img,
   ];
-  const imgIndex = Math.floor(Math.random() * 7);
+  const imgIndex = Math.floor(Math.random() * images.length);
 
   const {
     project: { name, description },
