@@ -29,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
     display: "table",
     alignItems: "center",
     width: "65%",
-    // border: "1px solid grey",
-    // borderRadius: 4,
   },
   searchCardDiv: {
     display: "flex",
@@ -53,12 +51,8 @@ const useStyles = makeStyles((theme) => ({
   },
   resultsTable: {
     wdith: "100%",
-    // display: "flex",
     justifyContent: "space-between",
     margin: 15,
-    // paddingTop: 20,
-    // paddingBottom: 20,
-    // height: 200,
   },
   buttonDiv: {
     marginBottom: 10,
@@ -119,7 +113,6 @@ function SearchUser() {
     if (contactList.length > firstIndexPresented + numResultsToShow) {
       return (
         <Button
-          // className={classes.buttonNextPrev}
           variant="outlined"
           color="primary"
           onClick={() =>
