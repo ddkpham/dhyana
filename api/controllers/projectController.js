@@ -4,6 +4,7 @@ const Column = require("../models/Column");
 const ProjectColumns = require("../models/ProjectColumns");
 const ColumnTask = require("../models/ColumnsTasks");
 const TeamsUsers = require("../models/TeamsUsers");
+const Comment = require("../models/Comment");
 const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
@@ -39,6 +40,78 @@ exports.create_project = function (req, res, next) {
     })
     .catch((err) => {
       res.status(409).json(errorResponse("Project exists already.", err));
+    });
+};
+
+exports.create_task_comment = function (req, res, next) {
+  console.log("exports.create_task_comment -> req.body", req.body);
+  console.log("get_task_comments params: ", req.params);
+  const task_id = req.params.task_id.trim();
+  body(req.body).trim().escape().not().isEmpty();
+  const { description } = req.body;
+  console.log("exports.create_task_comment -> body", description);
+  const { userId } = req.session;
+  const date_created = new Date().toISOString()
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!body || !userId) {
+    res.status(400).json(errorResponse("missing team id or project name"));
+    return;
+  }
+
+  Comment.create({
+    task_id: task_id,
+    user_id: userId,
+    date_created: date_created,
+    description: description,
+  })
+  .then(() => {
+    res.status(200).json(successResponse("comment created successfully."));
+    return;
+  })
+  .catch((err) => {
+    console.log("error in update", err);
+    res.status(409).json(errorResponse("comment couldn’t be created.", err));
+  });
+};
+
+exports.get_task_comments = function (req, res, next) {
+  console.log("get_task_comments params: ", req.params);
+  const task_id = req.params.task_id.trim();
+
+  if (!task_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  Comment.findAll({
+    where: {
+      task_id: task_id,
+    },
+  })
+    .then((comments) => {
+      console.log("exports.get_task_comments -> comments", comments);
+      if (comments.length) {
+        res
+          .status(200)
+          .json(successResponse("Sucessfully found comments", comments));
+      } else {
+        res.status(404).json(errorResponse("Comments not found.", err));
+      }
+    })
+    .catch((err) => {
+      res
+        .status(404)
+        .json(
+          errorResponse(
+            "Comments not found. error in request. Check query.",
+            err
+          )
+        );
     });
 };
 
@@ -308,6 +381,58 @@ exports.view_project_columns = function (req, res, next) {
     );
 };
 
+exports.delete_column = async function (req, res, next) {
+  console.log("exports.delete_column -> req.params", req.params);
+  const column_id = req.params.column_id.trim();
+
+  if (!column_id) {
+    res.status(400).json(errorResponse("missing column_id"));
+    return;
+  }
+
+  const tasks = await ColumnTask.findAll({
+    where: {
+      column_id,
+    },
+  });
+
+  const taskPromises = []
+
+  for(let t of tasks){
+    taskPromises.push(DeleteTask(t.task_id));
+  }
+
+  Promise.all(taskPromises)
+  .then(() => {
+    ProjectColumns.destroy({
+      where: {
+        column_id,
+      },
+    })
+    .then(() => {
+      Column.destroy({
+        where: {
+          id: column_id,
+        },
+      })
+        .then(() =>
+          res.status(200).json(successResponse("successfully deleted column"))
+        )
+        .catch((err) =>
+          res
+            .status(400)
+            .json(errorResponse("column destroy error: " + err.message))
+        );
+    })
+    .catch((err) =>
+      res
+        .status(400)
+        .json(errorResponse("projectcolumn destroy error: " + err.message))
+    );
+  })
+  .catch((error) => res.status(400).json(errorResponse(error)));
+};
+
 exports.create_new_task = function (req, res, next) {
   console.log("exports.create_new_task -> req.body", req.body);
 
@@ -320,7 +445,7 @@ exports.create_new_task = function (req, res, next) {
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
   const flag = req.body.flag == "" ? false : req.body.flag;
-  const date_created = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+  const date_created = new Date().toISOString()
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;
 
@@ -415,19 +540,19 @@ exports.move_task = function (req, res, next) {
   }
 
   ColumnTask.update(
-      {
-        column_id,
-      },
-      {
-        where: { task_id,},
-      }
-    )
+    {
+      column_id,
+    },
+    {
+      where: { task_id },
+    }
+  )
     .then(() => {
       res.status(200).json(successResponse("task moved successfully."));
       return;
     })
     .catch((err) => {
-      console.log("error in update", err)
+      console.log("error in update", err);
       res.status(409).json(errorResponse("task couldn’t be moved.", err));
     });
 };
@@ -436,8 +561,17 @@ exports.edit_task = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("edit task req.body is: ", req.body);
 
-  const { id, name, description, flag, user_id_assigned, priority, time_elapsed, time_estimated } = req.body
-  const date_modified = new Date().toISOString().slice(0, 10); // ref: https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+  const {
+    id,
+    name,
+    description,
+    flag,
+    user_id_assigned,
+    priority,
+    time_elapsed,
+    time_estimated,
+  } = req.body;
+  const date_modified = new Date().toISOString()
 
   if (!id) {
     res.status(400).json(errorResponse("missing task_id"));
@@ -447,30 +581,48 @@ exports.edit_task = function (req, res, next) {
   console.log("updating task with id: ", id);
 
   Task.update(
-      {
-        name,
-        description,
-        flag,
-        user_id_assigned,
-        priority,
-        date_modified,
-        time_elapsed,
-        time_estimated,
-      },
-      {
-        where: { id, },
-      }
-    )
+    {
+      name,
+      description,
+      flag,
+      user_id_assigned,
+      priority,
+      date_modified,
+      time_elapsed,
+      time_estimated,
+    },
+    {
+      where: { id },
+    }
+  )
     .then(() => {
-      console.log("UPDATE WAS SUCCESSFUL")
+      console.log("UPDATE WAS SUCCESSFUL");
       res.status(200).json(successResponse("task updated successfully."));
       return;
     })
     .catch((err) => {
-      console.log("error in update", err)
+      console.log("error in update", err);
       res.status(409).json(errorResponse("task couldn’t be updated.", err));
     });
 };
+
+function DeleteTask(task_id){
+  return ColumnTask.destroy({
+    where: {
+      task_id,
+    },
+  })
+  .then(() => {
+    Task.destroy({
+      where: {
+        id: task_id,
+      },
+    })
+      .then(() =>1)
+      .catch((err) => { throw "task destroy error: " + err.message; });
+  })
+  .catch((err) => { throw "task destroy error: " + err.message; });
+}
 
 exports.delete_task = function (req, res, next) {
   console.log("exports.delete_task -> req.params", req.params);
@@ -481,29 +633,13 @@ exports.delete_task = function (req, res, next) {
     return;
   }
 
-  ColumnTask.destroy({
-    where: {
-      task_id,
-    },
+  DeleteTask(task_id)
+  .then(() => {
+    res.status(200).json(successResponse("successfully deleted task"))
   })
-    .then(() => {
-      Task.destroy({
-        where: {
-          id: task_id,
-        },
-      })
-        .then(() =>
-          res.status(200).json(successResponse("successfully deleted task"))
-        )
-        .catch((err) =>
-          res
-            .status(400)
-            .json(errorResponse("task destroy error: " + err.message))
-        );
-    })
-    .catch((err) =>
-      res
-        .status(400)
-        .json(errorResponse("columntask destroy error: " + err.message))
-    );
+  .catch((error) => {
+    res
+      .status(400)
+      .json(errorResponse(error))
+  })
 };

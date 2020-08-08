@@ -14,7 +14,16 @@
   }
 
   &-project-add-btn {
-    width: 61vw;
+    width: 30vw;
+  }
+
+  &-title {
+    text-align: center;
+  }
+
+  &-add-project-btn {
+    display: flex;
+    justify-content: center;
   }
 }
 

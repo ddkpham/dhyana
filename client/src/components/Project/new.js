@@ -83,7 +83,6 @@ class NewProject extends React.Component {
               labelId="team-select-label"
               variant="outlined"
               value={team_id}
-              variant="outlined"
               onChange={(event) => {
                 this.setState({ team_id: event.target.value });
               }}

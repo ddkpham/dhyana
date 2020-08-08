@@ -8,8 +8,6 @@ import FormControl from "@material-ui/core/FormControl";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-
-import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { useHistory } from "react-router-dom";

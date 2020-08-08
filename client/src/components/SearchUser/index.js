@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import "./index.scss";
 import { useHistory } from "react-router-dom";
 import UserCard from "./userCard";
-import { postCall, getCall } from "../../apiCalls/apiCalls";
+import { postCall } from "../../apiCalls/apiCalls";
 
 function SearchUser() {
   const [contactList, setContacts] = useState([]);

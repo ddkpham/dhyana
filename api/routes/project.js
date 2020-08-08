@@ -28,6 +28,8 @@ router.post("/create/column", projectController.create_project_column);
 
 router.get("/:projectId/columns", projectController.view_project_columns);
 
+router.delete("/column/:column_id", projectController.delete_column);
+
 router.post(
   "/create/task",
   [
@@ -48,6 +50,17 @@ router.post(
   "/task/:task_id/move",
   [body("task_ids").isLength({ min: 1 })],
   projectController.move_task
+);
+
+router.get(
+  "/task/:task_id/get-comments",
+  projectController.get_task_comments
+);
+
+router.post(
+  "/task/:task_id/create-comment",
+  [body("description").isLength({ min: 1 }).escape()],
+  projectController.create_task_comment
 );
 
 router.post(
