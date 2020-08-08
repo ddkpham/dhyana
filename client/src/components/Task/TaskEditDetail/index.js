@@ -135,8 +135,10 @@ function TaskEditDetail(props) {
   const classes = useStyles();
   const { currValues, team } = props;
 
-  const currPriority = priorities.find(getPriority);
+  const currPriority = priorities.find(priorityQuery);
   console.log("currPriority is: ", currPriority)
+
+  console.log("timeElapsed is: ", currValues.time_elapsed)
 
   const [name, setName] = useState(currValues.name);
   const [description, setDescription] = useState(currValues.description);
@@ -144,6 +146,7 @@ function TaskEditDetail(props) {
     currValues.user_id_assigned
   );
   const [priority, setPriority] = useState(currPriority);
+  const [newPriority, setNewPriority] = useState();
   const [time_estimated, setTimeEstimated] = useState(
     currValues.time_estimated
   );
@@ -155,32 +158,34 @@ function TaskEditDetail(props) {
   const [commentDisabled, setCommentDisabled] = useState(true);
   const [teamMembers, setTeamMembers] = useState(team);
 
-  function getPriority(p) {
-    return p.id === currValues.priority;
+  function priorityQuery(p) {
+      return p.id === (currValues.priority ?? 0)
   }
 
   async function getAllComments(task_id, team) {
     console.log("getting all comments for: ", task_id);
     const url = `${baseURL}/project/task/${task_id}/get-comments`;
-    const response = await getCall(url);
-
-    const payload = await response.json();
-    const { data: comments } = payload;
-    console.log(comments);
-    if (response.status === 200) {
-      for (var i = 0; i < comments.length; i++) {
-        for (var j = 0; j < team.length; j++) {
-          if (comments[i].user_id === team[j].id) {
-            comments[i].username = team[j].username;
-            break;
-          }
-        }
-      }
-      setAllComments(comments);
-      // Scroll to bottom of comments
-      var gridDiv = document.getElementById("gridDiv");
-      gridDiv.scrollTop = gridDiv.scrollHeight;
-    }
+    getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+            const { data: comments } = payload;
+            if (comments.length) {
+                for (var i = 0; i < comments.length; i++) {
+                    for (var j = 0; j < team.length; j++) {
+                    if (comments[i].user_id === team[j].id) {
+                        comments[i].username = team[j].username;
+                        break;
+                    }
+                    }
+                }
+                console.log("comments are: ", comments);
+                setAllComments(comments);
+                // Scroll to bottom of comments
+                var gridDiv = document.getElementById("gridDiv");
+                gridDiv.scrollTop = gridDiv.scrollHeight;
+            }
+        })
+        .catch((err) => console.log("getUserCreated fetch error", err));
   }
 
   useEffect(() => {
@@ -200,18 +205,21 @@ function TaskEditDetail(props) {
 
   const editTask = () => {
     const timeEstimated = parseFloat(time_estimated);
+    const timeElapsed = parseFloat(time_elapsed);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
     const userIdAssigned = user_id_assigned === "" ? null : user_id_assigned;
+
+    console.log("editTask newPriority is: ", newPriority)
 
     const updatedValues = {
       id: currValues.id,
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: priority || null,
+      priority: newPriority ?? priority.id ?? 0,
       time_estimated: timeEstimated,
-      time_elapsed,
+      time_elapsed: timeElapsed,
       flag,
     };
     console.log("TaskEditDetail - editTask updatedValues: ", updatedValues);
@@ -238,7 +246,7 @@ function TaskEditDetail(props) {
 
   const assignPriority = (event) => {
     console.log("event value is: ", event.target.value);
-    setPriority(event.target.value);
+    setNewPriority(event.target.value);
   };
 
   const assignTimeEstimated = (event) => {
@@ -364,7 +372,7 @@ function TaskEditDetail(props) {
             defaultValue={currValues.time_estimated}
             variant="outlined"
             onChange={assignTimeEstimated}
-            inputProps={{ step: 0.5 }}
+            inputProps={{ step: 0.5, min: 0 }}
           />
 
           <TextField
@@ -375,7 +383,7 @@ function TaskEditDetail(props) {
             type="number"
             variant="outlined"
             onChange={assignTimeCompleted}
-            inputProps={{ step: 0.5 }}
+            inputProps={{ step: 0.5, min: 0 }}
           />
         </div>
 
@@ -384,7 +392,7 @@ function TaskEditDetail(props) {
             <InputLabel id="assignPriorityLabel">Priority</InputLabel>
             <Select
               labelId="assignPriorityLabel"
-              defaultValue={priority}
+              defaultValue={priority.id}
               onChange={assignPriority}
               className={classes.priority}
             >

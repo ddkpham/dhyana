@@ -32,12 +32,14 @@ const styles = (theme) => ({
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
     minWidth: '300px',
+    minHeight: 550,
   },
   taskContainer: {
     overflowY: 'scroll',
     maxHeight: '60vh',
     paddingBottom: '15px',
-    paddingRight: '10px'
+    paddingRight: '10px',
+    maxHeight: 450,
   },
   popover: {
     display: "flex",
@@ -50,7 +52,7 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    minHeight: 400,
+    marginBottom: 25,
   },
   buttonDiv: {
     margin: '10px',
@@ -65,7 +67,22 @@ const styles = (theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  }
+    paddingLeft: 3,
+  },
+  columnName: {
+    overflowX: "scroll",
+  },
+  addTaskButton: {
+    marginBottom: 10,
+    justifyContent: "center",
+  },
+  buttonDiv: {
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    marginTop: 1,
+  },
+
 });
 
 const ConfirmDialog = ({message, open, confirm, deny}) => {
@@ -336,10 +353,19 @@ class Column extends React.Component {
       <div className={classes.mainColumnDiv}>
         <Grid item key={column.id} className={classes.column}>
           <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
+          
           <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
+              <div className={classes.buttonDiv}>
+                <Button
+                  variant="outlined"
+                  onClick={this.openTaskPopover}
+                >
+                  Add task
+                </Button>
+              </div>
               <div className={classes.columnHeader}>
-                <Typography>{column.name}</Typography>
+                <Typography className={classes.columnName}>{column.name}</Typography>
                 <span>
                   {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
                   <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
@@ -371,14 +397,7 @@ class Column extends React.Component {
               </div>
             </Paper>
           </DragTarget>
-          <div className={classes.buttonDiv}>
-            <Button
-              variant="outlined"
-              onClick={this.openTaskPopover}
-            >
-              Add task
-            </Button>
-          </div>
+          
           <Popover
             id={id}
             open={taskOpen}
