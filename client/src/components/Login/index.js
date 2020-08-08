@@ -11,7 +11,7 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { useHistory } from "react-router-dom";
-
+import Typography from "@material-ui/core/Typography";
 import "./index.scss";
 import { postCall } from "../../apiCalls/apiCalls";
 
@@ -21,34 +21,48 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
 
-  const login = async (user, name) => {
+  const login = async () => {
     const url = `${baseURL}/login`;
     const body = { username, password };
     const response = await postCall(url, body);
 
     const data = await response.json();
-    const { confirmation, message } = data;
+    const { confirmation } = data;
     console.log(data);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
-
       window.location.href = `${clientBaseURL}/home`;
     } else {
-      alert(message);
+      alert("Username or Password Incorrect");
     }
   };
+
+  const keyPressed = (event) => {
+    console.log("entered key pressed with event: ", event)
+    if (event.key === "Enter") {
+      login()
+    }
+  }
+
+  // document.getElementById('idOfInputField').addEventListener("keyup", function(event) {
+  //   event.preventDefault();
+  //   if (event.keyCode === 13) {
+  //     document.getElementById('idOfAddMsgBtn').click();
+  //   }
+  // })
 
   return (
     <div className={"outer-wrapper"}>
       <Card className={"login-inner-wrapper"}>
         <div className={"title-wrapper"}>
-          <h2 className={"title"}>Login 👋</h2>
+          <Typography variant="h4">Login 👋</Typography>
         </div>
         <div className="text-input-wrapper">
           <TextField
             className="login-text-input"
             label="username"
             variant="outlined"
+            onKeyPress={keyPressed}
             onChange={(event) => {
               setUsername(event.target.value);
             }}
@@ -65,6 +79,7 @@ function Login() {
               onChange={(e) => {
                 setPass(e.target.value);
               }}
+              onKeyPress={keyPressed}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
