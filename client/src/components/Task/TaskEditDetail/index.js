@@ -138,6 +138,8 @@ function TaskEditDetail(props) {
   const currPriority = priorities.find(priorityQuery);
   console.log("currPriority is: ", currPriority)
 
+  console.log("timeElapsed is: ", currValues.time_elapsed)
+
   const [name, setName] = useState(currValues.name);
   const [description, setDescription] = useState(currValues.description);
   const [user_id_assigned, setUserAssigned] = useState(
@@ -156,7 +158,7 @@ function TaskEditDetail(props) {
   const [teamMembers, setTeamMembers] = useState(team);
 
   function priorityQuery(p) {
-      return p.id == (currValues.priority ?? 0)
+      return p.id === (currValues.priority ?? 0)
   }
 
   async function getAllComments(task_id, team) {
@@ -202,6 +204,7 @@ function TaskEditDetail(props) {
 
   const editTask = () => {
     const timeEstimated = parseFloat(time_estimated);
+    const timeElapsed = parseFloat(time_elapsed);
     console.log("user_id_assigned before parse: ", user_id_assigned);
 
     const userIdAssigned = user_id_assigned === "" ? null : user_id_assigned;
@@ -211,9 +214,9 @@ function TaskEditDetail(props) {
       name,
       description,
       user_id_assigned: userIdAssigned,
-      priority: priority || null,
+      priority: priority.id ?? 0,
       time_estimated: timeEstimated,
-      time_elapsed,
+      time_elapsed: timeElapsed,
       flag,
     };
     console.log("TaskEditDetail - editTask updatedValues: ", updatedValues);
@@ -366,7 +369,7 @@ function TaskEditDetail(props) {
             defaultValue={currValues.time_estimated}
             variant="outlined"
             onChange={assignTimeEstimated}
-            inputProps={{ step: 0.5 }}
+            inputProps={{ step: 0.5, min: 0 }}
           />
 
           <TextField
@@ -377,7 +380,7 @@ function TaskEditDetail(props) {
             type="number"
             variant="outlined"
             onChange={assignTimeCompleted}
-            inputProps={{ step: 0.5 }}
+            inputProps={{ step: 0.5, min: 0 }}
           />
         </div>
 

@@ -62,6 +62,10 @@ class Project extends React.Component {
     this.getProject();
   }
 
+  async componentWillUnmount() {
+    this.state.showColumns = false;
+  }
+
   getProject = () => {
     const { name } = this.props;
     const url = `${baseURL}/project/${name}`;
@@ -77,10 +81,14 @@ class Project extends React.Component {
         this.setState({ project });
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
+        this.state.showColumns = true;
       })
-      .catch((err) => console.log("project fetch error", err));
+      .catch((err) => {
+        console.log("project fetch error", err)
+        this.state.showColumns = true;
+      });
     
-    this.state.showColumns = true;
+    
   };
 
   getColumns = (projectId) => {
@@ -147,7 +155,6 @@ class Project extends React.Component {
             spacing={2}
             className={classes.root}
             direction="row"
-            hidden={this.state.showColumns}
           >
             {columns.map((c) => (
               <Column
@@ -159,6 +166,7 @@ class Project extends React.Component {
                 width={300}
               />
             ))}
+            {this.state.showColumns ? (
             <div>
               <Button
                 className={classes.addColumnButton}
@@ -169,6 +177,7 @@ class Project extends React.Component {
                 Add Column
               </Button>
             </div>
+            ) : (null)}
           </ScrollingComponent>
         </DndProvider>
       </div>
