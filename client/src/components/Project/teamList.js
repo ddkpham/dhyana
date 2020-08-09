@@ -57,23 +57,33 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
     const url = `${baseURL}/team/add-user`;
 		const user_id = user.id;
 		const addUserBody = { team_id: teamId, user_id };
-		console.log("hey toria body", addUserBody);
 
 		postCall(url, addUserBody)
 			.then((response) => response.json())
 			.then((payload) => {
 				console.log('hey toria add user response', payload);
-				reload(teamId)
+				reload(teamId);
+				setInput("");
+				closeTeamPopover();
 			})
 			.catch((err) => console.log('hey toria add user error', err));
   };
 
-	function openPopover(event) {
+	function openTeamPopover(event) {
 		setTeamPopover(event.currentTarget);
 	}
 
-	function closePopover() {
+	function closeTeamPopover() {
 		setTeamPopover(null);
+		closeSearchResults();
+	}
+
+	function openSearchResults(event){
+		setSearchMenu(event.currentTarget)
+	}
+
+	function closeSearchResults(){
+		setSearchMenu(null)
 	}
 
 	const displayTeam = teamMembers.slice(0, 3);
@@ -88,12 +98,12 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 			{displayTeam.map((t) => (
 				<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
 			))}
-			<IconButton className={classes.userAvatarWrapper} onClick={openPopover}><MoreHorizIcon/></IconButton>
+			<IconButton className={classes.userAvatarWrapper} onClick={openTeamPopover}><MoreHorizIcon/></IconButton>
 			<Popover
 				id={teamPopoverId}
 				open={showAllTeam}
 				anchorEl={teamPopover}
-				onClose={closePopover}
+				onClose={closeTeamPopover}
 				anchorOrigin={{
 					vertical: 'bottom',
 					horizontal: 'center',
@@ -110,7 +120,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				<TextField
 					variant="outlined"
 					placeholder="Add new teammate"
-					onFocus={(event) => setSearchMenu(event.currentTarget)}
+					onFocus={openSearchResults}
 					onChange={(event) => {
 						console.log('hey toria onChange', event.target.value)
 						if(event.target.value.length) setInput(event.target.value);
@@ -123,9 +133,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					disableAutoFocus
 					disableEnforceFocus
 					open={Boolean(searchMenu)}
-					onClose={(event) => {
-						setSearchMenu(null)
-					}}
+					onClose={closeSearchResults}
 					anchorOrigin={{
 						vertical: 'bottom',
 						horizontal: 'left',
