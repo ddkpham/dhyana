@@ -75,7 +75,9 @@ exports.delete_project = async function (req, res, next) {
     res.status(200).json(successResponse("successfully deleted project!"));
   } catch (err) {
     console.log("err", err);
-    res.status(200).json(errorResponse("Error occured in delete team", err));
+    res
+      .status(200)
+      .json(errorResponse("Error occured in deleting project", err));
   }
 };
 
