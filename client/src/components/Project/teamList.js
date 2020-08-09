@@ -10,8 +10,9 @@ import Input from "@material-ui/core/Input";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
+import Paper from '@material-ui/core/Paper';
 import AddIcon from "@material-ui/icons/Add";
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { makeStyles } from "@material-ui/core/styles";
 import ConfirmDialog from "../ConfirmDialog";
 
@@ -42,6 +43,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 	errorMessage: {
 		color: 'red',
+	},
+	successMessage: {
+		background: 'darkseagreen',
+		color: 'white',
+		padding: '10px 15px',
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		'& *': {
+			margin: '0px 10px'
+		}
 	}
 }));
 
@@ -141,10 +153,15 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				}}
 				deny={() => setConfirm(false)}
 			/>
-			<Snackbar open={successOpen} autoHideDuration={4000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => setSuccessOpen(false)}>
-				<Alert onClose={() => setSuccessOpen(false)} severity="success">
-					New Teammate Added!
-				</Alert>
+			<Snackbar
+				open={successOpen}
+				autoHideDuration={4000}
+				anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+				onClose={() => setSuccessOpen(false)}
+			>
+				<Paper classes={{root: classes.successMessage}}>
+					<CheckCircleOutlineIcon/> <Typography>New Teammate Added!</Typography>
+				</Paper>
 			</Snackbar>
 			{displayTeam.map((t) => (
 				<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
