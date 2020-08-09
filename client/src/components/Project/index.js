@@ -8,10 +8,11 @@ import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL } from "../../config/settings";
-import { getCall } from "../../apiCalls/apiCalls";
+import { getCall, postCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import ProjectTeam from "./teamList"
 
 const styles = (theme) => ({
   header: {
@@ -128,6 +129,7 @@ class Project extends React.Component {
   render() {
     const { project, columns, teamMembers, columnModalOpen } = this.state;
     const { classes } = this.props;
+
     console.log("Project -> render -> project", project);
     return (
       <div className={classes.projectMainDiv}>
@@ -147,6 +149,8 @@ class Project extends React.Component {
                 {project.description}
               </Typography>
             </div>
+
+            <ProjectTeam teamMembers={teamMembers} />
 
             <ProjectToggle />
           </div>
