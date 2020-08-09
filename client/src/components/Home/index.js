@@ -9,6 +9,7 @@ import { baseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
 import TeamCard from "./TeamCard";
 import { getCall } from "../../apiCalls/apiCalls";
+import EmptyCard from "../EmptyCard";
 
 import "./index.scss";
 
@@ -58,6 +59,11 @@ class Home extends React.Component {
 
   render() {
     const { projects, teams } = this.state;
+    const userProjects = projects.filter((p) => {
+      return teams.some((team) => team.id == p.team_id);
+    });
+    const noProjects = userProjects.length === 0;
+    console.log("Home -> render -> noProjects", noProjects);
     const { classes } = this.props;
 
     return (
@@ -85,7 +91,7 @@ class Home extends React.Component {
               <Typography
                 variant="h4"
                 color="secondary"
-                className={classes.title}
+                className={userProjects.length === 1 ? "" : classes.title}
               >
                 Projects
               </Typography>
@@ -99,8 +105,17 @@ class Home extends React.Component {
                     )}
                   </Fragment>
                 ))}
+                <div className="empty-projects-container">
+                  {noProjects ? <EmptyCard /> : null}
+                </div>
               </div>
-              <div className="home-add-project-btn">
+              <div
+                className={
+                  userProjects.length == 1
+                    ? "home-add-project-btn--single"
+                    : "home-add-project-btn"
+                }
+              >
                 <Card raised className="home-project-add-btn">
                   <CardActionArea href={"/project/new"}>
                     <CardContent>
