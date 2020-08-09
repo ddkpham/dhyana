@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	searchResult: {
 		display: 'flex',
-		justifyContent: 'space-between'
+		justifyItems: 'flex-start',
+		padding: 5
 	},
 	errorMessage: {
 		color: 'red',
@@ -124,14 +125,14 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const showAllTeam = Boolean(teamPopover);
 	const teamPopoverId = showAllTeam ? 'team-popover' : undefined;
 
-	const maxResults = 10;
+	const maxResults = 6;
 	const searchResultOpen = !!input.length && Boolean(searchMenu);
 
 	return (
 		<span>
 			<Snackbar open={successOpen} autoHideDuration={4000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => setSuccessOpen(false)}>
 				<Alert onClose={() => setSuccessOpen(false)} severity="success">
-					User has been added to team!
+					New Teammate Added!
 				</Alert>
 			</Snackbar>
 			{displayTeam.map((t) => (
@@ -191,7 +192,11 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					<MenuList>
 						{!!input && userOptions.slice(0, maxResults).map((u) =>(
 							<MenuItem className={classes.searchResult} onClick={() => addUser(u)}>
-								<AddIcon/> {u.username}
+								<AddIcon/>
+								<div>
+									{u.username}
+									<Typography variant='body2'>{u.first_name} {u.last_name}</Typography>
+								</div>
 							</MenuItem>
 						))}
 						{!searchError && userOptions.length===0 && <MenuItem>No Results</MenuItem>}
