@@ -2,7 +2,7 @@
   display: flex;
   justify-self: center;
   flex-direction: column;
-  width: 200px;
+  width: 250px;
   margin: 10px auto !important;
 }
 
@@ -10,7 +10,7 @@
   display: flex;
   justify-self: center;
   margin-top: 120px;
-  height: 280px;
+  height: 320px;
 }
 
 .login-inner-wrapper {
@@ -21,6 +21,8 @@
 .title-wrapper {
   display: flex;
   justify-content: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
 }
 
 .title {
