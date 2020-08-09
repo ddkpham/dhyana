@@ -195,42 +195,57 @@ function ProfilePage(props) {
               Teams
             </Typography>
             <div className="profile-page-team-container">
-              {userTeams.map((team) => {
-                console.log("ProfilePage -> team", team);
-                let imgIndex = Math.floor(Math.random() * team_images.length);
-                console.log("imgIndex", imgIndex);
-                return (
+              {(userTeams.length > 0)? (
+              <div>
+                {userTeams.map((team) => {
+                  console.log("ProfilePage -> team", team);
+                  let imgIndex = Math.floor(Math.random() * team_images.length);
+                  console.log("imgIndex", imgIndex);
+                  return (
+                    <Card raised>
+                      <CardContent className="team-card-container">
+                        <CardMedia
+                          className="teamcard-image"
+                          image={team_images[imgIndex]}
+                          title="Live from space album cover"
+                        />
+                        <div className="teamcard-div">
+                          <CardActionArea>
+                            <Typography variant="h5" color="primary">
+                              {team.name}
+                            </Typography>
+                          </CardActionArea>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>): 
+              (<div>
                   <Card raised>
                     <CardContent className="team-card-container">
                       <CardMedia
                         className="teamcard-image"
-                        image={team_images[imgIndex]}
+                        image={team_images[0]}
                         title="Live from space album cover"
                       />
                       <div className="teamcard-div">
                         <CardActionArea>
-                          <Typography variant="h5" color="primary">
-                            {team.name}
+                          <Typography variant="h6" color="primary">
+                            Sorry. The user does not belong to any teams.
                           </Typography>
                         </CardActionArea>
                       </div>
                     </CardContent>
                   </Card>
-                  // <TeamCard name={team.name} id={team.id} />
-                  // <Chip
-                  //   color="primary"
-                  //   avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
-                  //   label={team.name}
-                  //   onClick={() => console.log("clicked")}
-                  //   variant="outlined"
-                  // />
-                );
-              })}
+              </div>)}
             </div>
             <Typography className="project-title" variant="h4" color="secondary">
               Projects
             </Typography>
             <div className="profile-page-team-container">
+            {(userTeams.length > 0)? (
+              <div>
               {userProjects.map((project) => {
                 console.log("ProfilePage -> project", project);
                 let projectImgIndex = Math.floor(Math.random() * team_images.length);
@@ -251,15 +266,27 @@ function ProfilePage(props) {
                     </div>
                   </CardContent>
                 </Card>
-                  // <Chip
-                  //   color="secondary"
-                  //   avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
-                  //   label={project.name}
-                  //   onClick={() => console.log("clicked")}
-                  //   variant="outlined"
-                  // />
                 );
               })}
+              </div>):
+              (<div>
+                <Card raised>
+                  <CardContent className="team-card-container">
+                    <CardMedia
+                      className="teamcard-image"
+                      image={team_images[1]}
+                      title="Live from space album cover"
+                    />
+                    <div className="teamcard-div">
+                      <CardActionArea>
+                        <Typography variant="h6" color="primary">
+                          Sorry. The user does not have any projects.
+                        </Typography>
+                      </CardActionArea>
+                    </div>
+                  </CardContent>
+                </Card>
+            </div>)}
             </div>
           </CardContent>
         </Card>
