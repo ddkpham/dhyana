@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
 import IconButton from "@material-ui/core/IconButton";
 import { baseURL, clientBaseURL } from "../../../config/settings";
+import { withStyles } from "@material-ui/core/styles";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
 import "./index.scss";
@@ -18,6 +19,12 @@ import gsw from "../../../static/GSW.svg";
 import hawks from "../../../static/hawks.svg";
 
 import sports_logo_img from "../../../static/sports-logo.png";
+
+const styles = (theme) => ({
+  teamCardContainer: {
+    overflowX: "scroll",
+  },
+});
 
 class TeamCard extends React.Component {
   state = {
@@ -70,6 +77,7 @@ class TeamCard extends React.Component {
     const { name } = this.props;
     const { info, users, images } = this.state;
     const imgIndex = Math.floor(Math.random() * images.length);
+    const { classes } = this.props;
 
     return (
       <Card raised>
@@ -82,6 +90,7 @@ class TeamCard extends React.Component {
               window.location.href = `${clientBaseURL}/#`;
             }}
           />
+          <div className={ classes.teamCardContainer }>
           <div className="team-card-content">
             <CardActionArea href={"#"}>
               <Typography variant="h5" color="primary">
@@ -120,6 +129,7 @@ class TeamCard extends React.Component {
                 }
               })}
             </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -127,4 +137,4 @@ class TeamCard extends React.Component {
   }
 }
 
-export default TeamCard;
+export default withStyles(styles)(TeamCard);
