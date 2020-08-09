@@ -74,18 +74,16 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
     function search() {
 			const searchString = { input };
 			const url = `${baseURL}/user/search/result`;
+			setSearchError(false);
 			postCall(url, searchString)
 				.then((response) => response.json())
 				.then((data) => {
-					if(data.success){
-						console.log("search user result", data);
-						setOptions(data.data);
-					} else {
-						setSearchError(true);
-					}
+					console.log("search user result", data);
+					setOptions(data.data);
 				})
 				.catch((err) => {
 					setSearchError(true);
+					setOptions([])
 					console.log("user search error", err);
 				});
 		}
