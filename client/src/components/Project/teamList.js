@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const ProjectTeam = ({ teamMembers }) => {
+const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const [userOptions, setOptions] = useState([]);
 	const [teamPopover, setTeamPopover] = useState(null);
 	const [searchMenu, setSearchMenu] = useState(null);
@@ -47,10 +47,26 @@ const ProjectTeam = ({ teamMembers }) => {
 				})
 				.catch((err) => console.log("user search error", err));
 		}
+
     if (input.length) {
       search();
     }
 	}, [input]);
+
+	function addUser(user) {
+    const url = `${baseURL}/team/add-user`;
+		const user_id = user.id;
+		const addUserBody = { team_id: teamId, user_id };
+		console.log("hey toria body", addUserBody);
+
+		postCall(url, addUserBody)
+			.then((response) => response.json())
+			.then((payload) => {
+				console.log('hey toria add user response', payload);
+				reload(teamId)
+			})
+			.catch((err) => console.log('hey toria add user error', err));
+  };
 
 	function openPopover(event) {
 		setTeamPopover(event.currentTarget);
@@ -93,6 +109,7 @@ const ProjectTeam = ({ teamMembers }) => {
 				))}
 				<TextField
 					variant="outlined"
+					placeholder="Add new teammate"
 					onFocus={(event) => setSearchMenu(event.currentTarget)}
 					onChange={(event) => {
 						console.log('hey toria onChange', event.target.value)
@@ -120,9 +137,12 @@ const ProjectTeam = ({ teamMembers }) => {
 				>
 					<MenuList>
 						{!!input && userOptions.slice(0, maxResults).map((u) =>(
-								<MenuItem onClick={() => console.log('hey toria add', u)}>
+							<MenuItem onClick={() => {
+								console.log('hey toria add', u);
+								addUser(u);
+							}}>
 								{u.username}
-								</MenuItem>
+							</MenuItem>
 						))}
 						{userOptions.length===0 && <MenuItem>No Results</MenuItem>}
 					</MenuList>

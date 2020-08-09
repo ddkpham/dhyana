@@ -176,7 +176,7 @@ exports.search_user = function (req, res, next) {
           },
         ],
       },
-      attributes: [`username`, `first_name`, `last_name`],
+      attributes: [`id`, `username`, `first_name`, `last_name`],
     })
       .then((user) => {
         console.log("exports.search_user -> user", user);

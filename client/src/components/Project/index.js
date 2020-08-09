@@ -150,7 +150,7 @@ class Project extends React.Component {
               </Typography>
             </div>
 
-            <ProjectTeam teamMembers={teamMembers} />
+            <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
 
             <ProjectToggle />
           </div>
