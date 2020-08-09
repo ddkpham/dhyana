@@ -48,7 +48,6 @@ exports.create_project = function (req, res, next) {
 exports.delete_project = async function (req, res, next) {
   console.log("exports.delete_project -> req.body", req.body);
   body(req.body).trim().escape().not().isEmpty();
-  const name = req.body.name.trim();
   const id = req.body.id;
 
   const errors = validationResult(req.body);
@@ -69,7 +68,10 @@ exports.delete_project = async function (req, res, next) {
       projectTransactions.projectDelete(id)
     );
     console.log("finished transaction....");
-    console.log("exports.delete_project -> result", result);
+    console.log(
+      "exports.delete_project -> Number of deleted Projects: ",
+      result
+    );
     res.status(200).json(successResponse("successfully deleted project!"));
   } catch (err) {
     console.log("err", err);

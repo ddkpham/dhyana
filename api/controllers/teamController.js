@@ -40,6 +40,26 @@ exports.create_team = function (req, res, next) {
     });
 };
 
+exports.delete_team = function (req, res, next) {
+  console.log("exports.delete_team -> req.body", req.body);
+  body(req.body).trim().escape().not().isEmpty();
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing team id"));
+    return;
+  }
+
+  res.status(200).json(successResponse("Team deleted successfully"));
+};
+
 exports.get_users = function (req, res, next) {
   console.log("exports.get_user -> req.params", req.params);
   const team_id = req.params.id.trim();

@@ -13,11 +13,7 @@ router.post(
   projectController.create_project
 );
 
-router.post(
-  "/delete",
-  [body("id"), body("name").isLength({ min: 1 })],
-  projectController.delete_project
-);
+router.post("/delete", [body("id")], projectController.delete_project);
 
 router.get("/all", projectController.view_all);
 
