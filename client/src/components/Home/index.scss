@@ -25,6 +25,16 @@
     display: flex;
     justify-content: center;
   }
+  &-add-project-btn--single {
+    display: flex;
+    justify-content: start;
+  }
+}
+
+.empty-projects-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .MuiDrawer-paperAnchorDockedLeft {
