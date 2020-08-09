@@ -12,18 +12,13 @@ import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import ColumnMenu from './menu';
 import { priorities } from '../constants';
 import { postCall, deleteCall } from "../../apiCalls/apiCalls";
 import { red, cyan, grey } from "@material-ui/core/colors";
-
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
+import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   columnPaper: {
@@ -84,30 +79,6 @@ const styles = (theme) => ({
   },
 
 });
-
-const ConfirmDialog = ({message, open, confirm, deny}) => {
-  return (
-    <Dialog
-      open={open}
-      onClose={deny}
-    >
-      <DialogTitle>Are you sure?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {message}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={deny} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={confirm} color="primary" autoFocus>
-          Ok
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
 
 class Column extends React.Component {
   state = {

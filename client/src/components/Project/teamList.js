@@ -13,6 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/core/styles";
+import ConfirmDialog from "../ConfirmDialog";
 
 const useStyles = makeStyles((theme) => ({
   teamWrapper: {
@@ -53,6 +54,8 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const [ successOpen, setSuccessOpen ] = useState(false);
 	const [ searchError, setSearchError ] = useState(false);
 	const [ addError, setAddError ] = useState(false);
+	const [ confirmOpen, setConfirm ] = useState(false)
+	const [ selectedUserId, setUserId ] = useState();
 	const classes = useStyles();
 
   useEffect(() => {
@@ -80,10 +83,9 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
     }
 	}, [input]);
 
-	function addUser(user) {
+	function addUser() {
     const url = `${baseURL}/team/add-user`;
-		const user_id = user.id;
-		const addUserBody = { team_id: teamId, user_id };
+		const addUserBody = { team_id: teamId, user_id: selectedUserId };
 		setAddError(false)
 		postCall(url, addUserBody)
 			.then((response) => response.json())
@@ -130,6 +132,15 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 
 	return (
 		<span>
+			<ConfirmDialog
+				message='This user will be able to see all projects associated with this team'
+				open={confirmOpen}
+				confirm={() =>{
+					addUser();
+					setConfirm(false);
+				}}
+				deny={() => setConfirm(false)}
+			/>
 			<Snackbar open={successOpen} autoHideDuration={4000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => setSuccessOpen(false)}>
 				<Alert onClose={() => setSuccessOpen(false)} severity="success">
 					New Teammate Added!
@@ -191,7 +202,13 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				>
 					<MenuList>
 						{!!input && userOptions.slice(0, maxResults).map((u) =>(
-							<MenuItem className={classes.searchResult} onClick={() => addUser(u)}>
+							<MenuItem
+								className={classes.searchResult}
+								onClick={() => {
+									setUserId(u.id);
+									setConfirm(true);
+								}}
+							>
 								<AddIcon/>
 								<div>
 									{u.username}
