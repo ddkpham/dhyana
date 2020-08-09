@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { baseURL, clientBaseURL } from "../../../config/settings";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
+import UserAvatar from "./avatar";
 import "./index.scss";
 import { team_images } from "../../../static/teams/teamImages";
 
@@ -75,32 +76,9 @@ class TeamCard extends React.Component {
               <Typography variant="body2">members</Typography>
             </CardActionArea>
             <div className="teamcard-members-wrapper">
-              {users.map((user) => {
-                const { first_name, last_name, username } = user;
-                if (first_name && last_name) {
-                  return (
-                    <IconButton
-                      onClick={() => this.navigateToUserPage(username)}
-                    >
-                      <Avatar>
-                        {first_name.charAt(0)}
-                        {last_name.charAt(0)}
-                      </Avatar>
-                    </IconButton>
-                  );
-                } else {
-                  return (
-                    <IconButton
-                      onClick={() => this.navigateToUserPage(username)}
-                    >
-                      <Avatar>
-                        {username.charAt(0)}
-                        {username.charAt(1)}
-                      </Avatar>
-                    </IconButton>
-                  );
-                }
-              })}
+              {users.map((user) => (
+                <UserAvatar user={user}/>
+              ))}
             </div>
           </div>
         </CardContent>
