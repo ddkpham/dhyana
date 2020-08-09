@@ -4,16 +4,53 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { postCall } from "../../apiCalls/apiCalls";
-import "./index.scss";
+import { makeStyles } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import { useHistory } from "react-router-dom";
+
+
+const useStyles = makeStyles((theme) => ({
+  mainDiv: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: 100,
+  },
+  mainCard: {
+    width: 450,
+    alignSelf: "center",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+  title: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonCreateUser: {
+    marginBottom: 20,
+    justifyContent: "center",
+  },
+  backButton: {
+    marginRight: 15,
+  }
+}));
+
 
 function CreateUser() {
+  const classes = useStyles();  
+  let history = useHistory();
+
   const [username, setUsername] = useState("");
   console.log("CreateUser -> username", username);
   const [password, setPass] = useState("");
+  const [passwordConfirm, setConfirmPass] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
 
   const create = async (user, name) => {
+    if (password !== passwordConfirm) {
+      alert("Passwords do not match")
+      return
+    }
     const url = `${baseURL}/user/create`;
     const body = { username, password, first_name, last_name };
     const response = await postCall(url, body);
@@ -29,15 +66,15 @@ function CreateUser() {
   };
 
   return (
-    <div id="mainDiv">
-      <Card className={"sign-up-wrapper"}>
-        <div className={"title"}>
-          <h2>Sign Up 🆕</h2>
+    <div className={classes.mainDiv}>
+      <Card className={classes.mainCard}>
+        <div className={classes.title}>
+          <Typography variant="h4">Create an Account</Typography>
         </div>
         <div className="text-input-wrapper">
           <TextField
             className={"sign-up-text-input"}
-            label="username"
+            label="Username"
             variant="outlined"
             onChange={(event) => {
               setUsername(event.target.value);
@@ -45,7 +82,7 @@ function CreateUser() {
           />
           <TextField
             className={"sign-up-text-input"}
-            label="password"
+            label="Password"
             variant="outlined"
             onChange={(event) => {
               setPass(event.target.value);
@@ -53,7 +90,15 @@ function CreateUser() {
           />
           <TextField
             className={"sign-up-text-input"}
-            label="firstName"
+            label="Confirm Password"
+            variant="outlined"
+            onChange={(event) => {
+              setConfirmPass(event.target.value);
+            }}
+          />
+          <TextField
+            className={"sign-up-text-input"}
+            label="First Name"
             variant="outlined"
             onChange={(event) => {
               setFirstName(event.target.value);
@@ -61,14 +106,22 @@ function CreateUser() {
           />
           <TextField
             className={"sign-up-text-input"}
-            label="lastName"
+            label="Last Name"
             variant="outlined"
             onChange={(event) => {
               setLastName(event.target.value);
             }}
           />
         </div>
-        <div className="sign-up-button">
+        <div className={classes.buttonCreateUser}>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.backButton}
+            onClick={() => history.goBack()}
+          >
+            Back
+          </Button>
           <Button variant="outlined" color="primary" onClick={create}>
             Create User
           </Button>
