@@ -12,6 +12,7 @@ import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import Hidden from '@material-ui/core/Hidden';
 import ProjectTeam from "./teamList"
 
 const styles = (theme) => ({
@@ -21,14 +22,15 @@ const styles = (theme) => ({
     paddingBottom: 15,
     alignItems: 'flex-start',
     height: '10%',
+    overflowYy: 'hidden',
   },
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    height: "85%",
+    height: "80%",
     justifyContent: 'left',
     border: "1px solid grey",
-    paddingTop: 20,
+    padding: '20px 0',
     borderRadius: 4
   },
   projectMainDiv: {
@@ -48,9 +50,10 @@ const styles = (theme) => ({
   },
   smallSection: {
     display: 'flex',
-    width: '20%',
+    flexWrap: 'wrap',
+    width: '40%',
     padding: 10,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-evenly',
   },
 });
 
@@ -94,8 +97,6 @@ class Project extends React.Component {
         console.log("project fetch error", err)
         this.state.showColumns = true;
       });
-    
-    
   };
 
   getColumns = (projectId) => {
@@ -151,9 +152,11 @@ class Project extends React.Component {
               <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Typography noWrap variant="h6">
-                {project.description}
-              </Typography>
+              <Hidden sDown>
+                <Typography noWrap variant="h6">
+                  {project.description}
+                </Typography>
+              </Hidden>
             </div>
             <div className={classes.smallSection}>
               <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>

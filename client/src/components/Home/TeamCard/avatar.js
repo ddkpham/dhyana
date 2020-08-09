@@ -8,11 +8,12 @@ const navigateToUserPage = (username) => {
 	window.location.href = `${clientBaseURL}/user/${username}`;
 };
 
-const UserAvatar = ({ user: {username, first_name, last_name}, classes }) => {
+const UserAvatar = ({ user: {username, first_name, last_name}, classes, ...rest }) => {
 	return (
 		<IconButton
 			className={classes?.button}
 			onClick={() => navigateToUserPage(username)}
+			{...rest}
 		>
 			{first_name && last_name ?
 				<Avatar className={classes?.avatar}>

@@ -13,16 +13,25 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Paper from '@material-ui/core/Paper';
 import AddIcon from "@material-ui/icons/Add";
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import { makeStyles } from "@material-ui/core/styles";
+import { fade, makeStyles } from "@material-ui/core/styles";
+import Hidden from '@material-ui/core/Hidden';
 import ConfirmDialog from "../ConfirmDialog";
 
 const useStyles = makeStyles((theme) => ({
-  teamWrapper: {
+	teamWrapper: {
     display: 'flex',
     flexWrap: 'wrap'
-  },
+	},
+	moreAvatar: {
+		padding: 2,
+		background: theme.colours.bronze,
+		color: 'white',
+		'&:hover': {
+			backgroundColor: fade(theme.colours.bronze, 0.5)
+		}
+	},
   userAvatarWrapper: {
-    padding: 2,
+		padding: 2,
   },
   userAvatar:{
     height: 30,
@@ -161,10 +170,12 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					<CheckCircleOutlineIcon/> <Typography>New Teammate Added!</Typography>
 				</Paper>
 			</Snackbar>
-			{displayTeam.map((t) => (
-				<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
-			))}
-			<IconButton className={classes.userAvatarWrapper} onClick={showAllTeam ? closeTeamPopover : openTeamPopover}><MoreHorizIcon/></IconButton>
+			<Hidden smDown>
+				{displayTeam.map((t) => (
+					<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
+				))}
+			</Hidden>
+			<IconButton classes={{root: classes.moreAvatar}} onClick={showAllTeam ? closeTeamPopover : openTeamPopover}><MoreHorizIcon/></IconButton>
 			<Popover
 				id={teamPopoverId}
 				open={showAllTeam}

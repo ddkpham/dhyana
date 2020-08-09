@@ -22,19 +22,17 @@ import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   columnPaper: {
-    padding: "5px",
-    height: "100%",
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
     minWidth: '300px',
-    minHeight: 550,
+    padding: "5px",
+    height: '100%',
   },
   taskContainer: {
     overflowY: 'scroll',
-    maxHeight: '60vh',
+    height: '80%',
     paddingBottom: '15px',
     paddingRight: '10px',
-    maxHeight: 450,
   },
   popover: {
     display: "flex",
@@ -47,10 +45,7 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    marginBottom: 25,
-  },
-  buttonDiv: {
-    margin: '10px',
+    height: '100%'
   },
   mainColumnDiv: {
     height: "100%",
@@ -63,6 +58,7 @@ const styles = (theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 3,
+    height: '7%'
   },
   columnName: {
     overflowX: "scroll",
@@ -75,7 +71,8 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
-    marginTop: 1,
+    paddingTop: 1,
+    height: '7%'
   },
 
 });
