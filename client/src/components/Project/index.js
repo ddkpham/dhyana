@@ -8,7 +8,7 @@ import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL } from "../../config/settings";
-import { getCall, postCall } from "../../apiCalls/apiCalls";
+import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';

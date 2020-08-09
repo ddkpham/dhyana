@@ -6,11 +6,12 @@ import { postCall } from "../../apiCalls/apiCalls";
 import UserAvatar from '../Home/TeamCard/avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Popover from '@material-ui/core/Popover';
-import TextField from "@material-ui/core/TextField";
+import Input from "@material-ui/core/Input";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +26,18 @@ const useStyles = makeStyles((theme) => ({
     height: 30,
     width: 30,
     fontSize: 'small'
-  }
+	},
+	teamPopover:{
+		maxWidth: 300,
+		padding: 5,
+	},
+	teamList: {
+		marginBottom: 10,
+	},
+	searchResult: {
+		display: 'flex',
+		justifyContent: 'space-between'
+	}
 }));
 
 
@@ -44,7 +56,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 			postCall(url, searchString)
 				.then((response) => response.json())
 				.then((data) => {
-					console.log("hey toria user options", data);
+					console.log("search user result", data);
 					setOptions(data.data);
 				})
 				.catch((err) => console.log("user search error", err));
@@ -63,13 +75,13 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 		postCall(url, addUserBody)
 			.then((response) => response.json())
 			.then((payload) => {
-				console.log('hey toria add user response', payload);
+				console.log('add user response', payload);
 				reload(teamId);
 				closeTeamPopover();
 				setOptions([]);
 				setSuccessOpen(true)
 			})
-			.catch((err) => console.log('hey toria add user error', err));
+			.catch((err) => console.log('add user error', err));
   };
 
 	function openTeamPopover(event) {
@@ -94,9 +106,10 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const teamPopoverId = showAllTeam ? 'team-popover' : undefined;
 
 	const maxResults = 10;
-	console.log('hey toria input', input)
+	const searchResultOpen = !!input.length && Boolean(searchMenu);
+
 	return (
-		<span className={classes.teamWrapper}>
+		<span>
 			<Snackbar open={successOpen} autoHideDuration={4000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => setSuccessOpen(false)}>
 				<Alert onClose={() => setSuccessOpen(false)} severity="success">
 					User has been added to team!
@@ -110,6 +123,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				id={teamPopoverId}
 				open={showAllTeam}
 				anchorEl={teamPopover}
+				classes={{paper: classes.teamPopover}}
 				onClose={closeTeamPopover}
 				anchorOrigin={{
 					vertical: 'bottom',
@@ -120,16 +134,21 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					horizontal: 'center',
 				}}
 			>
+				<div className={classes.teamList}>
 				<Typography variant="h6">Team Members</Typography>
-				{teamMembers.map((t) => (
-					<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
-				))}
-				<TextField
+					{teamMembers.map((t) => (
+						<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
+					))}
+				</div>
+
+				<Typography>Add New Teammate:</Typography>
+				<Input
 					variant="outlined"
-					placeholder="Add new teammate"
-					onFocus={openSearchResults}
+					placeholder="Search..."
+					type='text'
 					onChange={(event) => {
 						setInput(event.target.value);
+						openSearchResults(event)
 						if(event.target.value.length===0) setOptions([]);
 					}}
 				/>
@@ -138,7 +157,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					anchorEl={searchMenu}
 					disableAutoFocus
 					disableEnforceFocus
-					open={!!input.length && Boolean(searchMenu)}
+					open={searchResultOpen}
 					onClose={closeSearchResults}
 					anchorOrigin={{
 						vertical: 'bottom',
@@ -151,11 +170,8 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				>
 					<MenuList>
 						{!!input && userOptions.slice(0, maxResults).map((u) =>(
-							<MenuItem onClick={() => {
-								console.log('hey toria add', u);
-								addUser(u);
-							}}>
-								{u.username}
+							<MenuItem className={classes.searchResult} onClick={() => addUser(u)}>
+								<AddIcon/> {u.username}
 							</MenuItem>
 						))}
 						{userOptions.length===0 && <MenuItem>No Results</MenuItem>}
