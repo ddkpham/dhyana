@@ -18,34 +18,40 @@ const styles = (theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    alignItems: 'baseline',
+    paddingBottom: 15,
+    alignItems: 'flex-start',
+    height: '10%',
   },
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    height: "100%",
-    minHeight: "95%",
+    height: "85%",
     justifyContent: 'left',
     border: "1px solid grey",
     paddingTop: 20,
-    margin: 20,
-    borderRadius: 4,
-    justify: "center",
+    borderRadius: 4
   },
   projectMainDiv: {
     width: "100%",
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
-    height: 600,
   },
   addColumnButton: {
     margin: 10,
     width: '200px',
     height: '50px',
-  }
+  },
+  titleSection: {
+    width: '60%',
+    margin: 10,
+  },
+  smallSection: {
+    display: 'flex',
+    width: '20%',
+    padding: 10,
+    justifyContent: 'flex-end',
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -141,18 +147,20 @@ class Project extends React.Component {
             order={columns.length || 0}
           />
           <div className={classes.header}>
-            <div>
-              <Typography variant="h4">
+            <div className={classes.titleSection}>
+              <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Typography variant="h6">
+              <Typography noWrap variant="h6">
                 {project.description}
               </Typography>
             </div>
-
-            <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
-
-            <ProjectToggle />
+            <div className={classes.smallSection}>
+              <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+            </div>
+            <div className={classes.smallSection}>
+              <ProjectToggle />
+            </div>
           </div>
 
           <ScrollingComponent
