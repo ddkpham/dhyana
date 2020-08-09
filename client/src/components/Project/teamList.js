@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
 	searchResult: {
 		display: 'flex',
 		justifyContent: 'space-between'
+	},
+	errorMessage: {
+		color: 'red',
 	}
 }));
 
@@ -47,6 +50,8 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const [searchMenu, setSearchMenu] = useState(null);
 	const [input, setInput] = useState('');
 	const [ successOpen, setSuccessOpen ] = useState(false);
+	const [ searchError, setSearchError ] = useState(false);
+	const [ addError, setAddError ] = useState(false);
 	const classes = useStyles();
 
   useEffect(() => {
@@ -56,10 +61,17 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 			postCall(url, searchString)
 				.then((response) => response.json())
 				.then((data) => {
-					console.log("search user result", data);
-					setOptions(data.data);
+					if(data.success){
+						console.log("search user result", data);
+						setOptions(data.data);
+					} else {
+						setSearchError(true);
+					}
 				})
-				.catch((err) => console.log("user search error", err));
+				.catch((err) => {
+					setSearchError(true);
+					console.log("user search error", err);
+				});
 		}
 
     if (input.length) {
@@ -71,17 +83,24 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
     const url = `${baseURL}/team/add-user`;
 		const user_id = user.id;
 		const addUserBody = { team_id: teamId, user_id };
-
+		setAddError(false)
 		postCall(url, addUserBody)
 			.then((response) => response.json())
 			.then((payload) => {
 				console.log('add user response', payload);
-				reload(teamId);
-				closeTeamPopover();
-				setOptions([]);
-				setSuccessOpen(true)
+				if(payload.success){
+					reload(teamId);
+					closeTeamPopover();
+					setOptions([]);
+					setSuccessOpen(true);
+				} else {
+					setAddError(true)
+				}
 			})
-			.catch((err) => console.log('add user error', err));
+			.catch((err) => {
+				setAddError(true)
+				console.log('add user error', err)
+			});
   };
 
 	function openTeamPopover(event) {
@@ -142,6 +161,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 				</div>
 
 				<Typography>Add New Teammate:</Typography>
+				{addError && <Typography variant='body2' className={classes.errorMessage}>Error adding user</Typography>}
 				<Input
 					variant="outlined"
 					placeholder="Search..."
@@ -174,7 +194,12 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 								<AddIcon/> {u.username}
 							</MenuItem>
 						))}
-						{userOptions.length===0 && <MenuItem>No Results</MenuItem>}
+						{!searchError && userOptions.length===0 && <MenuItem>No Results</MenuItem>}
+						{searchError &&
+							<MenuItem>
+								<Typography variant='body2' className={classes.errorMessage}>Error searching...</Typography>
+							</MenuItem>
+						}
 					</MenuList>
 				</Popover>
 			</Popover>
