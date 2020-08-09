@@ -9,6 +9,8 @@ import Popover from '@material-ui/core/Popover';
 import TextField from "@material-ui/core/TextField";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,11 +34,11 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const [teamPopover, setTeamPopover] = useState(null);
 	const [searchMenu, setSearchMenu] = useState(null);
 	const [input, setInput] = useState('');
+	const [ successOpen, setSuccessOpen ] = useState(false);
 	const classes = useStyles();
 
   useEffect(() => {
     function search() {
-			console.log('hey toria search input', input)
 			const searchString = { input };
 			const url = `${baseURL}/user/search/result`;
 			postCall(url, searchString)
@@ -63,8 +65,9 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 			.then((payload) => {
 				console.log('hey toria add user response', payload);
 				reload(teamId);
-				setInput("");
 				closeTeamPopover();
+				setOptions([]);
+				setSuccessOpen(true)
 			})
 			.catch((err) => console.log('hey toria add user error', err));
   };
@@ -91,14 +94,18 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 	const teamPopoverId = showAllTeam ? 'team-popover' : undefined;
 
 	const maxResults = 10;
-	console.log('hey toria userOptions', userOptions);
-
+	console.log('hey toria input', input)
 	return (
 		<span className={classes.teamWrapper}>
+			<Snackbar open={successOpen} autoHideDuration={4000} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} onClose={() => setSuccessOpen(false)}>
+				<Alert onClose={() => setSuccessOpen(false)} severity="success">
+					User has been added to team!
+				</Alert>
+			</Snackbar>
 			{displayTeam.map((t) => (
 				<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
 			))}
-			<IconButton className={classes.userAvatarWrapper} onClick={openTeamPopover}><MoreHorizIcon/></IconButton>
+			<IconButton className={classes.userAvatarWrapper} onClick={showAllTeam ? closeTeamPopover : openTeamPopover}><MoreHorizIcon/></IconButton>
 			<Popover
 				id={teamPopoverId}
 				open={showAllTeam}
@@ -122,9 +129,8 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					placeholder="Add new teammate"
 					onFocus={openSearchResults}
 					onChange={(event) => {
-						console.log('hey toria onChange', event.target.value)
-						if(event.target.value.length) setInput(event.target.value);
-						else setOptions([]);
+						setInput(event.target.value);
+						if(event.target.value.length===0) setOptions([]);
 					}}
 				/>
 				<Popover
@@ -132,7 +138,7 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					anchorEl={searchMenu}
 					disableAutoFocus
 					disableEnforceFocus
-					open={Boolean(searchMenu)}
+					open={!!input.length && Boolean(searchMenu)}
 					onClose={closeSearchResults}
 					anchorOrigin={{
 						vertical: 'bottom',
