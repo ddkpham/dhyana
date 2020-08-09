@@ -65,7 +65,6 @@ exports.delete_team = async function (req, res, next) {
       team_id: id,
     },
   });
-  console.log("projects", projects);
   const projectIds = projects.map((p) => p.dataValues.id);
 
   // step 2. start deletion transaction
