@@ -15,6 +15,7 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
+import { images } from "../../static/finalspace/avatars";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 
@@ -32,6 +33,7 @@ function ProfilePage(props) {
   const classes = useStyles();
   const { username } = props;
   let history = useHistory();
+  const imgIndex = Math.floor(Math.random() * images.length);
   const [userInfo, setUser] = useState([]);
   const [teamInfo, showTeams] = useState([]);
   const [userProjects, setUserProjects] = useState([]);
@@ -122,31 +124,35 @@ function ProfilePage(props) {
       <div className="profile-page-container">
         <Card className="profileDiv">
           <CardContent>
-            <AccountBoxIcon />
+          <div className="centerProfile">
+              <Avatar
+                alt={username}
+                src={images[imgIndex]}
+                className="profile-my-avatar"
+              />
             <Typography variant="h5" color="primary">
-              Username: {userInfo.username}
+              {userInfo.first_name || "John"}{" "}
+              {userInfo.last_name || "Doe"}
             </Typography>
             <Typography variant="h6" color="secondary">
-              first name:{" "}
-              {userInfo.first_name ? userInfo.first_name : "None of"}
+              @{userInfo.username}
             </Typography>
+            {userInfo.job_title ?
             <Typography variant="h6" color="secondary">
-              last name:{" "}
-              {userInfo.last_name ? userInfo.last_name : "Your business"}
-            </Typography>
-            <Typography variant="h6" color="secondary">
-              job title:{" "}
-              {userInfo.job_title ? userInfo.job_title : "CEO of mind your own"}
-            </Typography>
-
+              Job Title: {" "}
+              {userInfo.job_title}
+            </Typography>: null
+            }
             <TextField
+              disabled
               rowsMax={5}
               label="Biography"
               multiline
+              variant="outlined"
               rows={4}
               aria-label="maximum height"
               placeholder="Maximum 4 rows"
-              defaultValue={"Please respect my privacy. I'm a private person."}
+              defaultValue={"Nothing here yet."}
               value={userInfo.biography}
             />
             <FormControl className={classes.formControl} variant="outlined">
@@ -176,45 +182,48 @@ function ProfilePage(props) {
                 Add User to Team
               </Button>
             </div>
+            </div>
           </CardContent>
         </Card>
 
-        <div className="profileDiv">
-          <Typography variant="h4" color="primary">
-            Teams
-          </Typography>
-          <div className="profile-page-team-container">
-            {userTeams.map((team) => {
-              console.log("ProfilePage -> team", team);
-              return (
-                <Chip
-                  color="primary"
-                  avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
-                  label={team.name}
-                  onClick={() => console.log("clicked")}
-                  variant="outlined"
-                />
-              );
-            })}
-          </div>
-          <Typography variant="h4" color="secondary">
-            Projects
-          </Typography>
-          <div className="profile-page-team-container">
-            {userProjects.map((project) => {
-              console.log("ProfilePage -> project", project);
-              return (
-                <Chip
-                  color="secondary"
-                  avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
-                  label={project.name}
-                  onClick={() => console.log("clicked")}
-                  variant="outlined"
-                />
-              );
-            })}
-          </div>
-        </div>
+        <Card className="project-teams-container">
+          <CardContent>
+            <Typography variant="h4" color="primary">
+              Teams
+            </Typography>
+            <div className="profile-page-team-container">
+              {userTeams.map((team) => {
+                console.log("ProfilePage -> team", team);
+                return (
+                  <Chip
+                    color="primary"
+                    avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
+                    label={team.name}
+                    onClick={() => console.log("clicked")}
+                    variant="outlined"
+                  />
+                );
+              })}
+            </div>
+            <Typography variant="h4" color="secondary">
+              Projects
+            </Typography>
+            <div className="profile-page-team-container">
+              {userProjects.map((project) => {
+                console.log("ProfilePage -> project", project);
+                return (
+                  <Chip
+                    color="secondary"
+                    avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
+                    label={project.name}
+                    onClick={() => console.log("clicked")}
+                    variant="outlined"
+                  />
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
