@@ -17,18 +17,9 @@ import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
 import { images } from "../../static/finalspace/avatars";
+import { team_images } from "../../static/teams/teamImages";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
-
-import washington_img from "../../static/washington.png";
-import samsung from "../../static/samsung.jpeg";
-import bluejays from "../../static/blue_jays.png";
-import detTigers from "../../static/det-tigers.png";
-import counter from "../../static/counter.jpeg";
-import gsw from "../../static/GSW.svg";
-import hawks from "../../static/hawks.svg";
-
-import sports_logo_img from "../../static/sports-logo.png";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -42,16 +33,6 @@ const useStyles = makeStyles((theme) => ({
 
 function ProfilePage(props) {
 
-    const team_images = [
-      sports_logo_img,
-      washington_img,
-      bluejays,
-      detTigers,
-      samsung,
-      counter,
-      gsw,
-      hawks,
-    ];
   const classes = useStyles();
   const { username } = props;
   let history = useHistory();
