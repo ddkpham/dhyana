@@ -10,14 +10,25 @@ import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardActionArea from "@material-ui/core/CardActionArea";
 import Typography from "@material-ui/core/Typography";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
 import { images } from "../../static/finalspace/avatars";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
+
+import washington_img from "../../static/washington.png";
+import samsung from "../../static/samsung.jpeg";
+import bluejays from "../../static/blue_jays.png";
+import detTigers from "../../static/det-tigers.png";
+import counter from "../../static/counter.jpeg";
+import gsw from "../../static/GSW.svg";
+import hawks from "../../static/hawks.svg";
+
+import sports_logo_img from "../../static/sports-logo.png";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -30,6 +41,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProfilePage(props) {
+
+    const team_images = [
+      sports_logo_img,
+      washington_img,
+      bluejays,
+      detTigers,
+      samsung,
+      counter,
+      gsw,
+      hawks,
+    ];
   const classes = useStyles();
   const { username } = props;
   let history = useHistory();
@@ -194,31 +216,67 @@ function ProfilePage(props) {
             <div className="profile-page-team-container">
               {userTeams.map((team) => {
                 console.log("ProfilePage -> team", team);
+                let imgIndex = Math.floor(Math.random() * team_images.length);
+                console.log("imgIndex", imgIndex);
                 return (
-                  <Chip
-                    color="primary"
-                    avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
-                    label={team.name}
-                    onClick={() => console.log("clicked")}
-                    variant="outlined"
-                  />
+                  <Card raised>
+                    <CardContent className="teamcard-container">
+                      <CardMedia
+                        className="teamcard-card-media"
+                        image={team_images[imgIndex]}
+                        title="Live from space album cover"
+                      />
+                      <div className="team-card-content">
+                        <CardActionArea>
+                          <Typography variant="h5" color="primary">
+                            {team.name}
+                          </Typography>
+                        </CardActionArea>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  // <TeamCard name={team.name} id={team.id} />
+                  // <Chip
+                  //   color="primary"
+                  //   avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
+                  //   label={team.name}
+                  //   onClick={() => console.log("clicked")}
+                  //   variant="outlined"
+                  // />
                 );
               })}
             </div>
-            <Typography variant="h4" color="secondary">
+            <Typography className="project-title" variant="h4" color="secondary">
               Projects
             </Typography>
             <div className="profile-page-team-container">
               {userProjects.map((project) => {
                 console.log("ProfilePage -> project", project);
+                let projectImgIndex = Math.floor(Math.random() * team_images.length);
                 return (
-                  <Chip
-                    color="secondary"
-                    avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
-                    label={project.name}
-                    onClick={() => console.log("clicked")}
-                    variant="outlined"
-                  />
+                  <Card raised>
+                  <CardContent className="teamcard-container">
+                    <CardMedia
+                      className="teamcard-card-media"
+                      image={team_images[projectImgIndex]}
+                      title="Live from space album cover"
+                    />
+                    <div className="team-card-content">
+                      <CardActionArea>
+                        <Typography variant="h5" color="primary">
+                          {project.name}
+                        </Typography>
+                      </CardActionArea>
+                    </div>
+                  </CardContent>
+                </Card>
+                  // <Chip
+                  //   color="secondary"
+                  //   avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
+                  //   label={project.name}
+                  //   onClick={() => console.log("clicked")}
+                  //   variant="outlined"
+                  // />
                 );
               })}
             </div>
