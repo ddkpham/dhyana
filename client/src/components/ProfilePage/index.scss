@@ -60,3 +60,21 @@
 .project-title {
   margin-top: 10px;
 }
+
+.teamcard-image {
+  width: 100px;
+  cursor: pointer;
+}
+
+.team-card-container {
+  display: flex;
+  height: 100%;
+  padding: 0;
+  padding-bottom: 0 !important;
+  align-items: stretch;
+  width: 20vw;
+}
+
+.teamcard-div {
+  margin-left: 10px;
+}

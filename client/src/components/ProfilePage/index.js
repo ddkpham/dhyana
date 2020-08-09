@@ -220,13 +220,13 @@ function ProfilePage(props) {
                 console.log("imgIndex", imgIndex);
                 return (
                   <Card raised>
-                    <CardContent className="teamcard-container">
+                    <CardContent className="team-card-container">
                       <CardMedia
-                        className="teamcard-card-media"
+                        className="teamcard-image"
                         image={team_images[imgIndex]}
                         title="Live from space album cover"
                       />
-                      <div className="team-card-content">
+                      <div className="teamcard-div">
                         <CardActionArea>
                           <Typography variant="h5" color="primary">
                             {team.name}
@@ -255,13 +255,13 @@ function ProfilePage(props) {
                 let projectImgIndex = Math.floor(Math.random() * team_images.length);
                 return (
                   <Card raised>
-                  <CardContent className="teamcard-container">
+                  <CardContent className="team-card-container">
                     <CardMedia
-                      className="teamcard-card-media"
+                      className="teamcard-image"
                       image={team_images[projectImgIndex]}
                       title="Live from space album cover"
                     />
-                    <div className="team-card-content">
+                    <div className="teamcard-div">
                       <CardActionArea>
                         <Typography variant="h5" color="primary">
                           {project.name}
