@@ -4,6 +4,9 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import { images } from "../../static/finalspace/avatars";
 
 import "./index.scss";
 import ProjectCard from "../Project/card";
@@ -67,10 +70,45 @@ function TeamPage(props) {
                 {name}
             </Typography>
             <div className="usersContainer">
-            <Typography variant="h5" color="primary">
+            <Typography variant="h5" color="secondary">
                 Team Members
             </Typography>
-            {TeamUsers.map((user) => {
+            <div className="profile-container">
+            <div className="profile-flex-div">
+                {TeamUsers.map((user) => {
+                console.log("TeamPage -> team", user);
+                let nameExists = true;
+                let imgIndex = Math.floor(Math.random() * images.length);
+                if (user.first_name === null || user.last_name === null)
+                {
+                    nameExists = false;
+                }
+                return (
+                    <Card className="team-profileDiv">
+                    <CardContent>
+                        <div className="team-profile-container-width">
+                        <div className="team-profile-container-center">
+                            <Avatar
+                                alt={user.username}
+                                src={images[imgIndex]}
+                                className="profiles-avatar"
+                            />
+                            <Typography className="profile-name" variant="h5" color="primary">
+                                {user.first_name || "John"}{" "}
+                                {user.last_name || "Doe"}
+                            </Typography>
+                            <Typography className="profile-name" variant="h6" color="primary">
+                                @{user.username}
+                            </Typography>
+                        </div>
+                        </div>
+                    </CardContent>
+                    </Card>  
+                    );
+                })}
+                </div>
+            </div>
+            {/* {TeamUsers.map((user) => {
               console.log("TeamPage -> team", user);
               let nameExists = true;
               if (user.first_name === null || user.last_name === null)
@@ -92,9 +130,9 @@ function TeamPage(props) {
                   variant="outlined"
                 />
               );
-            })}
+            })} */}
             </div>
-            <Typography variant="h5" color="primary">
+            <Typography variant="h5" color="secondary">
                 Projects
             </Typography>
             <div className="team-projects-container">

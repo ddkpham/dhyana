@@ -23,3 +23,37 @@
       width: 70vw;
     }
 }
+
+.profile-flex-div{
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.team-profileDiv {
+    // margin: 0 auto !important;
+    padding: 25px auto;
+    // margin-top: 100px;
+    border: 1px solid lightgrey;
+  }
+
+  .team-profile-container-center {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .team-profile-container-width{
+      width: 160px;
+  }
+
+  .profiles-avatar {
+    width: 120px;
+    height: 120px;
+    border: lavender;
+  }
+
+  .profile-name{
+      text-align: center;
+  }
