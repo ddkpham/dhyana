@@ -66,46 +66,47 @@ function TeamPage(props) {
       
       <div className="outer-team-page-container">
         <div className="inner-team-page-container">
-            <Typography variant="h4" color="primary">
-                {name}
-            </Typography>
-            <div className="usersContainer">
-            <Typography variant="h5" color="secondary">
-                Team Members
-            </Typography>
-            <div className="profile-container">
-            <div className="profile-flex-div">
-                {TeamUsers.map((user) => {
-                console.log("TeamPage -> team", user);
-                let nameExists = true;
-                let imgIndex = Math.floor(Math.random() * images.length);
-                if (user.first_name === null || user.last_name === null)
-                {
-                    nameExists = false;
-                }
-                return (
-                    <Card className="team-profileDiv">
-                    <CardContent>
-                        <div className="team-profile-container-width">
-                        <div className="team-profile-container-center">
-                            <Avatar
-                                alt={user.username}
-                                src={images[imgIndex]}
-                                className="profiles-avatar"
-                            />
-                            <Typography className="profile-name" variant="h5" color="primary">
-                                {user.first_name || "John"}{" "}
-                                {user.last_name || "Doe"}
-                            </Typography>
-                            <Typography className="profile-name" variant="h6" color="primary">
-                                @{user.username}
-                            </Typography>
-                        </div>
-                        </div>
-                    </CardContent>
-                    </Card>  
-                    );
-                })}
+            <div className="team-page-center">
+                <div>
+                    <Typography variant="h4" color="primary">
+                        {name}
+                    </Typography>
+                    <Typography variant="h5" color="secondary">
+                        Team Members
+                    </Typography>
+                    <div className="profile-flex-div">
+                        {TeamUsers.map((user) => {
+                        console.log("TeamPage -> team", user);
+                        let nameExists = true;
+                        let imgIndex = Math.floor(Math.random() * images.length);
+                        if (user.first_name === null || user.last_name === null)
+                        {
+                            nameExists = false;
+                        }
+                        return (
+                            <Card className="team-profileDiv">
+                            <CardContent>
+                                <div className="team-profile-container-width">
+                                <div className="team-profile-container-center">
+                                    <Avatar
+                                        alt={user.username}
+                                        src={images[imgIndex]}
+                                        className="profiles-avatar"
+                                    />
+                                    <Typography className="profile-name" variant="h5" color="primary">
+                                        {user.first_name || "John"}{" "}
+                                        {user.last_name || "Doe"}
+                                    </Typography>
+                                    <Typography className="profile-name" variant="h6" color="primary">
+                                        @{user.username}
+                                    </Typography>
+                                </div>
+                                </div>
+                            </CardContent>
+                            </Card>  
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
             {/* {TeamUsers.map((user) => {
@@ -131,16 +132,19 @@ function TeamPage(props) {
                 />
               );
             })} */}
-            </div>
-            <Typography variant="h5" color="secondary">
-                Projects
-            </Typography>
-            <div className="team-projects-container">
-                <Fragment>
-                {TeamInfo.map((project) =>
-                    <ProjectCard key={project.id} project={project} team="" />
-                )}
-                </Fragment>
+            <div className="team-page-center">
+                <div>
+                    <Typography variant="h5" color="secondary">
+                        Projects
+                    </Typography>
+                    <div className="team-projects-container">
+                        <Fragment>
+                        {TeamInfo.map((project) =>
+                            <ProjectCard key={project.id} project={project} team="" />
+                        )}
+                        </Fragment>
+                    </div>
+                </div>
             </div>
         </div>
       </div>
