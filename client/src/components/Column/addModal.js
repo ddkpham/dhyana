@@ -30,6 +30,14 @@ class AddColumnDialog extends React.Component {
       .catch((err) => console.log("project create error", err));
   };
 
+  onChange = (e) => {
+    const input = e.target.value;
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      this.setState({ name: input });
+    }
+  };
+
   render() {
     const { name } = this.state;
     const { isOpen, close } = this.props;
@@ -44,9 +52,7 @@ class AddColumnDialog extends React.Component {
               label="Name"
               variant="outlined"
               value={name}
-              onChange={(event) => {
-                this.setState({ name: event.target.value });
-              }}
+              onChange={this.onChange}
             />
             <Button onClick={this.create}>Add</Button>
           </div>

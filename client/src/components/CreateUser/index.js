@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 
-
 const useStyles = makeStyles((theme) => ({
   mainDiv: {
     display: "flex",
@@ -31,12 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     marginRight: 15,
-  }
+  },
 }));
 
-
 function CreateUser() {
-  const classes = useStyles();  
+  const classes = useStyles();
   let history = useHistory();
 
   const [username, setUsername] = useState("");
@@ -48,8 +46,8 @@ function CreateUser() {
 
   const create = async (user, name) => {
     if (password !== passwordConfirm) {
-      alert("Passwords do not match")
-      return
+      alert("Passwords do not match");
+      return;
     }
     const url = `${baseURL}/user/create`;
     const body = { username, password, first_name, last_name };
@@ -65,6 +63,15 @@ function CreateUser() {
     }
   };
 
+  const onChangeUsername = (input) => {
+    console.log("before", input);
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      console.log("after", input);
+      setUsername(input);
+    }
+  };
+
   return (
     <div className={classes.mainDiv}>
       <Card className={classes.mainCard}>
@@ -76,8 +83,9 @@ function CreateUser() {
             className={"sign-up-text-input"}
             label="Username"
             variant="outlined"
+            value={username}
             onChange={(event) => {
-              setUsername(event.target.value);
+              onChangeUsername(event.target.value);
             }}
           />
           <TextField

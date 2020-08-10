@@ -38,11 +38,11 @@ function Login() {
   };
 
   const keyPressed = (event) => {
-    console.log("entered key pressed with event: ", event)
+    console.log("entered key pressed with event: ", event);
     if (event.key === "Enter") {
-      login()
+      login();
     }
-  }
+  };
 
   // document.getElementById('idOfInputField').addEventListener("keyup", function(event) {
   //   event.preventDefault();
@@ -50,6 +50,15 @@ function Login() {
   //     document.getElementById('idOfAddMsgBtn').click();
   //   }
   // })
+
+  const onChangeUsername = (input) => {
+    console.log("before", input);
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      console.log("after", input);
+      setUsername(input);
+    }
+  };
 
   return (
     <div className={"outer-wrapper"}>
@@ -63,8 +72,9 @@ function Login() {
             label="username"
             variant="outlined"
             onKeyPress={keyPressed}
+            value={username}
             onChange={(event) => {
-              setUsername(event.target.value);
+              onChangeUsername(event.target.value);
             }}
           />
 

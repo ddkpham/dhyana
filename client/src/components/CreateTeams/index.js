@@ -58,23 +58,35 @@ function CreateTeam() {
       });
   };
 
+  const onChange = (input) => {
+    console.log("before", input);
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      console.log("after", input);
+      setTeamName(input);
+    }
+  };
+
   return (
     <div id="mainDiv">
       <Card className={"sign-up-wrapper"}>
         <div className={"title"}>
           <Typography variant="h4" color="primary">
-              Create New Team
+            Create New Team
           </Typography>
-          <GroupIcon className="group-icon" color="primary" style={{ fontSize: 40 }}/>
+          <GroupIcon
+            className="group-icon"
+            color="primary"
+            style={{ fontSize: 40 }}
+          />
         </div>
         <div className="text-input-wrapper">
           <TextField
             className={"sign-up-text-input"}
             label="Team Name"
             variant="outlined"
-            onChange={(event) => {
-              setTeamName(event.target.value);
-            }}
+            value={name}
+            onChange={(e) => onChange(e.target.value)}
           />
         </div>
         <div className="sign-up-button">

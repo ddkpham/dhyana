@@ -35,7 +35,9 @@ class NewProject extends React.Component {
           window.location.href = `${clientBaseURL}/project/${data.data.name}`;
         } else {
           console.log("project create error", data.message);
-          alert("Project was not created. Error: missing project name or team.");
+          alert(
+            "Project was not created. Error: missing project name or team."
+          );
         }
       })
       .catch((err) => console.log("project create error", err));
@@ -51,63 +53,74 @@ class NewProject extends React.Component {
       .catch((err) => console.log("team fetch error", err));
   };
 
+  onChangeProjectName = (e) => {
+    const input = e.target.value;
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      this.setState({ name: input });
+    }
+  };
+
   render() {
     const { name, description, team_id, team_options } = this.state;
     return (
       <div id="main-project-div">
-      <Card className="create-project-wrapper">
-        <div className="page-title">
-          <Typography variant="h4" color="primary">
+        <Card className="create-project-wrapper">
+          <div className="page-title">
+            <Typography variant="h4" color="primary">
               Create New Project
-          </Typography>
-        </div>
-        <div className="main-content-div">
-          <TextField
-            label="Name"
-            variant="outlined"
-            value={name}
-            onChange={(event) => {
-              this.setState({ name: event.target.value });
-            }}
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            value={description}
-            onChange={(event) => {
-              this.setState({ description: event.target.value });
-            }}
-          />
-          <FormControl>
-            <InputLabel
-              className="select-label"
-              htmlFor="team_id"
-              id="team-select-label"
-            >
-              Team
-            </InputLabel>
-            <Select
-              labelId="team-select-label"
-              variant="outlined"
-              value={team_id}
-              onChange={(event) => {
-                this.setState({ team_id: event.target.value });
-              }}
-            >
-              {team_options.map((t) => {
-                return <MenuItem value={t.id}>{t.name}</MenuItem>;
-              })}
-              <MenuItem value="">None</MenuItem>
-            </Select>
-          </FormControl>
-          <div className="create-project-button">
-            <Button className="create-btn" onClick={this.create} variant="outlined" color="primary">
-              Create
-            </Button>
+            </Typography>
           </div>
-        </div>
-      </Card>
-    </div>
+          <div className="main-content-div">
+            <TextField
+              label="Name"
+              variant="outlined"
+              value={name}
+              onChange={this.onChangeProjectName}
+            />
+            <TextField
+              label="Description"
+              variant="outlined"
+              value={description}
+              onChange={(event) => {
+                this.setState({ description: event.target.value });
+              }}
+            />
+            <FormControl>
+              <InputLabel
+                className="select-label"
+                htmlFor="team_id"
+                id="team-select-label"
+              >
+                Team
+              </InputLabel>
+              <Select
+                labelId="team-select-label"
+                variant="outlined"
+                value={team_id}
+                onChange={(event) => {
+                  this.setState({ team_id: event.target.value });
+                }}
+              >
+                {team_options.map((t) => {
+                  return <MenuItem value={t.id}>{t.name}</MenuItem>;
+                })}
+                <MenuItem value="">None</MenuItem>
+              </Select>
+            </FormControl>
+            <div className="create-project-button">
+              <Button
+                className="create-btn"
+                onClick={this.create}
+                variant="outlined"
+                color="primary"
+              >
+                Create
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
     );
   }
 }
