@@ -35,8 +35,10 @@ const useStyles = makeStyles({
 
 function SimpleDialog(props) {
   const classes = useStyles();
-  const { onClose, open, id } = props;
+  const { onClose, open, id, name } = props;
   const history = useHistory();
+  const [teamName, setTeamName] = useState("");
+
 
   const handleClose = () => {
     onClose();
@@ -44,6 +46,15 @@ function SimpleDialog(props) {
 
 
   const deleteAccount = async () => {
+    console.log("deleting team");
+    console.log("SimpleDialog -> team name", teamName);
+    if (teamName != name) {
+      alert("The team names don't match. Are you getting cold feet? 🧊👣");
+      setTeamName("");
+      return;
+    }
+
+
     const url = `${baseURL}/team/delete`;
     const body = { id: id };
     console.log("body ->", body);
@@ -72,6 +83,21 @@ function SimpleDialog(props) {
         Are you sure you want to delete this team?
       </DialogTitle>
       <List>
+        <ListItem button key={"confirm-deletion"}>
+            <ListItemAvatar>
+              <Avatar className={classes.avatar}>
+                <SentimentDissatisfiedIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <TextField
+              id="outlined-basic"
+              label="Confirm Team Name"
+              variant="outlined"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
+        </ListItem>
+
         <ListItem autoFocus button onClick={deleteAccount}>
           <ListItemAvatar>
             <Avatar>

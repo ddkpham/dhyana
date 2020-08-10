@@ -33,24 +33,6 @@ function TeamPage(props) {
     setOpen(false);
   };
 
-  const deleteTeam = async() => {
-    const url = `${baseURL}/team/delete`;
-    const body = { id: id };
-    console.log("body ->", body);
-
-    const response = await postCall(url, body);
-
-    const data = await response.json();
-    const { confirmation, message } = data;
-    console.log("the response is", data);
-    if (confirmation === "success") {
-      alert(`Success: ${message}`);
-      window.location.href = `${clientBaseURL}/home`;
-    } else {
-      alert(`Error: ${message}`);
-    }
-  };
-
   const deleteTeamMember = async(user_id) => {
     const url = `${baseURL}/team/delete/user`;
     const body = { user_id: user_id, team_id: id };
@@ -63,7 +45,7 @@ function TeamPage(props) {
     console.log("the response is", data);
     if (confirmation === "success") {
       alert(`Success: ${message}`);
-      window.location.href = `${clientBaseURL}/home`;
+      window.location.href = `${clientBaseURL}/team/${name}`;
     } else {
       alert(`Error: ${message}`);
     }
@@ -133,6 +115,7 @@ function TeamPage(props) {
                       open={open}
                       onClose={handleClose}
                       id={id}
+                      name={name}
                     />
                     <Typography variant="h5" color="secondary">
                         Team Members
