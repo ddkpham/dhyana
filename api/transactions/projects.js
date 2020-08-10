@@ -90,6 +90,67 @@ const projectDelete = (id) => {
   };
 };
 
+const columnDelete = (id) => {
+  return async (transaction) => {
+    // step 1. Delete all comments related to project. Need to find project columns to find
+    // task ids. Then we can delete comments from there.
+    const taskData = await ColumnTask.findAll({
+      where: {
+        column_id: id,
+      },
+    });
+
+    const taskIds = taskData.map((t) => t.dataValues.task_id);
+    const taskQuery = taskIds.map((tid) => ({ task_id: tid }));
+
+    const commentsDeleted = await Comment.destroy({
+      where: {
+        [Op.or]: taskQuery,
+      },
+      transaction,
+    });
+    console.log(`Deleted ${commentsDeleted} Comments `);
+
+    // step 2. Delete all tasks in project columns.
+    const colTasksDelete = await ColumnTask.destroy({
+      where: {
+        [Op.or]: taskQuery,
+      },
+      transaction,
+    });
+
+    const taskDeleteQuery = taskIds.map((tid) => ({
+      id: tid,
+    }));
+
+    const tasksDeleted = await Task.destroy({
+      where: {
+        [Op.or]: taskDeleteQuery,
+      },
+      transaction,
+    });
+    console.log(`Deleted ${tasksDeleted} Tasks `);
+
+    // step 3. Delete columns
+    const projectColDeleted = await ProjectColumns.destroy({
+      where: {
+        column_id: id,
+      },
+      transaction,
+    });
+
+    const colsDeleted = await Column.destroy({
+      where: {
+        id
+      },
+      transaction,
+    });
+
+    console.log(`Deleted ${colsDeleted} Columns `);
+  }
+}
+
 module.exports = {
   projectDelete,
+  columnDelete,
 };

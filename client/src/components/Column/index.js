@@ -231,8 +231,8 @@ class Column extends React.Component {
 
   deleteColumn = () => {
     const { column, reload } = this.props;
-    const url = `${baseURL}/project/column/${column.id}`;
-    deleteCall(url)
+    const url = `${baseURL}/project/column/delete`;
+    postCall(url, {id: column.id})
       .then((response) => response.json())
       .then((data) => {
         console.log("delete column success", data);

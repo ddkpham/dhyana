@@ -508,57 +508,32 @@ exports.view_project_columns = function (req, res, next) {
 };
 
 exports.delete_column = async function (req, res, next) {
-  console.log("exports.delete_column -> req.params", req.params);
-  const column_id = req.params.column_id.trim();
+  console.log("exports.delete_column -> req.body", req.body);
+  body(req.body).trim().escape().not().isEmpty();
+  const id = req.body.id;
 
-  if (!column_id) {
+  if (!id) {
     res.status(400).json(errorResponse("missing column_id"));
     return;
   }
 
-  const tasks = await ColumnTask.findAll({
-    where: {
-      column_id,
-    },
-  });
-
-  const taskPromises = [];
-
-  for (let t of tasks) {
-    taskPromises.push(DeleteTask(t.task_id));
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(
+      projectTransactions.columnDelete(id)
+    );
+    console.log("finished transaction....");
+    console.log(
+      "exports.delete_column -> Number of deleted Columns: ",
+      result
+    );
+    res.status(200).json(successResponse("successfully deleted column!"));
+  } catch (err) {
+    console.log("err", err);
+    res
+      .status(200)
+      .json(errorResponse("Error occured in deleting column", err));
   }
-
-  Promise.all(taskPromises)
-    .then(() => {
-      ProjectColumns.destroy({
-        where: {
-          column_id,
-        },
-      })
-        .then(() => {
-          Column.destroy({
-            where: {
-              id: column_id,
-            },
-          })
-            .then(() =>
-              res
-                .status(200)
-                .json(successResponse("successfully deleted column"))
-            )
-            .catch((err) =>
-              res
-                .status(400)
-                .json(errorResponse("column destroy error: " + err.message))
-            );
-        })
-        .catch((err) =>
-          res
-            .status(400)
-            .json(errorResponse("projectcolumn destroy error: " + err.message))
-        );
-    })
-    .catch((error) => res.status(400).json(errorResponse(error)));
 };
 
 exports.create_new_task = function (req, res, next) {
