@@ -76,11 +76,15 @@ class NewProject extends React.Component {
               label="Name"
               variant="outlined"
               value={name}
-              onChange={this.onChangeProjectName}
+              inputProps={{ maxLength: 255 }}
+              onChange={(event) => {
+                this.setState({ name: event.target.value });
+              }}
             />
             <TextField
               label="Description"
               variant="outlined"
+              inputProps={{ maxLength: 1023 }}
               value={description}
               onChange={(event) => {
                 this.setState({ description: event.target.value });
@@ -97,27 +101,44 @@ class NewProject extends React.Component {
               <Select
                 labelId="team-select-label"
                 variant="outlined"
-                value={team_id}
+                value={description}
                 onChange={(event) => {
-                  this.setState({ team_id: event.target.value });
+                  this.setState({ description: event.target.value });
                 }}
-              >
-                {team_options.map((t) => {
-                  return <MenuItem value={t.id}>{t.name}</MenuItem>;
-                })}
-                <MenuItem value="">None</MenuItem>
-              </Select>
+              />
+              <FormControl>
+                <InputLabel
+                  className="select-label"
+                  htmlFor="team_id"
+                  id="team-select-label"
+                >
+                  Team
+                </InputLabel>
+                <Select
+                  labelId="team-select-label"
+                  variant="outlined"
+                  value={team_id}
+                  onChange={(event) => {
+                    this.setState({ team_id: event.target.value });
+                  }}
+                >
+                  {team_options.map((t) => {
+                    return <MenuItem value={t.id}>{t.name}</MenuItem>;
+                  })}
+                  <MenuItem value="">None</MenuItem>
+                </Select>
+              </FormControl>
+              <div className="create-project-button">
+                <Button
+                  className="create-btn"
+                  onClick={this.create}
+                  variant="outlined"
+                  color="primary"
+                >
+                  Create
+                </Button>
+              </div>
             </FormControl>
-            <div className="create-project-button">
-              <Button
-                className="create-btn"
-                onClick={this.create}
-                variant="outlined"
-                color="primary"
-              >
-                Create
-              </Button>
-            </div>
           </div>
         </Card>
       </div>
