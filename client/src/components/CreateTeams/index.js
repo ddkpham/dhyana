@@ -6,9 +6,24 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import GroupIcon from "@material-ui/icons/Group";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
+import { useHistory } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
 import "./index.scss";
 
+const useStyles = makeStyles((theme) => ({
+  mainDiv: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  cardDiv: {
+    marginTop: 25,
+  }
+}));
+
 function CreateTeam() {
+  let history = useHistory();
+  const classes = useStyles();
   const [name, setTeamName] = useState("");
   const [userInfo, setUser] = useState([]);
 
@@ -68,33 +83,41 @@ function CreateTeam() {
   };
 
   return (
-    <div id="mainDiv">
-      <Card className={"sign-up-wrapper"}>
-        <div className={"title"}>
-          <Typography variant="h4" color="primary">
-            Create New Team
-          </Typography>
-          <GroupIcon
-            className="group-icon"
-            color="primary"
-            style={{ fontSize: 40 }}
-          />
-        </div>
-        <div className="text-input-wrapper">
-          <TextField
-            className={"sign-up-text-input"}
-            label="Team Name"
-            variant="outlined"
-            value={name}
-            onChange={(e) => onChange(e.target.value)}
-          />
-        </div>
-        <div className="sign-up-button">
-          <Button variant="outlined" color="primary" onClick={create}>
-            Create Team
-          </Button>
-        </div>
-      </Card>
+    <div className={classes.mainDiv}>
+      <div className="buttonDiv">
+        <Button
+          className="backButton"
+          variant="outlined"
+          color="primary"
+          onClick={() => history.goBack()}
+        >
+          Back
+        </Button>
+      </div>
+      <div className={classes.cardDiv}>
+        <Card className={"sign-up-wrapper"}>
+          <div className={"title"}>
+            <Typography variant="h4" color="primary">
+                Create New Team
+            </Typography>
+            <GroupIcon className="group-icon" color="primary" style={{ fontSize: 40 }}/>
+          </div>
+          <div className="text-input-wrapper">
+            <TextField
+              className={"sign-up-text-input"}
+              label="Team Name"
+              variant="outlined"
+              value={name}
+              onChange={(e) => onChange(e.target.value)}
+            />
+          </div>
+          <div className="sign-up-button">
+            <Button variant="outlined" color="primary" onClick={create}>
+              Create Team
+            </Button>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -18,12 +18,15 @@ import "./card.scss";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    maxWidth: 335,
   },
   media: {
     height: 140,
     cursor: "pointer",
   },
+  contentDiv: {
+    maxWidth: 325,
+  }
 });
 
 function ProjectCard(props) {
@@ -54,13 +57,15 @@ function ProjectCard(props) {
       />
       <CardActionArea href={"/project/" + name}>
         <CardContent>
-          <Typography variant="h5" color="primary" gutterBottom>
-            {name}
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            {description}
-          </Typography>
-          <Typography variant="body2">{team}</Typography>
+          <div className={classes.contentDiv}>
+            <Typography variant="h5" color="primary" gutterBottom>
+              {name}
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {description}
+            </Typography>
+            <Typography variant="body2">{team}</Typography>
+          </div>
         </CardContent>
       </CardActionArea>
     </Card>

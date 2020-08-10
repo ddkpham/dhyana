@@ -168,7 +168,7 @@ class Project extends React.Component {
   }
 
   async componentWillUnmount() {
-    this.state.showColumns = false;
+    this.setState({showColumns: false})
   }
 
   getProject = () => {
@@ -186,11 +186,11 @@ class Project extends React.Component {
         this.setState({ project });
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
-        this.state.showColumns = true;
+        this.setState({showColumns: true})
       })
       .catch((err) => {
-        console.log("project fetch error", err);
-        this.state.showColumns = true;
+        console.log("project fetch error", err)
+        this.setState({showColumns: true})
       });
   };
 
@@ -448,7 +448,8 @@ class Project extends React.Component {
         ) : (
           <div className={classes.emptyContainer}>
             {" "}
-            <EmptyCard />{" "}
+            <EmptyCard />
+            {" "}
           </div>
         )}
       </div>
