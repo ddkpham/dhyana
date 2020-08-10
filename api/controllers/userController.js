@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
+const sequelize = require("../config/database");
 
 var User = require("../models/User");
 var TeamsUsers = require("../models/TeamsUsers");
@@ -226,6 +227,37 @@ exports.create_new_user = function (req, res, next) {
       .catch((err) => {
         res.status(409).json(errorResponse("user already exists", err));
       });
+  }
+};
+
+exports.delete_user = async function (req, res, next) {
+  console.log("exports.delete_user -> req.body", req.body);
+
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing user id"));
+    return;
+  }
+
+  // managed transaction - sequelize will automatically handle commits and rollbacks
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(
+      projectTransactions.projectDelete(id)
+    );
+    console.log("finished transaction....");
+    console.log("exports.delete user -> Number of deleted users: ", result);
+    res.status(200).json(successResponse("successfully deleted user!"));
+  } catch (err) {
+    console.log("err", err);
+    res.status(200).json(errorResponse("Error occured in deleting user", err));
   }
 };
 
