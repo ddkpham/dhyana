@@ -9,7 +9,7 @@ import { baseURL } from "../../config/settings";
 import ProjectCard from "../Project/card";
 import TeamCard from "./TeamCard";
 import { getCall } from "../../apiCalls/apiCalls";
-import EmptyCard from "../EmptyCard";
+import EmptyHomeCard from "./EmptyHomeCard/";
 
 import "./index.scss";
 
@@ -161,7 +161,7 @@ class Home extends React.Component {
         </div>
 
         <div className="empty-projects-container">
-          {this.state.teams.length === 0 ? <EmptyCard /> : null}
+          {this.state.teams.length === 0 ? <EmptyHomeCard /> : null}
         </div>
 
         <div className={classes.mainWrapper}>
