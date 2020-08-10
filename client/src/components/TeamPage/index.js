@@ -99,24 +99,30 @@ function TeamPage(props) {
         <div className="inner-team-page-container">
             <div className="team-page-center">
                 <div>
+                  <div classNamae="title-button-container">
+                    <div className="team-name">
                     <Typography variant="h4" color="primary">
                         {name}
                     </Typography>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      onClick={() => {
-                        handleClickOpen();
-                      }}        
-                    >
-                      Delete Team
-                    </Button>
-                    <DeleteTeamDialog
-                      open={open}
-                      onClose={handleClose}
-                      id={id}
-                      name={name}
-                    />
+                    </div>
+                    <div className="delete-team-btn">
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => {
+                          handleClickOpen();
+                        }}        
+                      >
+                        Delete Team
+                      </Button>
+                      <DeleteTeamDialog
+                        open={open}
+                        onClose={handleClose}
+                        id={id}
+                        name={name}
+                      />
+                    </div>
+                  </div>
                     <Typography variant="h5" color="secondary">
                         Team Members
                     </Typography>
