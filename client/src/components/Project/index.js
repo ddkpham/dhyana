@@ -7,13 +7,15 @@ import Column from "../Column";
 import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { baseURL } from "../../config/settings";
-import { getCall } from "../../apiCalls/apiCalls";
+import { baseURL, clientBaseURL } from "../../config/settings";
+import { getCall, postCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Hidden from '@material-ui/core/Hidden';
 import ProjectTeam from "./teamList"
+import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   header: {
@@ -55,6 +57,15 @@ const styles = (theme) => ({
     padding: 10,
     justifyContent: 'space-evenly',
   },
+  deleteButton: {
+    color: 'red',
+    borderColor: 'red',
+    [theme.breakpoints.down("sm")]: {
+      '& .MuiButton-startIcon': {
+        margin: 0,
+      }
+    }
+  }
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -66,6 +77,7 @@ class Project extends React.Component {
     teamMembers: [],
     columnModalOpen: false,
     showColumns: false,
+    deleteOpen: false,
   };
 
   async componentWillMount() {
@@ -98,6 +110,28 @@ class Project extends React.Component {
         this.state.showColumns = true;
       });
   };
+
+  deleteProject = () => {
+    const { project } = this.state;
+    const url = `${baseURL}/project/delete`;
+    const body = { id: project.id };
+    console.log('hey toria body', body)
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("delete project success", data);
+        window.location.href = `${clientBaseURL}/home`;
+      })
+      .catch((err) => console.log("delete project error", err));
+  };
+
+  openDelete = () => {
+    this.setState({deleteOpen: true})
+  }
+
+  closeDelete = () => {
+    this.setState({deleteOpen: false})
+  }
 
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
@@ -134,7 +168,7 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, teamMembers, columnModalOpen } = this.state;
+    const { project, columns, teamMembers, columnModalOpen, deleteOpen } = this.state;
     const { classes } = this.props;
 
     console.log("Project -> render -> project", project);
@@ -147,6 +181,7 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
+          <ConfirmDialog message='This will irreversibly delete this project and all its tasks' open={deleteOpen} confirm={this.deleteProject} deny={this.closeDelete}/>
           <div className={classes.header}>
             <div className={classes.titleSection}>
               <Typography noWrap variant="h4">
@@ -158,6 +193,18 @@ class Project extends React.Component {
             </div>
             <div className={classes.smallSection}>
               <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+            </div>
+            <div className={classes.smallSection}>
+              <Button
+                variant="outlined"
+                startIcon={<DeleteForeverIcon/>}
+                onClick={this.openDelete}
+                className={classes.deleteButton}
+              >
+                <Hidden smDown>
+                  Delete Project
+                </Hidden>
+              </Button>
             </div>
             <div className={classes.smallSection}>
               <ProjectToggle />
