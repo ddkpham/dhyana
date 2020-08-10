@@ -22,7 +22,7 @@ const styles = (theme) => ({
     paddingBottom: 15,
     alignItems: 'flex-start',
     height: '10%',
-    overflowYy: 'hidden',
+    minHeight: 45,
   },
   root: {
     display: 'flex',
@@ -152,11 +152,9 @@ class Project extends React.Component {
               <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Hidden sDown>
-                <Typography noWrap variant="h6">
-                  {project.description}
-                </Typography>
-              </Hidden>
+              <Typography variant="h6" className='hide-short'>
+                {project.description}
+              </Typography>
             </div>
             <div className={classes.smallSection}>
               <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
