@@ -6,11 +6,18 @@ import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
 import IconButton from "@material-ui/core/IconButton";
 import { baseURL, clientBaseURL } from "../../../config/settings";
+import { withStyles } from "@material-ui/core/styles";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
 import UserAvatar from "./avatar";
 import "./index.scss";
 import { team_images } from "../../../static/teams/teamImages";
+
+const styles = (theme) => ({
+  teamCardContainer: {
+    overflowX: "scroll",
+  },
+});
 
 class TeamCard extends React.Component {
   state = {
@@ -50,23 +57,24 @@ class TeamCard extends React.Component {
   };
 
   render() {
-    const { name } = this.props;
+    const { name, classes } = this.props;
     const { info, users } = this.state;
     const imgIndex = Math.floor(Math.random() * team_images.length);
 
     return (
-      <Card raised>
+      <Card raised
+      onClick={() => {
+        window.location.href = `${clientBaseURL}/team/${name}`;
+      }}>
         <CardContent className="teamcard-container">
           <CardMedia
             className="teamcard-card-media"
             image={team_images[imgIndex]}
             title="Live from space album cover"
-            onClick={() => {
-              window.location.href = `${clientBaseURL}/#`;
-            }}
           />
+          <div className={ classes.teamCardContainer }>
           <div className="team-card-content">
-            <CardActionArea href={"#"}>
+            <CardActionArea>
               <Typography variant="h5" color="primary">
                 {name}
               </Typography>
@@ -80,6 +88,7 @@ class TeamCard extends React.Component {
                 <UserAvatar user={user}/>
               ))}
             </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -87,4 +96,4 @@ class TeamCard extends React.Component {
   }
 }
 
-export default TeamCard;
+export default withStyles(styles)(TeamCard);

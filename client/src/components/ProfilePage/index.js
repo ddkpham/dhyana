@@ -202,7 +202,10 @@ function ProfilePage(props) {
                   let imgIndex = Math.floor(Math.random() * team_images.length);
                   console.log("imgIndex", imgIndex);
                   return (
-                    <Card raised>
+                    <Card raised
+                      onClick={() => {
+                        history.push("/team/" + team.name);
+                      }}>
                       <CardContent className="team-card-container">
                         <CardMedia
                           className="teamcard-image"

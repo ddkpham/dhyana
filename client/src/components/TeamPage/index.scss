@@ -1,0 +1,72 @@
+.usersContainer{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+.outer-team-page-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+.inner-team-page-container {
+    // margin: 0 auto;
+    padding: 25px 45px;
+    margin-top: 100px;
+    border: 1px solid lightgrey;
+}
+
+.team {
+    &-projects-container {
+      display: flex;
+      flex-wrap: wrap;
+      width: 70vw;
+    }
+}
+
+.profile-flex-div{
+    justify-content: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    width: 70vw;
+
+}
+
+.team-profileDiv {
+    // margin: 0 auto !important;
+    padding: 25px auto;
+    // margin-top: 100px;
+    border: 1px solid lightgrey;
+  }
+
+  .team-profile-container-center {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .team-profile-container-width{
+      width: 160px;
+  }
+
+  .profiles-avatar {
+    width: 120px;
+    height: 120px;
+    border: lavender;
+  }
+
+  .profile-name{
+      text-align: center;
+  }
+
+  .team-page-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .disabled{
+    pointer-events: none !important;
+  }
