@@ -411,8 +411,8 @@ class Project extends React.Component {
                 <Typography variant="h6" className="hide-short">
                   {project.description || ""}
                 </Typography>
-                {priorityArray.map((p) => (
-                  <Chip label={p.label} className={p.class} />
+                {priorityArray.map((priority) => (
+                  <Chip label={priority.label} className={priority.class} />
                 ))}
               </div>
               <ScrollingComponent
