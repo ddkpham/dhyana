@@ -10,11 +10,14 @@ import Chip from "@material-ui/core/Chip";
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardActionArea from "@material-ui/core/CardActionArea";
 import Typography from "@material-ui/core/Typography";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import TextField from "@material-ui/core/TextField";
 
 import "./index.scss";
+import { images } from "../../static/finalspace/avatars";
+import { team_images } from "../../static/teams/teamImages";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 
@@ -29,9 +32,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProfilePage(props) {
+
   const classes = useStyles();
   const { username } = props;
   let history = useHistory();
+  const imgIndex = Math.floor(Math.random() * images.length);
   const [userInfo, setUser] = useState([]);
   const [teamInfo, showTeams] = useState([]);
   const [userProjects, setUserProjects] = useState([]);
@@ -122,31 +127,35 @@ function ProfilePage(props) {
       <div className="profile-page-container">
         <Card className="profileDiv">
           <CardContent>
-            <AccountBoxIcon />
+          <div className="centerProfile">
+              <Avatar
+                alt={username}
+                src={images[imgIndex]}
+                className="profile-my-avatar"
+              />
             <Typography variant="h5" color="primary">
-              Username: {userInfo.username}
+              {userInfo.first_name || "John"}{" "}
+              {userInfo.last_name || "Doe"}
             </Typography>
             <Typography variant="h6" color="secondary">
-              first name:{" "}
-              {userInfo.first_name ? userInfo.first_name : "None of"}
+              @{userInfo.username}
             </Typography>
+            {userInfo.job_title ?
             <Typography variant="h6" color="secondary">
-              last name:{" "}
-              {userInfo.last_name ? userInfo.last_name : "Your business"}
-            </Typography>
-            <Typography variant="h6" color="secondary">
-              job title:{" "}
-              {userInfo.job_title ? userInfo.job_title : "CEO of mind your own"}
-            </Typography>
-
+              Job Title: {" "}
+              {userInfo.job_title}
+            </Typography>: null
+            }
             <TextField
+              disabled
               rowsMax={5}
               label="Biography"
               multiline
+              variant="outlined"
               rows={4}
               aria-label="maximum height"
               placeholder="Maximum 4 rows"
-              defaultValue={"Please respect my privacy. I'm a private person."}
+              defaultValue={"Nothing here yet."}
               value={userInfo.biography}
             />
             <FormControl className={classes.formControl} variant="outlined">
@@ -176,47 +185,111 @@ function ProfilePage(props) {
                 Add User to Team
               </Button>
             </div>
+            </div>
           </CardContent>
         </Card>
 
-        <div className="profileDiv">
-          <Typography variant="h4" color="primary">
-            Teams
-          </Typography>
-          <div className="profile-page-team-container">
-            {userTeams.map((team) => {
-              console.log("ProfilePage -> team", team);
-              return (
-                <Chip
-                  color="primary"
-                  avatar={<Avatar>{team.name.charAt(0)}</Avatar>}
-                  label={team.name}
-                  onClick={() => {
-                    history.push("/team/"+ team.name);
-                  }}
-                  variant="outlined"
-                />
-              );
-            })}
-          </div>
-          <Typography variant="h4" color="secondary">
-            Projects
-          </Typography>
-          <div className="profile-page-team-container">
-            {userProjects.map((project) => {
-              console.log("ProfilePage -> project", project);
-              return (
-                <Chip
-                  color="secondary"
-                  avatar={<Avatar>{project.name.charAt(0)}</Avatar>}
-                  label={project.name}
-                  onClick={() => console.log("clicked")}
-                  variant="outlined"
-                />
-              );
-            })}
-          </div>
-        </div>
+        <Card className="project-teams-container">
+          <CardContent>
+            <Typography variant="h4" color="primary">
+              Teams
+            </Typography>
+            <div className="profile-page-team-container">
+              {(userTeams.length > 0)? (
+              <div>
+                {userTeams.map((team) => {
+                  console.log("ProfilePage -> team", team);
+                  let imgIndex = Math.floor(Math.random() * team_images.length);
+                  console.log("imgIndex", imgIndex);
+                  return (
+                    <Card raised>
+                      <CardContent className="team-card-container">
+                        <CardMedia
+                          className="teamcard-image"
+                          image={team_images[imgIndex]}
+                          title="Live from space album cover"
+                        />
+                        <div className="teamcard-div">
+                          <CardActionArea>
+                            <Typography variant="h5" color="primary">
+                              {team.name}
+                            </Typography>
+                          </CardActionArea>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>): 
+              (<div>
+                  <Card raised>
+                    <CardContent className="team-card-container">
+                      <CardMedia
+                        className="teamcard-image"
+                        image={team_images[0]}
+                        title="Live from space album cover"
+                      />
+                      <div className="teamcard-div">
+                        <CardActionArea>
+                          <Typography variant="h6" color="primary">
+                            Sorry. The user does not belong to any teams.
+                          </Typography>
+                        </CardActionArea>
+                      </div>
+                    </CardContent>
+                  </Card>
+              </div>)}
+            </div>
+            <Typography className="project-title" variant="h4" color="secondary">
+              Projects
+            </Typography>
+            <div className="profile-page-team-container">
+            {(userTeams.length > 0)? (
+              <div>
+              {userProjects.map((project) => {
+                console.log("ProfilePage -> project", project);
+                let projectImgIndex = Math.floor(Math.random() * team_images.length);
+                return (
+                  <Card raised>
+                  <CardContent className="team-card-container">
+                    <CardMedia
+                      className="teamcard-image"
+                      image={team_images[projectImgIndex]}
+                      title="Live from space album cover"
+                    />
+                    <div className="teamcard-div">
+                      <CardActionArea>
+                        <Typography variant="h5" color="primary">
+                          {project.name}
+                        </Typography>
+                      </CardActionArea>
+                    </div>
+                  </CardContent>
+                </Card>
+                );
+              })}
+              </div>):
+              (<div>
+                <Card raised>
+                  <CardContent className="team-card-container">
+                    <CardMedia
+                      className="teamcard-image"
+                      image={team_images[1]}
+                      title="Live from space album cover"
+                    />
+                    <div className="teamcard-div">
+                      <CardActionArea>
+                        <Typography variant="h6" color="primary">
+                          Sorry. The user does not have any projects.
+                        </Typography>
+                      </CardActionArea>
+                    </div>
+                  </CardContent>
+                </Card>
+            </div>)}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

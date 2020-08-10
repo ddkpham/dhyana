@@ -22,6 +22,8 @@ router.get("/create", function (req, res, next) {
 
 router.post("/create", userController.create_new_user);
 
+router.post("/delete", [body("id")], userController.delete_user);
+
 router.post(
   "/edit-user",
   authMiddleware,

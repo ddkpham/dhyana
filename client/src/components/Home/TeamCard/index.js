@@ -10,15 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { getCall } from "../../../apiCalls/apiCalls";
 import Avatar from "@material-ui/core/Avatar";
 import "./index.scss";
-import washington_img from "../../../static/washington.png";
-import samsung from "../../../static/samsung.jpeg";
-import bluejays from "../../../static/blue_jays.png";
-import detTigers from "../../../static/det-tigers.png";
-import counter from "../../../static/counter.jpeg";
-import gsw from "../../../static/GSW.svg";
-import hawks from "../../../static/hawks.svg";
-
-import sports_logo_img from "../../../static/sports-logo.png";
+import { team_images } from "../../../static/teams/teamImages";
 
 const styles = (theme) => ({
   teamCardContainer: {
@@ -30,16 +22,6 @@ class TeamCard extends React.Component {
   state = {
     info: {},
     users: [],
-    images: [
-      sports_logo_img,
-      washington_img,
-      bluejays,
-      detTigers,
-      samsung,
-      counter,
-      gsw,
-      hawks,
-    ],
   };
 
   async componentDidMount() {
@@ -75,16 +57,15 @@ class TeamCard extends React.Component {
 
   render() {
     const { name } = this.props;
-    const { info, users, images } = this.state;
-    const imgIndex = Math.floor(Math.random() * images.length);
-    const { classes } = this.props;
+    const { info, users } = this.state;
+    const imgIndex = Math.floor(Math.random() * team_images.length);
 
     return (
       <Card raised>
         <CardContent className="teamcard-container">
           <CardMedia
             className="teamcard-card-media"
-            image={images[imgIndex]}
+            image={team_images[imgIndex]}
             title="Live from space album cover"
             onClick={() => {
               window.location.href = `${clientBaseURL}/#`;
