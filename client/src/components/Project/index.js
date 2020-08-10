@@ -448,7 +448,8 @@ class Project extends React.Component {
         ) : (
           <div className={classes.emptyContainer}>
             {" "}
-            <EmptyCard />{" "}
+            <EmptyCard />
+            {" "}
           </div>
         )}
       </div>
