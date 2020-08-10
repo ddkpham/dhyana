@@ -9,6 +9,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
+import Chip from "@material-ui/core/Chip";
 import ProjectToggle from "./projectToggle";
 import GridList from "@material-ui/core/GridList";
 import withScrolling from "react-dnd-scrolling";
@@ -16,8 +17,13 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Hidden from "@material-ui/core/Hidden";
 import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
+import { red, cyan, grey } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
+  header: {
+    display: "flex",
+    flexDirection: "row",
+  },
   headerButtons: {
     display: "flex",
     flexDirection: "row",
@@ -34,8 +40,8 @@ const styles = (theme) => ({
     height: "80%",
     justifyContent: "left",
     border: "1px solid grey",
-    borderRadius: 4,
     padding: "20px 0",
+    borderRadius: 4,
   },
   projectMainDiv: {
     width: "100%",
@@ -55,6 +61,7 @@ const styles = (theme) => ({
   smallSection: {
     display: "flex",
     flexWrap: "wrap",
+    width: "40%",
     padding: 10,
     justifyContent: "space-evenly",
   },
@@ -74,6 +81,33 @@ const styles = (theme) => ({
       },
     },
     marginTop: "10px",
+  },
+  chipsContainer: {
+    margin: "10px",
+  },
+  chip0: {
+    color: "white",
+    backgroundColor: cyan[50],
+  },
+  chip1: {
+    color: "white",
+    backgroundColor: "lightgreen",
+  },
+  chip2: {
+    color: "white",
+    backgroundColor: "#CCCC00",
+  },
+  chip3: {
+    color: "white",
+    backgroundColor: "orange",
+  },
+  chip4: {
+    color: "white",
+    backgroundColor: red[300],
+  },
+  chip5: {
+    color: "white",
+    backgroundColor: red[600],
   },
   teamButtonSection: {
     display: "flex",
@@ -197,6 +231,14 @@ class Project extends React.Component {
       deleteOpen,
     } = this.state;
     const { classes } = this.props;
+    const priorityArray = [
+      { label: "None", class: classes.chip0 },
+      { label: "Low", class: classes.chip1 },
+      { label: "Medium", class: classes.chip2 },
+      { label: "High", class: classes.chip3 },
+      { label: "Critical", class: classes.chip4 },
+      { label: "Blocker", class: classes.chip5 },
+    ];
 
     console.log("Project -> render -> project", project);
     return (
@@ -241,6 +283,11 @@ class Project extends React.Component {
                 {project.name}
               </Typography>
               <Typography variant="body1">{project.description}</Typography>
+            </div>
+            <div className={classes.chipsContainer}>
+              {priorityArray.map((p) => (
+                <Chip label={p.label} className={p.class} />
+              ))}
             </div>
             <ScrollingComponent
               spacing={2}
