@@ -5,11 +5,22 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 import { useHistory } from "react-router-dom";
+import DeleteAccountDialog from "./DeleteAccountDialog";
 import "./index.scss";
 
 function EditProfile() {
   let history = useHistory();
   const [profileInfo, setProfileInfo] = useState({});
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    // setSelectedValue(value);
+  };
 
   useEffect(() => {
     function getProfile() {
@@ -18,6 +29,7 @@ function EditProfile() {
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
+          console.log("getProfile -> payload", payload);
           setProfileInfo(payload.data[0]);
         })
         .catch((err) => console.log("project fetch error", err));
@@ -143,12 +155,17 @@ function EditProfile() {
               variant="outlined"
               color="primary"
               onClick={() => {
-                console.log("deleting account");
+                handleClickOpen();
               }}
               className="edit-profile-btn"
             >
               Delete Account
             </Button>
+            <DeleteAccountDialog
+              open={open}
+              onClose={handleClose}
+              user={profileInfo}
+            />
           </div>
         </Card>
       </div>

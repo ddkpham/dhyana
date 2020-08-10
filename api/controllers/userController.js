@@ -265,7 +265,7 @@ exports.delete_user = async function (req, res, next) {
 
       // delete all tasks created by the user. Table constraint.
 
-      // first delete it from columnsTasks
+      // first delete it from columnsTasks and all comments with that task id
       const taskData = await Task.findAll({
         where: {
           user_id_created: id,
@@ -288,6 +288,16 @@ exports.delete_user = async function (req, res, next) {
       });
 
       console.log(`Deleted ${deletedColumnTasks} rows from ColumnTasks`);
+
+      // delete all comments that on tasks that user has created
+      const deletedComments2 = await Comment.destroy({
+        where: {
+          [Op.or]: taskQuery,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted ${deletedComments2} Comments by user ${id}`);
 
       const deletedTasks = await Task.destroy({
         where: {
