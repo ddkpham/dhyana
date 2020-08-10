@@ -64,6 +64,15 @@ function CreateUser() {
     }
   };
 
+  const onChangeUsername = (input) => {
+    console.log("before", input);
+    const regex = /^[a-zA-Z0-9_-]*$/;
+    if (regex.test(input) || input == "") {
+      console.log("after", input);
+      setUsername(input);
+    }
+  };
+
   return (
     <div className={classes.mainDiv}>
       <Card className={classes.mainCard}>
@@ -75,8 +84,9 @@ function CreateUser() {
             className={"sign-up-text-input"}
             label="Username"
             variant="outlined"
+            value={username}
             onChange={(event) => {
-              setUsername(event.target.value);
+              onChangeUsername(event.target.value);
             }}
           />
           <TextField
