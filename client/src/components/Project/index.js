@@ -9,68 +9,94 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
+import Chip from "@material-ui/core/Chip";
 import ProjectToggle from "./projectToggle";
-import GridList from '@material-ui/core/GridList';
-import withScrolling from 'react-dnd-scrolling';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import Hidden from '@material-ui/core/Hidden';
-import ProjectTeam from "./teamList"
+import GridList from "@material-ui/core/GridList";
+import withScrolling from "react-dnd-scrolling";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import Hidden from "@material-ui/core/Hidden";
+import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
+import { red, cyan, grey } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
   header: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     paddingBottom: 15,
-    alignItems: 'flex-start',
-    height: '10%',
+    alignItems: "flex-start",
+    height: "10%",
     minHeight: 45,
+    marginBottom: "40px",
   },
   root: {
-    display: 'flex',
-    flexWrap: 'nowrap',
+    display: "flex",
+    flexWrap: "nowrap",
     height: "80%",
-    justifyContent: 'left',
+    justifyContent: "left",
     border: "1px solid grey",
-    padding: '20px 0',
-    borderRadius: 4
+    padding: "20px 0",
+    borderRadius: 4,
   },
   projectMainDiv: {
     width: "100%",
     height: "100%",
-    justifyContent: 'center',
-    alignContent: 'center',
+    justifyContent: "center",
+    alignContent: "center",
   },
   addColumnButton: {
     margin: 10,
-    width: '200px',
-    height: '50px',
+    width: "200px",
+    height: "50px",
   },
   titleSection: {
-    width: '60%',
+    width: "60%",
     margin: 10,
   },
   smallSection: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    width: '40%',
+    display: "flex",
+    flexWrap: "wrap",
+    width: "40%",
     padding: 10,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
   },
   deleteButton: {
-    color: 'red',
-    borderColor: 'red',
+    color: "red",
+    borderColor: "red",
     [theme.breakpoints.down("sm")]: {
-      '& .MuiButton-startIcon': {
+      "& .MuiButton-startIcon": {
         margin: 0,
-      }
-    }
-  }
+      },
+    },
+  },
+  chip0: {
+    color: "white",
+    backgroundColor: "red",
+  },
+  chip1: {
+    color: "white",
+    backgroundColor: "red",
+  },
+  chip2: {
+    color: "white",
+    backgroundColor: "red",
+  },
+  chip3: {
+    color: "white",
+    backgroundColor: "red",
+  },
+  chip4: {
+    color: "white",
+    backgroundColor: "red",
+  },
+  chip5: {
+    color: "white",
+    backgroundColor: "red",
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
 class Project extends React.Component {
-
   state = {
     project: {},
     columns: [],
@@ -106,7 +132,7 @@ class Project extends React.Component {
         this.state.showColumns = true;
       })
       .catch((err) => {
-        console.log("project fetch error", err)
+        console.log("project fetch error", err);
         this.state.showColumns = true;
       });
   };
@@ -115,7 +141,7 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
-    console.log('hey toria body', body)
+    console.log("hey toria body", body);
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -126,12 +152,12 @@ class Project extends React.Component {
   };
 
   openDelete = () => {
-    this.setState({deleteOpen: true})
-  }
+    this.setState({ deleteOpen: true });
+  };
 
   closeDelete = () => {
-    this.setState({deleteOpen: false})
-  }
+    this.setState({ deleteOpen: false });
+  };
 
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
@@ -156,7 +182,6 @@ class Project extends React.Component {
       .catch((err) => console.log("column fetch error", err));
   };
 
-
   closeColumnModal = () => {
     const { project } = this.state;
     this.setState({ columnModalOpen: false });
@@ -168,8 +193,22 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, teamMembers, columnModalOpen, deleteOpen } = this.state;
+    const {
+      project,
+      columns,
+      teamMembers,
+      columnModalOpen,
+      deleteOpen,
+    } = this.state;
     const { classes } = this.props;
+    const priorityArray = [
+      { label: "None", class: classes.chip0 },
+      { label: "Low", class: classes.chip1 },
+      { label: "Medium", class: classes.chip2 },
+      { label: "High", class: classes.chip3 },
+      { label: "Critical", class: classes.chip4 },
+      { label: "Blocker", class: classes.chip5 },
+    ];
 
     console.log("Project -> render -> project", project);
     return (
@@ -181,29 +220,39 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
-          <ConfirmDialog message='This will irreversibly delete this project and all its tasks' open={deleteOpen} confirm={this.deleteProject} deny={this.closeDelete}/>
+          <ConfirmDialog
+            message="This will irreversibly delete this project and all its tasks"
+            open={deleteOpen}
+            confirm={this.deleteProject}
+            deny={this.closeDelete}
+          />
           <div className={classes.header}>
             <div className={classes.titleSection}>
               <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Typography variant="h6" className='hide-short'>
+              <Typography variant="h6" className="hide-short">
                 {project.description}
               </Typography>
+              {priorityArray.map((p) => (
+                <Chip label={p.label} className={p.class} />
+              ))}
             </div>
             <div className={classes.smallSection}>
-              <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+              <ProjectTeam
+                teamMembers={teamMembers}
+                teamId={project.team_id}
+                reload={(id) => this.getTeamUserArray(id)}
+              />
             </div>
             <div className={classes.smallSection}>
               <Button
                 variant="outlined"
-                startIcon={<DeleteForeverIcon/>}
+                startIcon={<DeleteForeverIcon />}
                 onClick={this.openDelete}
                 className={classes.deleteButton}
               >
-                <Hidden smDown>
-                  Delete Project
-                </Hidden>
+                <Hidden smDown>Delete Project</Hidden>
               </Button>
             </div>
             <div className={classes.smallSection}>
@@ -227,17 +276,17 @@ class Project extends React.Component {
               />
             ))}
             {this.state.showColumns ? (
-            <div>
-              <Button
-                className={classes.addColumnButton}
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={this.openColumnModal}
-              >
-                Add Column
-              </Button>
-            </div>
-            ) : (null)}
+              <div>
+                <Button
+                  className={classes.addColumnButton}
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={this.openColumnModal}
+                >
+                  Add Column
+                </Button>
+              </div>
+            ) : null}
           </ScrollingComponent>
         </DndProvider>
       </div>
