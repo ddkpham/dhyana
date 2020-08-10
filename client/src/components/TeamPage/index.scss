@@ -26,7 +26,7 @@
 }
 
 .profile-flex-div{
-    justify-content: center;
+    justify-content: flex-start;
     display: flex;
     flex-wrap: wrap;
     width: 70vw;
@@ -65,4 +65,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .disabled{
+    pointer-events: none !important;
   }
