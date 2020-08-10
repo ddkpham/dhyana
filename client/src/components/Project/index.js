@@ -143,6 +143,8 @@ class Project extends React.Component {
     columnModalOpen: false,
     showColumns: false,
     deleteOpen: false,
+    name: "",
+    description: ""
   };
 
   async componentWillMount() {
@@ -180,7 +182,7 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
-    console.log("hey toria body", body);
+
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -199,16 +201,21 @@ class Project extends React.Component {
   };
 
   editProject = () => {
-    const { title, description, project } = this.state;
+    const { name, description, project } = this.state;
+
     const url = `${baseURL}/project/edit/${project.id}`;
-    const body = { title, description };
-    console.log('hey toria body', body)
+    const newName = name.length ? name : project.name;
+    const newDescription = description.length ? description : project.description
+    const body = {
+      name: newName,
+      description: newDescription
+    };
+
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
         console.log("edit project success", data);
-        this.getProject();
-        this.closeEdit();
+        window.location.href = `${clientBaseURL}/project/${newName}`;
       })
       .catch((err) => console.log("edit project error", err));
   };
@@ -328,7 +335,7 @@ class Project extends React.Component {
                         placeholder="Name"
                         type='text'
                         onChange={(event) => {
-                          this.setState({title: event.target.value})
+                          this.setState({name: event.target.value})
                         }}
                       />
                     </MenuItem>

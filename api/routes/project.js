@@ -19,11 +19,13 @@ router.get("/all", projectController.view_all);
 
 router.get("/user-specific/all", projectController.view_user_specific);
 
-router.get(
-  "/:name",
-  [param("name").isLength({ min: 2 })],
-  projectController.view_project
-);
+router.get("/:name", [param("name").isLength({ min: 2 })], projectController.view_project);
+
+router.post("/edit/:project_id",
+[param("name").isLength({ min: 1 }),
+body("name").isLength({ min: 1 }).escape(),
+body("description").isLength({ min: 1 }).escape()],
+projectController.edit_project);
 
 ////////////////////////////// Project Column related routes
 
