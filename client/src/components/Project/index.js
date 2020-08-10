@@ -18,13 +18,15 @@ import ProjectTeam from "./teamList"
 import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
-  header: {
+  headerButtons: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: "space-between",
     paddingBottom: 15,
     alignItems: 'flex-start',
     height: '10%',
     minHeight: 45,
+    marginBottom: 5,
   },
   root: {
     display: 'flex',
@@ -32,8 +34,8 @@ const styles = (theme) => ({
     height: "80%",
     justifyContent: 'left',
     border: "1px solid grey",
+    borderRadius: 4,
     padding: '20px 0',
-    borderRadius: 4
   },
   projectMainDiv: {
     width: "100%",
@@ -53,7 +55,6 @@ const styles = (theme) => ({
   smallSection: {
     display: 'flex',
     flexWrap: 'wrap',
-    width: '40%',
     padding: 10,
     justifyContent: 'space-evenly',
   },
@@ -65,6 +66,20 @@ const styles = (theme) => ({
         margin: 0,
       }
     }
+  }
+  teamButtonSection: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    padding: 10,
+    justifyContent: 'center',
+    textAlign: "center",
+    border: "1px solid grey",
+    borderRadius: 4,
+  },
+  headerDiv: {
+    textAlign: "center",
+    marginBottom: 10,
   }
 });
 
@@ -192,6 +207,10 @@ class Project extends React.Component {
               </Typography>
             </div>
             <div className={classes.smallSection}>
+          <div>
+          <div className={classes.headerButtons}>
+            <div className={classes.teamButtonSection}>
+              <Typography variant="h6">Team Members</Typography>
               <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
             </div>
             <div className={classes.smallSection}>
@@ -210,7 +229,14 @@ class Project extends React.Component {
               <ProjectToggle />
             </div>
           </div>
-
+          <div className={classes.headerDiv}>
+            <Typography variant="h4" style={{marginBottom: 15}}>
+              {project.name}
+            </Typography>
+            <Typography variant="body1">
+              {project.description}
+            </Typography>
+          </div>
           <ScrollingComponent
             spacing={2}
             className={classes.root}
@@ -239,6 +265,7 @@ class Project extends React.Component {
             </div>
             ) : (null)}
           </ScrollingComponent>
+          </div>
         </DndProvider>
       </div>
     );
