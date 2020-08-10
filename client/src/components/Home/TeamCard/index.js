@@ -61,19 +61,19 @@ class TeamCard extends React.Component {
     const imgIndex = Math.floor(Math.random() * team_images.length);
 
     return (
-      <Card raised>
+      <Card raised
+      onClick={() => {
+        window.location.href = `${clientBaseURL}/team/${name}`;
+      }}>
         <CardContent className="teamcard-container">
           <CardMedia
             className="teamcard-card-media"
             image={team_images[imgIndex]}
             title="Live from space album cover"
-            onClick={() => {
-              window.location.href = `${clientBaseURL}/#`;
-            }}
           />
           <div className={ classes.teamCardContainer }>
           <div className="team-card-content">
-            <CardActionArea href={"#"}>
+            <CardActionArea>
               <Typography variant="h5" color="primary">
                 {name}
               </Typography>
