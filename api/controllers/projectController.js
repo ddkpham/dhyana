@@ -48,7 +48,7 @@ exports.check_authorization = async function (req, res, next) {
       if (teamCheck.length) {
         res.status(200).json(successResponse("user is authorized"));
       } else {
-        res.status(401).json(successResponse("user is unauthorized"));
+        res.status(401).json(errorResponse("user is unauthorized"));
       }
     } else {
       res

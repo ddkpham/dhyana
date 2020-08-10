@@ -17,6 +17,7 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Hidden from "@material-ui/core/Hidden";
 import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
+import EmptyCard from "../EmptyCard";
 import { red, cyan, grey } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
@@ -123,6 +124,10 @@ const styles = (theme) => ({
     textAlign: "center",
     marginBottom: 10,
   },
+  emptyContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -137,7 +142,18 @@ class Project extends React.Component {
   };
 
   async componentWillMount() {
-    this.getProject();
+    const { name } = this.props;
+    try {
+      const url = `${baseURL}/project/check-authorization`;
+      const body = { project_name: name };
+      const response = await postCall(url, body);
+      const data = await response.json();
+      if (data.success) {
+        this.getProject();
+      }
+    } catch (err) {
+      console.log("Project -> componentWillMount -> err", err);
+    }
   }
 
   async componentWillUnmount() {
@@ -171,7 +187,6 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
-    console.log("hey toria body", body);
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -239,86 +254,93 @@ class Project extends React.Component {
       { label: "Critical", class: classes.chip4 },
       { label: "Blocker", class: classes.chip5 },
     ];
+    const isAuthorized = project.name ? true : false;
 
     console.log("Project -> render -> project", project);
     return (
       <div className={classes.projectMainDiv}>
-        <DndProvider backend={HTML5Backend}>
-          <AddColumnModal
-            isOpen={columnModalOpen}
-            close={this.closeColumnModal}
-            projectId={project?.id}
-            order={columns.length || 0}
-          />
-          <div>
-            <ConfirmDialog
-              message="This will irreversibly delete this project and all its tasks"
-              open={deleteOpen}
-              confirm={this.deleteProject}
-              deny={this.closeDelete}
+        {isAuthorized ? (
+          <DndProvider backend={HTML5Backend}>
+            <AddColumnModal
+              isOpen={columnModalOpen}
+              close={this.closeColumnModal}
+              projectId={project?.id}
+              order={columns.length || 0}
             />
-            <div className={classes.headerButtons}>
-              <div className={classes.teamButtonSection}>
-                <Typography variant="h6">Team Members</Typography>
-                <ProjectTeam
-                  teamMembers={teamMembers}
-                  teamId={project.team_id}
-                  reload={(id) => this.getTeamUserArray(id)}
-                />
-              </div>
-              <div className={classes.smallSectionProject}>
-                <ProjectToggle />
-                <Button
-                  variant="outlined"
-                  startIcon={<DeleteForeverIcon />}
-                  onClick={this.openDelete}
-                  className={classes.deleteButton}
-                >
-                  <Hidden smDown>Delete Project</Hidden>
-                </Button>
-              </div>
-            </div>
-            <div className={classes.headerDiv}>
-              <Typography variant="h4" style={{ marginBottom: 15 }}>
-                {project.name}
-              </Typography>
-              <Typography variant="body1">{project.description}</Typography>
-            </div>
-            <div className={classes.chipsContainer}>
-              {priorityArray.map((p) => (
-                <Chip label={p.label} className={p.class} />
-              ))}
-            </div>
-            <ScrollingComponent
-              spacing={2}
-              className={classes.root}
-              direction="row"
-            >
-              {columns.map((c) => (
-                <Column
-                  column={c}
-                  key={c.id}
-                  projectId={project.id}
-                  team={teamMembers}
-                  reload={this.getProject}
-                  width={300}
-                />
-              ))}
-              {this.state.showColumns ? (
-                <div>
+            <div>
+              <ConfirmDialog
+                message="This will irreversibly delete this project and all its tasks"
+                open={deleteOpen}
+                confirm={this.deleteProject}
+                deny={this.closeDelete}
+              />
+              <div className={classes.headerButtons}>
+                <div className={classes.teamButtonSection}>
+                  <Typography variant="h6">Team Members</Typography>
+                  <ProjectTeam
+                    teamMembers={teamMembers}
+                    teamId={project.team_id}
+                    reload={(id) => this.getTeamUserArray(id)}
+                  />
+                </div>
+                <div className={classes.smallSectionProject}>
+                  <ProjectToggle />
                   <Button
-                    className={classes.addColumnButton}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={this.openColumnModal}
+                    variant="outlined"
+                    startIcon={<DeleteForeverIcon />}
+                    onClick={this.openDelete}
+                    className={classes.deleteButton}
                   >
-                    Add Column
+                    <Hidden smDown>Delete Project</Hidden>
                   </Button>
                 </div>
-              ) : null}
-            </ScrollingComponent>
+              </div>
+              <div className={classes.headerDiv}>
+                <Typography variant="h4" style={{ marginBottom: 15 }}>
+                  {project.name}
+                </Typography>
+                <Typography variant="body1">{project.description}</Typography>
+              </div>
+              <div className={classes.chipsContainer}>
+                {priorityArray.map((p) => (
+                  <Chip label={p.label} className={p.class} />
+                ))}
+              </div>
+              <ScrollingComponent
+                spacing={2}
+                className={classes.root}
+                direction="row"
+              >
+                {columns.map((c) => (
+                  <Column
+                    column={c}
+                    key={c.id}
+                    projectId={project.id}
+                    team={teamMembers}
+                    reload={this.getProject}
+                    width={300}
+                  />
+                ))}
+                {this.state.showColumns ? (
+                  <div>
+                    <Button
+                      className={classes.addColumnButton}
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={this.openColumnModal}
+                    >
+                      Add Column
+                    </Button>
+                  </div>
+                ) : null}
+              </ScrollingComponent>
+            </div>
+          </DndProvider>
+        ) : (
+          <div className={classes.emptyContainer}>
+            <EmptyCard />
           </div>
-        </DndProvider>
+        )}
       </div>
     );
   }
