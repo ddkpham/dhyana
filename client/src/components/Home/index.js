@@ -68,7 +68,7 @@ class Home extends React.Component {
     teams: [],
     columns: [],
   };
-  async componentDidMount() {
+  async componentWillMount() {
     this.getProjects();
     this.getTeams();
   }
