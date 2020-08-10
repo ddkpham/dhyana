@@ -198,10 +198,7 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
-<<<<<<< HEAD
-=======
 
->>>>>>> master
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -309,13 +306,19 @@ class Project extends React.Component {
 
     return (
       <div className={classes.projectMainDiv}>
-        {isAuthorized ? (
-          <DndProvider backend={HTML5Backend}>
-            <AddColumnModal
-              isOpen={columnModalOpen}
-              close={this.closeColumnModal}
-              projectId={project?.id}
-              order={columns.length || 0}
+        <DndProvider backend={HTML5Backend}>
+          <AddColumnModal
+            isOpen={columnModalOpen}
+            close={this.closeColumnModal}
+            projectId={project?.id}
+            order={columns.length || 0}
+          />
+          <div>
+            <ConfirmDialog
+              message="This will irreversibly delete this project and all its tasks"
+              open={deleteOpen}
+              confirm={this.deleteProject}
+              deny={this.closeDelete}
             />
             <div className={classes.headerButtons}>
               <div className={classes.teamButtonSection}>
@@ -426,61 +429,18 @@ class Project extends React.Component {
               {this.state.showColumns ? (
                 <div>
                   <Button
-                    variant="outlined"
-                    startIcon={<DeleteForeverIcon />}
-                    onClick={this.openDelete}
-                    className={classes.deleteButton}
+                    className={classes.addColumnButton}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={this.openColumnModal}
                   >
-                    <Hidden smDown>Delete Project</Hidden>
+                    Add Column
                   </Button>
                 </div>
-              </div>
-              <div className={classes.headerDiv}>
-                <Typography variant="h4" style={{ marginBottom: 15 }}>
-                  {project.name}
-                </Typography>
-                <Typography variant="body1">{project.description}</Typography>
-              </div>
-              <div className={classes.chipsContainer}>
-                {priorityArray.map((p) => (
-                  <Chip label={p.label} className={p.class} />
-                ))}
-              </div>
-              <ScrollingComponent
-                spacing={2}
-                className={classes.root}
-                direction="row"
-              >
-                {columns.map((c) => (
-                  <Column
-                    column={c}
-                    key={c.id}
-                    projectId={project.id}
-                    team={teamMembers}
-                    reload={this.getProject}
-                    width={300}
-                  />
-                ))}
-                {this.state.showColumns ? (
-                  <div>
-                    <Button
-                      className={classes.addColumnButton}
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      onClick={this.openColumnModal}
-                    >
-                      Add Column
-                    </Button>
-                  </div>
-                ) : null}
-              </ScrollingComponent>
-            </div>
-          </DndProvider>
-        ) : (
-          <div className={classes.emptyContainer}>
-            <EmptyCard />
+              ) : null}
+            </ScrollingComponent>
           </div>
-        )}
+        </DndProvider>
       </div>
     );
   }
