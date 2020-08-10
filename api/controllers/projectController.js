@@ -27,7 +27,39 @@ exports.check_authorization = async function (req, res, next) {
     return;
   }
 
-  res.status(200).json(successResponse("user is authorized"));
+  try {
+    const projectData = await Project.findAll({
+      where: {
+        name: project_name,
+      },
+    });
+    if (projectData.length) {
+      const {
+        dataValues: { team_id },
+      } = projectData[0];
+
+      const teamCheck = await TeamsUsers.findAll({
+        where: {
+          team_id,
+          user_id: userId,
+        },
+      });
+
+      if (teamCheck.length) {
+        res.status(200).json(successResponse("user is authorized"));
+      } else {
+        res.status(401).json(successResponse("user is unauthorized"));
+      }
+    } else {
+      res
+        .status(404)
+        .json(errorResponse(`project: ${project_name} does not exist`));
+    }
+  } catch (err) {
+    res
+      .status(200)
+      .json(errorResponse("Error occured in checking authorization", err));
+  }
 };
 
 exports.create_project = function (req, res, next) {
