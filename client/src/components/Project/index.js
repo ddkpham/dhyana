@@ -71,27 +71,27 @@ const styles = (theme) => ({
   },
   chip0: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: cyan[50],
   },
   chip1: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: "lightgreen",
   },
   chip2: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: "#CCCC00",
   },
   chip3: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: "orange",
   },
   chip4: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: red[300],
   },
   chip5: {
     color: "white",
-    backgroundColor: "red",
+    backgroundColor: red[600],
   },
 });
 
