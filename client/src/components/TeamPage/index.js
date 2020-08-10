@@ -21,6 +21,7 @@ function TeamPage(props) {
   const { name } = props;
   const [TeamUsers, getTeamUsers] = useState([]);
   const [id, setTeamId] = useState("");
+  const [sessionUserTeams, getSessionUserTeams] = useState([]);
   console.log("TeamUsers", TeamUsers);
   
   const [open, setOpen] = useState(false);
@@ -50,6 +51,21 @@ function TeamPage(props) {
       alert(`Error: ${message}`);
     }
   };
+
+  useEffect(() => {
+    function getTeams() {
+      const url = `${baseURL}/team/all`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("payload", payload);
+          console.log("session user teams ->", payload.data); 
+          getSessionUserTeams(payload.data);
+        })
+        .catch((err) => console.log("project fetch error", err));
+    }
+    getTeams();
+  }, []);
 
   useEffect(() => {
     function getTeam() {
@@ -105,23 +121,29 @@ function TeamPage(props) {
                         {name}
                     </Typography>
                     </div>
-                    <div className="delete-team-btn">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => {
-                          handleClickOpen();
-                        }}        
-                      >
-                        Delete Team
-                      </Button>
-                      <DeleteTeamDialog
-                        open={open}
-                        onClose={handleClose}
-                        id={id}
-                        name={name}
-                      />
-                    </div>
+                    {sessionUserTeams.map((t) => {
+                      return(
+                        <div className="delete-team-btn">
+                        {(t.name === name) ?
+                        (<div>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => {
+                              handleClickOpen();
+                            }}        
+                          >
+                            Delete Team
+                          </Button>
+                          <DeleteTeamDialog
+                            open={open}
+                            onClose={handleClose}
+                            id={id}
+                            name={name}
+                          />
+                        </div>) :null}
+                        </div>)
+                    })}
                   </div>
                     <Typography variant="h5" color="secondary">
                         Team Members
@@ -152,25 +174,33 @@ function TeamPage(props) {
                                     <Typography className="profile-name" variant="h6" color="primary">
                                         @{user.username}
                                     </Typography>
-                                    { (TeamUsers.length > 1)? (
-                                    <Button
-                                      className="delete-member-btn"
-                                      variant="outlined"
-                                      color="primary"
-                                      onClick={()=> deleteTeamMember(user.id)}
-                                    >
-                                      Delete Member
-                                    </Button>
-                                    ):
-                                    <Button
-                                    className="delete-member-btn"
-                                    variant="outlined"
-                                    color="primary"
-                                    disabled
-                                    onClick={()=> deleteTeamMember(user.id)}
-                                  >
-                                    Delete Member
-                                  </Button>}
+                                    {sessionUserTeams.map((t) => {
+                                      return(
+                                      <div>
+                                        {(t.name === name) ? (
+                                        <div>
+                                        { (TeamUsers.length > 1)? (
+                                          <Button
+                                            className="delete-member-btn"
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={()=> deleteTeamMember(user.id)}
+                                          >
+                                            Delete Member
+                                          </Button>
+                                          ):
+                                          (<Button
+                                          className="delete-member-btn"
+                                          variant="outlined"
+                                          color="primary"
+                                          disabled
+                                          onClick={()=> deleteTeamMember(user.id)}
+                                        >
+                                          Delete Member
+                                        </Button>)}
+                                      </div>): null}
+                                    </div>)
+                                  })}
                                 </div>
                                 </div>
                             </CardContent>
