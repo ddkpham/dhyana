@@ -114,7 +114,7 @@ const ColumnMenu = ({anchorEl, handleClose, sort, setSort, filters, filterOption
 					</MenuItem>
 				))}
 				</div>
-				<MenuItem><Button variant="outlined" classes={{outlined: classes.deleteButton}} onClick={deleteFunction}>Delete</Button></MenuItem>
+				<MenuItem><Button variant="outlined" classes={{outlined: classes.deleteButton}} onClick={deleteFunction}>Delete Column</Button></MenuItem>
     </Menu>
   );
 }
