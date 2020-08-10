@@ -66,6 +66,7 @@ class NewProject extends React.Component {
             label="Name"
             variant="outlined"
             value={name}
+            inputProps={{ maxLength: 255 }}
             onChange={(event) => {
               this.setState({ name: event.target.value });
             }}
@@ -73,6 +74,7 @@ class NewProject extends React.Component {
           <TextField
             label="Description"
             variant="outlined"
+            inputProps={{ maxLength: 1023 }}
             value={description}
             onChange={(event) => {
               this.setState({ description: event.target.value });
