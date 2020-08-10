@@ -1,10 +1,13 @@
 .teamcard-members-wrapper {
   display: flex;
-  justify-content: flex-start;
+  // justify-content: flex-start;
+  overflow-x: scroll;
+  padding-right: 5px;
+  height: 55px;
 }
 
 .teamcard-card-media {
-  width: 100px;
+  width: 150px;
   cursor: pointer;
 }
 
@@ -14,9 +17,4 @@
   padding: 0;
   padding-bottom: 0 !important;
   align-items: stretch;
-  width: 20vw;
-}
-
-.team-card-content {
-  margin-left: 10px;
 }
