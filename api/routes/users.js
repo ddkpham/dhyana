@@ -2,6 +2,9 @@ var express = require("express");
 var router = express.Router();
 var userController = require("../controllers/userController");
 const { body, param } = require("express-validator");
+const bcrypt = require("bcrypt");
+
+const saltRounds = 10;
 
 const authMiddleware = (req, res, next) => {
   const { userId } = req.session;
@@ -14,6 +17,11 @@ const authMiddleware = (req, res, next) => {
 };
 
 router.get("/create", function (req, res, next) {
+  const myPlaintextPassword = "hello world";
+
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const hash = bcrypt.hashSync(myPlaintextPassword, salt);
+  const result = bcrypt.compareSync(myPlaintextPassword, hash); // true
   res.json({
     confirmation: "success",
     message: "get create user",
