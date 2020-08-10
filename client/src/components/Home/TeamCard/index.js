@@ -56,7 +56,7 @@ class TeamCard extends React.Component {
   };
 
   render() {
-    const { name } = this.props;
+    const { name, classes } = this.props;
     const { info, users } = this.state;
     const imgIndex = Math.floor(Math.random() * team_images.length);
 
