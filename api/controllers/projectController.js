@@ -249,6 +249,36 @@ exports.view_project = function (req, res, next) {
     });
 };
 
+exports.edit_project = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.edit_project -> req.body", req.body);
+  const project_id = req.params.project_id;
+  const { name, description } = req.body;
+
+  if (!project_id) {
+    res.status(400).json(errorResponse("missing project id"));
+    return;
+  }
+
+  Project.update(
+    {
+      name,
+      description,
+    },
+    {
+      where: { id: project_id },
+    }
+  )
+    .then(() => {
+      res.status(200).json(successResponse("project updated successfully."));
+      return;
+    })
+    .catch((err) => {
+      res.status(400).json(errorResponse("Project update error", err));
+      return;
+    });
+};
+
 exports.view_user_specific = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("exports.view_user_specific -> req.session", req.session);

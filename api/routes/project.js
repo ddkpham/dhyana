@@ -31,6 +31,16 @@ router.get(
   projectController.view_project
 );
 
+router.post(
+  "/edit/:project_id",
+  [
+    param("project_id").isLength({ min: 1 }),
+    body("name").isLength({ min: 1 }).escape(),
+    body("description").isLength({ min: 1 }).escape(),
+  ],
+  projectController.edit_project
+);
+
 ////////////////////////////// Project Column related routes
 
 //TEMP for debuggin

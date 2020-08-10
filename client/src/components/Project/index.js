@@ -15,6 +15,12 @@ import GridList from "@material-ui/core/GridList";
 import withScrolling from "react-dnd-scrolling";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Hidden from "@material-ui/core/Hidden";
+import EditIcon from "@material-ui/icons/Edit";
+import SaveIcon from "@material-ui/icons/Save";
+import Popover from "@material-ui/core/Popover";
+import MenuList from "@material-ui/core/MenuList";
+import MenuItem from "@material-ui/core/MenuItem";
+import Input from "@material-ui/core/Input";
 import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
 import EmptyCard from "../EmptyCard";
@@ -69,9 +75,12 @@ const styles = (theme) => ({
   smallSectionProject: {
     display: "flex",
     flexWrap: "wrap",
-    flexDirection: "column",
+    flexDirection: "row",
     padding: 10,
     justifyContent: "space-evenly",
+    "& .MuiButtonBase-root": {
+      margin: 5,
+    },
   },
   deleteButton: {
     color: "red",
@@ -139,6 +148,8 @@ class Project extends React.Component {
     columnModalOpen: false,
     showColumns: false,
     deleteOpen: false,
+    name: "",
+    description: "",
   };
 
   async componentWillMount() {
@@ -187,6 +198,10 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -202,6 +217,37 @@ class Project extends React.Component {
 
   closeDelete = () => {
     this.setState({ deleteOpen: false });
+  };
+
+  editProject = () => {
+    const { name, description, project } = this.state;
+
+    const url = `${baseURL}/project/edit/${project.id}`;
+    const newName = name.length ? name : project.name;
+    const newDescription = description.length
+      ? description
+      : project.description;
+    const body = {
+      name: newName,
+      description: newDescription,
+    };
+
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("edit project success", data);
+        window.location.href = `${clientBaseURL}/project/${newName}`;
+      })
+      .catch((err) => console.log("edit project error", err));
+  };
+
+  openEdit = (event) => {
+    const { project } = this.state;
+    this.setState({ editAnchor: event.currentTarget });
+  };
+
+  closeEdit = () => {
+    this.setState({ editAnchor: null });
   };
 
   getColumns = (projectId) => {
@@ -244,7 +290,10 @@ class Project extends React.Component {
       teamMembers,
       columnModalOpen,
       deleteOpen,
+      editAnchor,
     } = this.state;
+    console.log("Project -> render -> project", project);
+
     const { classes } = this.props;
     const priorityArray = [
       { label: "None", class: classes.chip0 },
@@ -256,7 +305,8 @@ class Project extends React.Component {
     ];
     const isAuthorized = project.name ? true : false;
 
-    console.log("Project -> render -> project", project);
+    const editOpen = Boolean(editAnchor);
+
     return (
       <div className={classes.projectMainDiv}>
         {isAuthorized ? (
@@ -267,24 +317,114 @@ class Project extends React.Component {
               projectId={project?.id}
               order={columns.length || 0}
             />
-            <div>
-              <ConfirmDialog
-                message="This will irreversibly delete this project and all its tasks"
-                open={deleteOpen}
-                confirm={this.deleteProject}
-                deny={this.closeDelete}
-              />
-              <div className={classes.headerButtons}>
-                <div className={classes.teamButtonSection}>
-                  <Typography variant="h6">Team Members</Typography>
-                  <ProjectTeam
-                    teamMembers={teamMembers}
-                    teamId={project.team_id}
-                    reload={(id) => this.getTeamUserArray(id)}
-                  />
-                </div>
-                <div className={classes.smallSectionProject}>
-                  <ProjectToggle />
+            <div className={classes.headerButtons}>
+              <div className={classes.teamButtonSection}>
+                <Typography variant="h6">Team Members</Typography>
+                <ProjectTeam
+                  teamMembers={teamMembers}
+                  teamId={project.team_id}
+                  reload={(id) => this.getTeamUserArray(id)}
+                />
+              </div>
+              <div className={classes.smallSectionProject}>
+                <ProjectToggle />
+                <Popover
+                  id="search-results"
+                  anchorEl={editAnchor}
+                  disableAutoFocus
+                  disableEnforceFocus
+                  open={editOpen}
+                  onClose={this.closeEdit}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  <MenuList>
+                    <MenuItem>
+                      <Input
+                        variant="outlined"
+                        placeholder="Name"
+                        defaultValue={project.name}
+                        type="text"
+                        onChange={(event) => {
+                          this.setState({ name: event.target.value });
+                        }}
+                      />
+                    </MenuItem>
+                    <MenuItem>
+                      <Input
+                        variant="outlined"
+                        placeholder="Description"
+                        defaultValue={project.description}
+                        type="text"
+                        multiline
+                        rows={4}
+                        onChange={(event) => {
+                          this.setState({ description: event.target.value });
+                        }}
+                      />
+                    </MenuItem>
+                    <MenuItem>
+                      <Button
+                        variant="outlined"
+                        startIcon={<SaveIcon />}
+                        onClick={this.editProject}
+                      >
+                        <Hidden smDown>Save</Hidden>
+                      </Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button
+                        variant="outlined"
+                        startIcon={<DeleteForeverIcon />}
+                        onClick={this.openDelete}
+                        className={classes.deleteButton}
+                      >
+                        <Hidden smDown>Delete Project</Hidden>
+                      </Button>
+                    </MenuItem>
+                  </MenuList>
+                </Popover>
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={this.openEdit}
+                  className={classes.editButton}
+                >
+                  <Hidden smDown>Edit Project</Hidden>
+                </Button>
+              </div>
+            </div>
+            <div className={classes.headerDiv}>
+              <Typography variant="h4" style={{ marginBottom: 15 }}>
+                {project.name}
+              </Typography>
+              <Typography variant="h6" className="hide-short">
+                {project.description || ""}
+              </Typography>
+            </div>
+            <ScrollingComponent
+              spacing={2}
+              className={classes.root}
+              direction="row"
+            >
+              {columns.map((c) => (
+                <Column
+                  column={c}
+                  key={c.id}
+                  projectId={project.id}
+                  team={teamMembers}
+                  reload={this.getProject}
+                  width={300}
+                />
+              ))}
+              {this.state.showColumns ? (
+                <div>
                   <Button
                     variant="outlined"
                     startIcon={<DeleteForeverIcon />}
