@@ -333,6 +333,7 @@ class Project extends React.Component {
                       <Input
                         variant="outlined"
                         placeholder="Name"
+                        defaultValue={project.name}
                         type='text'
                         onChange={(event) => {
                           this.setState({name: event.target.value})
@@ -343,6 +344,7 @@ class Project extends React.Component {
                       <Input
                         variant="outlined"
                         placeholder="Description"
+                        defaultValue={project.description}
                         type='text'
                         multiline
                         onChange={(event) => {
