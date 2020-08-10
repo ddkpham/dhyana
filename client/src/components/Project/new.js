@@ -77,9 +77,7 @@ class NewProject extends React.Component {
               variant="outlined"
               value={name}
               inputProps={{ maxLength: 255 }}
-              onChange={(event) => {
-                this.setState({ name: event.target.value });
-              }}
+              onChange={this.onChangeProjectName}
             />
             <TextField
               label="Description"
@@ -101,44 +99,28 @@ class NewProject extends React.Component {
               <Select
                 labelId="team-select-label"
                 variant="outlined"
-                value={description}
+                value={team_id}
                 onChange={(event) => {
-                  this.setState({ description: event.target.value });
+                  this.setState({ team_id: event.target.value });
                 }}
-              />
-              <FormControl>
-                <InputLabel
-                  className="select-label"
-                  htmlFor="team_id"
-                  id="team-select-label"
-                >
-                  Team
-                </InputLabel>
-                <Select
-                  labelId="team-select-label"
-                  variant="outlined"
-                  value={team_id}
-                  onChange={(event) => {
-                    this.setState({ team_id: event.target.value });
-                  }}
-                >
-                  {team_options.map((t) => {
-                    return <MenuItem value={t.id}>{t.name}</MenuItem>;
-                  })}
-                  <MenuItem value="">None</MenuItem>
-                </Select>
-              </FormControl>
-              <div className="create-project-button">
-                <Button
-                  className="create-btn"
-                  onClick={this.create}
-                  variant="outlined"
-                  color="primary"
-                >
-                  Create
-                </Button>
-              </div>
+              >
+                {team_options.map((t) => {
+                  return <MenuItem value={t.id}>{t.name}</MenuItem>;
+                })}
+                <MenuItem value="">None</MenuItem>
+              </Select>
             </FormControl>
+            <div className="create-project-button">
+              <Button
+                className="create-btn"
+                onClick={this.create}
+                variant="outlined"
+                color="primary"
+              >
+                Create
+              </Button>
+            </div>
+            {/* </FormControl> */}
           </div>
         </Card>
       </div>
