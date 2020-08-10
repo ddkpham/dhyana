@@ -1,0 +1,32 @@
+.create-project-button
+{
+    display: flex;
+    justify-content: center;
+}
+
+.create-btn{
+    width: 150px;
+}
+
+.main-content-div{
+    display: flex;
+    justify-self: center;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+}
+
+.page-title{
+    display: flex;
+    justify-content: center;
+}
+
+.create-project-wrapper{
+    width: 40%;
+    margin: 0 auto !important;
+    padding-bottom: 10px;
+}
+
+#main-project-div {
+    padding: 50px;
+  }
