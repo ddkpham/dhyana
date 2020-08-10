@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
     dropWrapper: {
         height: "100%",
-        margin: "10px"
+        margin: "0 10px"
     },
     onHover: {
         backgroundColor: theme.colours.mint
