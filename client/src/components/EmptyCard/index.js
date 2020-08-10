@@ -11,8 +11,8 @@ const useStyles = makeStyles({
   },
   media: {
     height: 140,
-    width: "30vw",
-    height: "40vh",
+    width: "100%",
+    height: "100%",
   },
 });
 
@@ -22,11 +22,13 @@ function EmptyCard(props) {
 
   return (
     <Card raised className="empty-card-container">
-      <CardMedia
-        className={classes.media}
-        image={empty}
-        title="Contemplative Reptile"
-      />
+      <div>
+        <img
+          className={classes.media}
+          src={empty}
+          title="Contemplative Reptile"
+        />
+      </div>
     </Card>
   );
 }

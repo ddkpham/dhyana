@@ -16,7 +16,27 @@ import { team_images } from "../../../static/teams/teamImages";
 const styles = (theme) => ({
   teamCardContainer: {
     overflowX: "scroll",
+    justifyContent: "right",
   },
+  mainCard: {
+    display: "flex",
+    flexDirection: "column",
+    width: 335,
+    height: 160,
+  },
+  mainCardDiv: {
+    width: "100%",
+  },
+  contentDiv: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+  },
+  contentTextDiv: {
+    width: 235,
+    padding: 10,
+    overflowX: "scroll",
+  }
 });
 
 class TeamCard extends React.Component {
@@ -63,34 +83,42 @@ class TeamCard extends React.Component {
 
     return (
       <Card raised
-      onClick={() => {
-        window.location.href = `${clientBaseURL}/team/${name}`;
-      }}>
-        <CardContent className="teamcard-container">
-          <CardMedia
-            className="teamcard-card-media"
-            image={team_images[imgIndex]}
-            title="Live from space album cover"
-          />
-          <div className={ classes.teamCardContainer }>
-          <div className="team-card-content">
-            <CardActionArea>
-              <Typography variant="h5" color="primary">
-                {name}
-              </Typography>
-              <Typography variant="body1" color="textSecondary">
-                projects: {info.projects ? info.projects.length : null}
-              </Typography>
-              <Typography variant="body2">members</Typography>
-            </CardActionArea>
-            <div className="teamcard-members-wrapper">
-              {users.map((user) => (
-                <UserAvatar user={user}/>
-              ))}
+        onClick={() => {
+          window.location.href = `${clientBaseURL}/team/${name}`;
+        }}
+        className={ classes.mainCard }
+      >
+        
+          <CardContent className="teamcard-container">
+            <div className={ classes.teamCardContainer }>
+              <div className="team-card-content">
+                <CardActionArea>
+                <div className={classes.contentDiv}>
+                  <img
+                    className="teamcard-card-media"
+                    src={team_images[imgIndex]}
+                    title="Live from space album cover"
+                    style={{width: 100, height: 100}}
+                  />
+                  <div className={classes.contentTextDiv}>
+                    <Typography noWrap gutterBottom variant="h5" color="primary">
+                      {name}
+                    </Typography>
+                    <Typography variant="body1" color="textSecondary">
+                      projects: {info.projects ? info.projects.length : null}
+                    </Typography>
+                  </div>
+                </div>
+                  
+                </CardActionArea>
+                <div className="teamcard-members-wrapper">
+                  {users.map((user) => (
+                    <UserAvatar user={user}/>
+                  ))}
+                </div>
+              </div>
             </div>
-            </div>
-          </div>
-        </CardContent>
+          </CardContent>
       </Card>
     );
   }

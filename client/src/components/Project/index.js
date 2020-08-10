@@ -23,6 +23,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
 import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
+import EmptyCard from "../EmptyCard";
 import { red, cyan, grey } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
@@ -132,6 +133,10 @@ const styles = (theme) => ({
     textAlign: "center",
     marginBottom: 10,
   },
+  emptyContainer: {
+    display: "flex",
+    justifyContent: "center",
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -148,11 +153,22 @@ class Project extends React.Component {
   };
 
   async componentWillMount() {
-    this.getProject();
+    const { name } = this.props;
+    try {
+      const url = `${baseURL}/project/check-authorization`;
+      const body = { project_name: name };
+      const response = await postCall(url, body);
+      const data = await response.json();
+      if (data.success) {
+        this.getProject();
+      }
+    } catch (err) {
+      console.log("Project -> componentWillMount -> err", err);
+    }
   }
 
   async componentWillUnmount() {
-    this.state.showColumns = false;
+    this.setState({showColumns: false})
   }
 
   getProject = () => {
@@ -170,11 +186,11 @@ class Project extends React.Component {
         this.setState({ project });
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
-        this.state.showColumns = true;
+        this.setState({showColumns: true})
       })
       .catch((err) => {
-        console.log("project fetch error", err);
-        this.state.showColumns = true;
+        console.log("project fetch error", err)
+        this.setState({showColumns: true})
       });
   };
 
@@ -284,146 +300,158 @@ class Project extends React.Component {
       { label: "Critical", class: classes.chip4 },
       { label: "Blocker", class: classes.chip5 },
     ];
+    const isAuthorized = project.name ? true : false;
 
     const editOpen = Boolean(editAnchor);
 
     return (
       <div className={classes.projectMainDiv}>
-        <DndProvider backend={HTML5Backend}>
-          <AddColumnModal
-            isOpen={columnModalOpen}
-            close={this.closeColumnModal}
-            projectId={project?.id}
-            order={columns.length || 0}
-          />
-          <div>
-            <ConfirmDialog
-              message="This will irreversibly delete this project and all its tasks"
-              open={deleteOpen}
-              confirm={this.deleteProject}
-              deny={this.closeDelete}
+        {isAuthorized ? (
+          <DndProvider backend={HTML5Backend}>
+            <AddColumnModal
+              isOpen={columnModalOpen}
+              close={this.closeColumnModal}
+              projectId={project?.id}
+              order={columns.length || 0}
             />
-            <div className={classes.headerButtons}>
-              <div className={classes.teamButtonSection}>
-                <Typography variant="h6">Team Members</Typography>
-                <ProjectTeam
-                  teamMembers={teamMembers}
-                  teamId={project.team_id}
-                  reload={(id) => this.getTeamUserArray(id)}
-                />
-              </div>
-              <div className={classes.smallSectionProject}>
-                <ProjectToggle />
-                <Popover
-                  id="search-results"
-                  anchorEl={editAnchor}
-                  disableAutoFocus
-                  disableEnforceFocus
-                  open={editOpen}
-                  onClose={this.closeEdit}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                >
-                  <MenuList>
-                    <MenuItem>
-                      <Input
-                        variant="outlined"
-                        placeholder="Name"
-                        defaultValue={project.name}
-                        type="text"
-                        onChange={(event) => {
-                          this.setState({ name: event.target.value });
-                        }}
-                      />
-                    </MenuItem>
-                    <MenuItem>
-                      <Input
-                        variant="outlined"
-                        placeholder="Description"
-                        defaultValue={project.description}
-                        type="text"
-                        multiline
-                        rows={4}
-                        onChange={(event) => {
-                          this.setState({ description: event.target.value });
-                        }}
-                      />
-                    </MenuItem>
-                    <MenuItem>
-                      <Button
-                        variant="outlined"
-                        startIcon={<SaveIcon />}
-                        onClick={this.editProject}
-                      >
-                        <Hidden smDown>Save</Hidden>
-                      </Button>
-                    </MenuItem>
-                    <MenuItem>
-                      <Button
-                        variant="outlined"
-                        startIcon={<DeleteForeverIcon />}
-                        onClick={this.openDelete}
-                        className={classes.deleteButton}
-                      >
-                        <Hidden smDown>Delete Project</Hidden>
-                      </Button>
-                    </MenuItem>
-                  </MenuList>
-                </Popover>
-                <Button
-                  variant="outlined"
-                  startIcon={<EditIcon />}
-                  onClick={this.openEdit}
-                  className={classes.editButton}
-                >
-                  <Hidden smDown>Edit Project</Hidden>
-                </Button>
-              </div>
-            </div>
-            <div className={classes.headerDiv}>
-              <Typography variant="h4" style={{ marginBottom: 15 }}>
-                {project.name}
-              </Typography>
-              <Typography variant="h6" className="hide-short">
-                {project.description || ""}
-              </Typography>
-            </div>
-            <ScrollingComponent
-              spacing={2}
-              className={classes.root}
-              direction="row"
-            >
-              {columns.map((c) => (
-                <Column
-                  column={c}
-                  key={c.id}
-                  projectId={project.id}
-                  team={teamMembers}
-                  reload={this.getProject}
-                  width={300}
-                />
-              ))}
-              {this.state.showColumns ? (
-                <div>
-                  <Button
-                    className={classes.addColumnButton}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={this.openColumnModal}
+            <div>
+              <ConfirmDialog
+                message="This will irreversibly delete this project and all its tasks"
+                open={deleteOpen}
+                confirm={this.deleteProject}
+                deny={this.closeDelete}
+              />
+              <div className={classes.headerButtons}>
+                <div className={classes.teamButtonSection}>
+                  <Typography variant="h6">Team Members</Typography>
+                  <ProjectTeam
+                    teamMembers={teamMembers}
+                    teamId={project.team_id}
+                    reload={(id) => this.getTeamUserArray(id)}
+                  />
+                </div>
+                <div className={classes.smallSectionProject}>
+                  <ProjectToggle />
+                  <Popover
+                    id="search-results"
+                    anchorEl={editAnchor}
+                    disableAutoFocus
+                    disableEnforceFocus
+                    open={editOpen}
+                    onClose={this.closeEdit}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
                   >
-                    Add Column
+                    <MenuList>
+                      <MenuItem>
+                        <Input
+                          variant="outlined"
+                          placeholder="Name"
+                          defaultValue={project.name}
+                          type="text"
+                          onChange={(event) => {
+                            this.setState({ name: event.target.value });
+                          }}
+                        />
+                      </MenuItem>
+                      <MenuItem>
+                        <Input
+                          variant="outlined"
+                          placeholder="Description"
+                          defaultValue={project.description}
+                          type="text"
+                          multiline
+                          rows={4}
+                          onChange={(event) => {
+                            this.setState({ description: event.target.value });
+                          }}
+                        />
+                      </MenuItem>
+                      <MenuItem>
+                        <Button
+                          variant="outlined"
+                          startIcon={<SaveIcon />}
+                          onClick={this.editProject}
+                        >
+                          <Hidden smDown>Save</Hidden>
+                        </Button>
+                      </MenuItem>
+                      <MenuItem>
+                        <Button
+                          variant="outlined"
+                          startIcon={<DeleteForeverIcon />}
+                          onClick={this.openDelete}
+                          className={classes.deleteButton}
+                        >
+                          <Hidden smDown>Delete Project</Hidden>
+                        </Button>
+                      </MenuItem>
+                    </MenuList>
+                  </Popover>
+                  <Button
+                    variant="outlined"
+                    startIcon={<EditIcon />}
+                    onClick={this.openEdit}
+                    className={classes.editButton}
+                  >
+                    <Hidden smDown>Edit Project</Hidden>
                   </Button>
                 </div>
-              ) : null}
-            </ScrollingComponent>
+              </div>
+              <div className={classes.headerDiv}>
+                <Typography variant="h4" style={{ marginBottom: 15 }}>
+                  {project.name}
+                </Typography>
+                <Typography variant="h6" className="hide-short">
+                  {project.description || ""}
+                </Typography>
+                {priorityArray.map((priority) => (
+                  <Chip label={priority.label} className={priority.class} />
+                ))}
+              </div>
+              <ScrollingComponent
+                spacing={2}
+                className={classes.root}
+                direction="row"
+              >
+                {columns.map((c) => (
+                  <Column
+                    column={c}
+                    key={c.id}
+                    projectId={project.id}
+                    team={teamMembers}
+                    reload={this.getProject}
+                    width={300}
+                  />
+                ))}
+                {this.state.showColumns ? (
+                  <div>
+                    <Button
+                      className={classes.addColumnButton}
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={this.openColumnModal}
+                    >
+                      Add Column
+                    </Button>
+                  </div>
+                ) : null}
+              </ScrollingComponent>
+            </div>
+          </DndProvider>
+        ) : (
+          <div className={classes.emptyContainer}>
+            {" "}
+            <EmptyCard />
+            {" "}
           </div>
-        </DndProvider>
+        )}
       </div>
     );
   }
