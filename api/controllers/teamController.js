@@ -113,6 +113,59 @@ exports.delete_team = async function (req, res, next) {
   }
 };
 
+exports.delete_user_from_team = async function (req, res, next) {
+  console.log("exports.delete_user_from_team -> req.body", req.body);
+
+  body(req.body).trim().escape().not().isEmpty();
+  const user_id = req.body.user_id;
+  const team_id = req.body.team_id;
+
+  const errors = validationResult(req.body);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  }
+
+  if (!user_id || !team_id) {
+    res.status(400).json(errorResponse("missing team id or user id"));
+    return;
+  }
+
+  // managed transaction - sequelize will automatically handle commits and rollbacks
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(async (transaction) => {
+      // remove user from team.
+      const deletedUserFromTeam = await TeamsUsers.destroy({
+        where: {
+          team_id: team_id,
+          user_id: user_id,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted user from teams ${deletedUserFromTeam}`);
+
+      return deletedUserFromTeam;
+    });
+    console.log("finished transaction....");
+    console.log(
+      "exports.delete_user_from_team -> Number of deleted users: ",
+      result
+    );
+    res
+      .status(200)
+      .json(successResponse("successfully deleted user from team!"));
+  } catch (err) {
+    console.log("err", err);
+    res
+      .status(200)
+      .json(errorResponse("Error occured in deleting user from team", err));
+  }
+};
+
 exports.get_users = function (req, res, next) {
   console.log("exports.get_user -> req.params", req.params);
   const team_id = req.params.id.trim();
