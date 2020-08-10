@@ -10,69 +10,77 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
-import GridList from '@material-ui/core/GridList';
-import withScrolling from 'react-dnd-scrolling';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import Hidden from '@material-ui/core/Hidden';
-import ProjectTeam from "./teamList"
+import GridList from "@material-ui/core/GridList";
+import withScrolling from "react-dnd-scrolling";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import Hidden from "@material-ui/core/Hidden";
+import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   headerButtons: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     justifyContent: "space-between",
     paddingBottom: 15,
-    alignItems: 'flex-start',
-    height: '10%',
+    alignItems: "flex-start",
+    height: "10%",
     minHeight: 45,
     marginBottom: 5,
   },
   root: {
-    display: 'flex',
-    flexWrap: 'nowrap',
+    display: "flex",
+    flexWrap: "nowrap",
     height: "80%",
-    justifyContent: 'left',
+    justifyContent: "left",
     border: "1px solid grey",
     borderRadius: 4,
-    padding: '20px 0',
+    padding: "20px 0",
   },
   projectMainDiv: {
     width: "100%",
     height: "100%",
-    justifyContent: 'center',
-    alignContent: 'center',
+    justifyContent: "center",
+    alignContent: "center",
   },
   addColumnButton: {
     margin: 10,
-    width: '200px',
-    height: '50px',
+    width: "200px",
+    height: "50px",
   },
   titleSection: {
-    width: '60%',
+    width: "60%",
     margin: 10,
   },
   smallSection: {
-    display: 'flex',
-    flexWrap: 'wrap',
+    display: "flex",
+    flexWrap: "wrap",
     padding: 10,
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
+  },
+  smallSectionProject: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    padding: 10,
+    justifyContent: "space-evenly",
   },
   deleteButton: {
-    color: 'red',
-    borderColor: 'red',
+    color: "red",
+    borderColor: "red",
     [theme.breakpoints.down("sm")]: {
-      '& .MuiButton-startIcon': {
+      "& .MuiButton-startIcon": {
         margin: 0,
-      }
-    }
+      },
+    },
+    marginTop: "10px",
   },
   teamButtonSection: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    flexDirection: 'column',
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
     padding: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
     textAlign: "center",
     border: "1px solid grey",
     borderRadius: 4,
@@ -80,12 +88,11 @@ const styles = (theme) => ({
   headerDiv: {
     textAlign: "center",
     marginBottom: 10,
-  }
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
 class Project extends React.Component {
-
   state = {
     project: {},
     columns: [],
@@ -121,7 +128,7 @@ class Project extends React.Component {
         this.state.showColumns = true;
       })
       .catch((err) => {
-        console.log("project fetch error", err)
+        console.log("project fetch error", err);
         this.state.showColumns = true;
       });
   };
@@ -130,7 +137,7 @@ class Project extends React.Component {
     const { project } = this.state;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
-    console.log('hey toria body', body)
+    console.log("hey toria body", body);
     postCall(url, body)
       .then((response) => response.json())
       .then((data) => {
@@ -141,12 +148,12 @@ class Project extends React.Component {
   };
 
   openDelete = () => {
-    this.setState({deleteOpen: true})
-  }
+    this.setState({ deleteOpen: true });
+  };
 
   closeDelete = () => {
-    this.setState({deleteOpen: false})
-  }
+    this.setState({ deleteOpen: false });
+  };
 
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
@@ -171,7 +178,6 @@ class Project extends React.Component {
       .catch((err) => console.log("column fetch error", err));
   };
 
-
   closeColumnModal = () => {
     const { project } = this.state;
     this.setState({ columnModalOpen: false });
@@ -183,7 +189,13 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, teamMembers, columnModalOpen, deleteOpen } = this.state;
+    const {
+      project,
+      columns,
+      teamMembers,
+      columnModalOpen,
+      deleteOpen,
+    } = this.state;
     const { classes } = this.props;
 
     console.log("Project -> render -> project", project);
@@ -197,35 +209,38 @@ class Project extends React.Component {
             order={columns.length || 0}
           />
           <div>
-            <ConfirmDialog message='This will irreversibly delete this project and all its tasks' open={deleteOpen} confirm={this.deleteProject} deny={this.closeDelete}/>
+            <ConfirmDialog
+              message="This will irreversibly delete this project and all its tasks"
+              open={deleteOpen}
+              confirm={this.deleteProject}
+              deny={this.closeDelete}
+            />
             <div className={classes.headerButtons}>
               <div className={classes.teamButtonSection}>
                 <Typography variant="h6">Team Members</Typography>
-                <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+                <ProjectTeam
+                  teamMembers={teamMembers}
+                  teamId={project.team_id}
+                  reload={(id) => this.getTeamUserArray(id)}
+                />
               </div>
-              <div className={classes.smallSection}>
+              <div className={classes.smallSectionProject}>
+                <ProjectToggle />
                 <Button
                   variant="outlined"
-                  startIcon={<DeleteForeverIcon/>}
+                  startIcon={<DeleteForeverIcon />}
                   onClick={this.openDelete}
                   className={classes.deleteButton}
                 >
-                  <Hidden smDown>
-                    Delete Project
-                  </Hidden>
+                  <Hidden smDown>Delete Project</Hidden>
                 </Button>
-              </div>
-              <div className={classes.smallSection}>
-                <ProjectToggle />
               </div>
             </div>
             <div className={classes.headerDiv}>
-              <Typography variant="h4" style={{marginBottom: 15}}>
+              <Typography variant="h4" style={{ marginBottom: 15 }}>
                 {project.name}
               </Typography>
-              <Typography variant="body1">
-                {project.description}
-              </Typography>
+              <Typography variant="body1">{project.description}</Typography>
             </div>
             <ScrollingComponent
               spacing={2}
@@ -243,17 +258,17 @@ class Project extends React.Component {
                 />
               ))}
               {this.state.showColumns ? (
-              <div>
-                <Button
-                  className={classes.addColumnButton}
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.openColumnModal}
-                >
-                  Add Column
-                </Button>
-              </div>
-              ) : (null)}
+                <div>
+                  <Button
+                    className={classes.addColumnButton}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={this.openColumnModal}
+                  >
+                    Add Column
+                  </Button>
+                </div>
+              ) : null}
             </ScrollingComponent>
           </div>
         </DndProvider>
