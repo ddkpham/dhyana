@@ -15,14 +15,31 @@ import "./index.scss";
 
 const styles = (theme) => ({
   homeRoot: {
-    padding: "5px",
+    padding: 5,
   },
-  projectWrapper: {
-    display: "inline-block",
+  mainWrapper: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    overflowX: "scroll",
+    // backgroundColor: "blue",
+    height: "100%",
   },
   title: {
     textAlign: "center",
   },
+  teamsColumn: {
+    display: "flex",
+    flexDirection: "column",
+    // backgroundColor: "grey",
+    height: "100%",
+  },
+  projectsColumn: {
+    display: "flex",
+    flexDirection: "column",
+    // backgroundColor: "green",
+    height: "100%",
+  }
 });
 
 class Home extends React.Component {
@@ -36,7 +53,7 @@ class Home extends React.Component {
   }
 
   getProjects = () => {
-    const url = `${baseURL}/project/all`;
+    const url = `${baseURL}/project/user-specific/all`;
     getCall(url)
       .then((response) => response.json())
       .then((data) => {
@@ -68,14 +85,13 @@ class Home extends React.Component {
 
     return (
       <div className={classes.homeRoot}>
-        <div className={classes.projectWrapper}>
-          <Typography variant="h4" color="primary">
-            Dashboard
-          </Typography>
-          <br />
+        <Typography variant="h4" color="primary" gutterBottom>
+          Dashboard
+        </Typography>
+        <div className={classes.mainWrapper}>
+          
 
-          <div className="home-content-wrapper">
-            <div className="home-teams">
+            <div className={classes.teamsColumn}>
               <Typography
                 variant="h4"
                 color="secondary"
@@ -83,39 +99,54 @@ class Home extends React.Component {
               >
                 Teams
               </Typography>
+
               {teams.map((team) => (
                 <TeamCard name={team.name} id={team.id} />
               ))}
+
+
+              {teams.map((t) => (
+                <Fragment>
+                  {projects.map((p) =>
+                    t.id === p.team_id ? (
+                      <ProjectCard key={p.id} project={p} team={t.name} />
+                    ) : null
+                  )}
+                </Fragment>
+              ))}
+              <div>
+                <Card raised className="home-project-add-btn">
+                  <CardActionArea href={"/create-team"}>
+                    <CardContent>
+                      <Typography variant="h5" color="textSecondary">
+                        <AddIcon />
+                        Add Team
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </div>
             </div>
-            <div className="home-projects-container">
-              <Typography
-                variant="h4"
-                color="secondary"
-                className={userProjects.length === 1 ? "" : classes.title}
-              >
-                Projects
-              </Typography>
-              <div className="home-projects-wrapper">
-                {teams.map((t) => (
-                  <Fragment>
-                    {projects.map((p) =>
-                      t.id === p.team_id ? (
-                        <ProjectCard key={p.id} project={p} team={t.name} />
-                      ) : null
-                    )}
-                  </Fragment>
-                ))}
+
+
+
+                
+
+              <div className={classes.projectsColumn}>
+
+                <Typography
+                  variant="h4"
+                  color="secondary"
+                  className={userProjects.length === 1 ? "" : classes.title}
+                >
+                  Projects
+                </Typography>
+
                 <div className="empty-projects-container">
                   {noProjects ? <EmptyCard /> : null}
                 </div>
-              </div>
-              <div
-                className={
-                  userProjects.length == 1
-                    ? "home-add-project-btn--single"
-                    : "home-add-project-btn"
-                }
-              >
+
+                {this.state.teams.length >= 1 ? (
                 <Card raised className="home-project-add-btn">
                   <CardActionArea href={"/project/new"}>
                     <CardContent>
@@ -126,9 +157,9 @@ class Home extends React.Component {
                     </CardContent>
                   </CardActionArea>
                 </Card>
+                ) : (null)}
               </div>
-            </div>
-          </div>
+            
         </div>
       </div>
     );
