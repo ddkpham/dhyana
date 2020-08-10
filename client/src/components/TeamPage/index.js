@@ -1,4 +1,4 @@
-import { baseURL } from "../../config/settings";
+import { baseURL, clientBaseURL } from "../../config/settings";
 import React, { useState, useEffect, Fragment } from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -9,9 +9,10 @@ import CardContent from "@material-ui/core/CardContent";
 import { images } from "../../static/finalspace/avatars";
 
 import "./index.scss";
+import DeleteTeamDialog from "./DeleteTeamDialog";
 import ProjectCard from "../Project/card";
 import { useHistory } from "react-router-dom";
-import { getCall } from "../../apiCalls/apiCalls";
+import { getCall, postCall } from "../../apiCalls/apiCalls";
 
 
 function TeamPage(props) {
@@ -19,7 +20,52 @@ function TeamPage(props) {
   const [TeamInfo, setTeamInfo] = useState([]);
   const { name } = props;
   const [TeamUsers, getTeamUsers] = useState([]);
+  const [id, setTeamId] = useState("");
+  const [sessionUserTeams, getSessionUserTeams] = useState([]);
   console.log("TeamUsers", TeamUsers);
+  
+  const [open, setOpen] = useState(false);
+	
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
+  const deleteTeamMember = async(user_id) => {
+    const url = `${baseURL}/team/delete/user`;
+    const body = { user_id: user_id, team_id: id };
+    console.log("body ->", body);
+
+    const response = await postCall(url, body);
+
+    const data = await response.json();
+    const { confirmation, message } = data;
+    console.log("the response is", data);
+    if (confirmation === "success") {
+      alert(`Success: ${message}`);
+      window.location.href = `${clientBaseURL}/team/${name}`;
+    } else {
+      alert(`Error: ${message}`);
+    }
+  };
+
+  useEffect(() => {
+    function getTeams() {
+      const url = `${baseURL}/team/all`;
+      getCall(url)
+        .then((response) => response.json())
+        .then((payload) => {
+          console.log("payload", payload);
+          console.log("session user teams ->", payload.data); 
+          getSessionUserTeams(payload.data);
+        })
+        .catch((err) => console.log("project fetch error", err));
+    }
+    getTeams();
+  }, []);
 
   useEffect(() => {
     function getTeam() {
@@ -30,6 +76,7 @@ function TeamPage(props) {
         .then((payload) => {
           console.log("payload", payload);
           setTeamInfo(payload.data.projects);
+          setTeamId(payload.data.id);
 
           const teamId = payload.data.id;
           const userUrl = `${baseURL}/team/${teamId}/users`;
@@ -68,9 +115,36 @@ function TeamPage(props) {
         <div className="inner-team-page-container">
             <div className="team-page-center">
                 <div>
+                  <div classNamae="title-button-container">
+                    <div className="team-name">
                     <Typography variant="h4" color="primary">
                         {name}
                     </Typography>
+                    </div>
+                    {sessionUserTeams.map((t) => {
+                      return(
+                        <div className="delete-team-btn">
+                        {(t.name === name) ?
+                        (<div>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => {
+                              handleClickOpen();
+                            }}        
+                          >
+                            Delete Team
+                          </Button>
+                          <DeleteTeamDialog
+                            open={open}
+                            onClose={handleClose}
+                            id={id}
+                            name={name}
+                          />
+                        </div>) :null}
+                        </div>)
+                    })}
+                  </div>
                     <Typography variant="h5" color="secondary">
                         Team Members
                     </Typography>
@@ -100,6 +174,33 @@ function TeamPage(props) {
                                     <Typography className="profile-name" variant="h6" color="primary">
                                         @{user.username}
                                     </Typography>
+                                    {sessionUserTeams.map((t) => {
+                                      return(
+                                      <div>
+                                        {(t.name === name) ? (
+                                        <div>
+                                        { (TeamUsers.length > 1)? (
+                                          <Button
+                                            className="delete-member-btn"
+                                            variant="outlined"
+                                            color="primary"
+                                            onClick={()=> deleteTeamMember(user.id)}
+                                          >
+                                            Delete Member
+                                          </Button>
+                                          ):
+                                          (<Button
+                                          className="delete-member-btn"
+                                          variant="outlined"
+                                          color="primary"
+                                          disabled
+                                          onClick={()=> deleteTeamMember(user.id)}
+                                        >
+                                          Delete Member
+                                        </Button>)}
+                                      </div>): null}
+                                    </div>)
+                                  })}
                                 </div>
                                 </div>
                             </CardContent>
