@@ -40,6 +40,24 @@ function TeamPage(props) {
     }
   };
 
+  const deleteTeamMember = async(user_id) => {
+    const url = `${baseURL}/team/delete/user`;
+    const body = { user_id: user_id, team_id: id };
+    console.log("body ->", body);
+
+    const response = await postCall(url, body);
+
+    const data = await response.json();
+    const { confirmation, message } = data;
+    console.log("the response is", data);
+    if (confirmation === "success") {
+      alert(`Success: ${message}`);
+      window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert(`Error: ${message}`);
+    }
+  };
+
   useEffect(() => {
     function getTeam() {
       console.log("GET from", `${baseURL}/team/${name}`);
@@ -127,6 +145,13 @@ function TeamPage(props) {
                                     <Typography className="profile-name" variant="h6" color="primary">
                                         @{user.username}
                                     </Typography>
+                                    <Button
+                                      variant="outlined"
+                                      color="primary"
+                                      onClick={()=> deleteTeamMember(user.id)}
+                                    >
+                                      Delete Member
+                                    </Button>
                                 </div>
                                 </div>
                             </CardContent>
