@@ -8,6 +8,8 @@ const Comment = require("../models/Comment");
 const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
+const sequelize = require("../config/database");
+const projectTransactions = require("../transactions/projects");
 
 exports.create_project = function (req, res, next) {
   console.log("exports.create_project -> req.body", req.body);
@@ -43,6 +45,42 @@ exports.create_project = function (req, res, next) {
     });
 };
 
+exports.delete_project = async function (req, res, next) {
+  console.log("exports.delete_project -> req.body", req.body);
+  body(req.body).trim().escape().not().isEmpty();
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing project id"));
+    return;
+  }
+
+  // managed transaction - sequelize will automatically handle commits and rollbacks
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(
+      projectTransactions.projectDelete(id)
+    );
+    console.log("finished transaction....");
+    console.log(
+      "exports.delete_project -> Number of deleted Projects: ",
+      result
+    );
+    res.status(200).json(successResponse("successfully deleted project!"));
+  } catch (err) {
+    console.log("err", err);
+    res
+      .status(200)
+      .json(errorResponse("Error occured in deleting project", err));
+  }
+};
+
 exports.create_task_comment = function (req, res, next) {
   console.log("exports.create_task_comment -> req.body", req.body);
   console.log("get_task_comments params: ", req.params);
@@ -51,7 +89,7 @@ exports.create_task_comment = function (req, res, next) {
   const { description } = req.body;
   console.log("exports.create_task_comment -> body", description);
   const { userId } = req.session;
-  const date_created = new Date().toISOString()
+  const date_created = new Date().toISOString();
 
   const errors = validationResult(req.body);
   if (!errors.isEmpty()) {
@@ -69,14 +107,14 @@ exports.create_task_comment = function (req, res, next) {
     date_created: date_created,
     description: description,
   })
-  .then(() => {
-    res.status(200).json(successResponse("comment created successfully."));
-    return;
-  })
-  .catch((err) => {
-    console.log("error in update", err);
-    res.status(409).json(errorResponse("comment couldn’t be created.", err));
-  });
+    .then(() => {
+      res.status(200).json(successResponse("comment created successfully."));
+      return;
+    })
+    .catch((err) => {
+      console.log("error in update", err);
+      res.status(409).json(errorResponse("comment couldn’t be created.", err));
+    });
 };
 
 exports.get_task_comments = function (req, res, next) {
@@ -396,41 +434,43 @@ exports.delete_column = async function (req, res, next) {
     },
   });
 
-  const taskPromises = []
+  const taskPromises = [];
 
-  for(let t of tasks){
+  for (let t of tasks) {
     taskPromises.push(DeleteTask(t.task_id));
   }
 
   Promise.all(taskPromises)
-  .then(() => {
-    ProjectColumns.destroy({
-      where: {
-        column_id,
-      },
-    })
     .then(() => {
-      Column.destroy({
+      ProjectColumns.destroy({
         where: {
-          id: column_id,
+          column_id,
         },
       })
-        .then(() =>
-          res.status(200).json(successResponse("successfully deleted column"))
-        )
+        .then(() => {
+          Column.destroy({
+            where: {
+              id: column_id,
+            },
+          })
+            .then(() =>
+              res
+                .status(200)
+                .json(successResponse("successfully deleted column"))
+            )
+            .catch((err) =>
+              res
+                .status(400)
+                .json(errorResponse("column destroy error: " + err.message))
+            );
+        })
         .catch((err) =>
           res
             .status(400)
-            .json(errorResponse("column destroy error: " + err.message))
+            .json(errorResponse("projectcolumn destroy error: " + err.message))
         );
     })
-    .catch((err) =>
-      res
-        .status(400)
-        .json(errorResponse("projectcolumn destroy error: " + err.message))
-    );
-  })
-  .catch((error) => res.status(400).json(errorResponse(error)));
+    .catch((error) => res.status(400).json(errorResponse(error)));
 };
 
 exports.create_new_task = function (req, res, next) {
@@ -445,7 +485,7 @@ exports.create_new_task = function (req, res, next) {
   const priority = req.body.priority;
   const time_estimated = req.body.time_estimated;
   const flag = req.body.flag == "" ? false : req.body.flag;
-  const date_created = new Date().toISOString()
+  const date_created = new Date().toISOString();
   const column_id = req.body.column_id;
   const project_id = req.body.project_id;
 
@@ -571,7 +611,7 @@ exports.edit_task = function (req, res, next) {
     time_elapsed,
     time_estimated,
   } = req.body;
-  const date_modified = new Date().toISOString()
+  const date_modified = new Date().toISOString();
 
   if (!id) {
     res.status(400).json(errorResponse("missing task_id"));
@@ -606,22 +646,26 @@ exports.edit_task = function (req, res, next) {
     });
 };
 
-function DeleteTask(task_id){
+function DeleteTask(task_id) {
   return ColumnTask.destroy({
     where: {
       task_id,
     },
   })
-  .then(() => {
-    Task.destroy({
-      where: {
-        id: task_id,
-      },
+    .then(() => {
+      Task.destroy({
+        where: {
+          id: task_id,
+        },
+      })
+        .then(() => 1)
+        .catch((err) => {
+          throw "task destroy error: " + err.message;
+        });
     })
-      .then(() =>1)
-      .catch((err) => { throw "task destroy error: " + err.message; });
-  })
-  .catch((err) => { throw "task destroy error: " + err.message; });
+    .catch((err) => {
+      throw "task destroy error: " + err.message;
+    });
 }
 
 exports.delete_task = function (req, res, next) {
@@ -634,12 +678,10 @@ exports.delete_task = function (req, res, next) {
   }
 
   DeleteTask(task_id)
-  .then(() => {
-    res.status(200).json(successResponse("successfully deleted task"))
-  })
-  .catch((error) => {
-    res
-      .status(400)
-      .json(errorResponse(error))
-  })
+    .then(() => {
+      res.status(200).json(successResponse("successfully deleted task"));
+    })
+    .catch((error) => {
+      res.status(400).json(errorResponse(error));
+    });
 };

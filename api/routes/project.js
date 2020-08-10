@@ -13,6 +13,8 @@ router.post(
   projectController.create_project
 );
 
+router.post("/delete", [body("id")], projectController.delete_project);
+
 router.get("/all", projectController.view_all);
 
 router.get("/user-specific/all", projectController.view_user_specific);
@@ -23,12 +25,16 @@ router.get(
   projectController.view_project
 );
 
+////////////////////////////// Project Column related routes
+
 //TEMP for debuggin
 router.post("/create/column", projectController.create_project_column);
 
 router.get("/:projectId/columns", projectController.view_project_columns);
 
 router.delete("/column/:column_id", projectController.delete_column);
+
+////////////////////////////// Project Task related routes
 
 router.post(
   "/create/task",
@@ -52,10 +58,7 @@ router.post(
   projectController.move_task
 );
 
-router.get(
-  "/task/:task_id/get-comments",
-  projectController.get_task_comments
-);
+router.get("/task/:task_id/get-comments", projectController.get_task_comments);
 
 router.post(
   "/task/:task_id/create-comment",

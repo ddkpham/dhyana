@@ -6,7 +6,9 @@ var Project = require("../models/Project");
 var ProjectColumns = require("../models/ProjectColumns");
 var ColumnsTasks = require("../models/ColumnsTasks");
 var Column = require("../models/Column");
+const sequelize = require("../config/database");
 const { Op } = require("sequelize");
+const projectTransactions = require("../transactions/projects");
 
 const { errorResponse, successResponse } = require("../utility/response");
 
@@ -38,6 +40,77 @@ exports.create_team = function (req, res, next) {
     .catch((err) => {
       res.status(409).json(errorResponse("Team exists already.", err));
     });
+};
+
+exports.delete_team = async function (req, res, next) {
+  console.log("exports.delete_team -> req.body", req.body);
+  body(req.body).trim().escape().not().isEmpty();
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+    return;
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing team id"));
+    return;
+  }
+
+  // step 1. Get all projects owned by team
+  const projects = await Project.findAll({
+    where: {
+      team_id: id,
+    },
+  });
+  const projectIds = projects.map((p) => p.dataValues.id);
+
+  // step 2. start deletion transaction
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(async (transaction) => {
+      // step 3. Delete all projects that the team owns
+
+      // create an array of functions that return an async func that deletes project
+      const projectDeleteFuns = projectIds.map((pid) => {
+        return projectTransactions.projectDelete(pid);
+      });
+
+      // execute each function by passing it the  transaction object
+      const projectDeletePromises = projectDeleteFuns.map((projectFunc) => {
+        return projectFunc(transaction);
+      });
+
+      // wait until they are all resolved
+      const res = await Promise.all(projectDeletePromises);
+
+      // delete all team / user rows
+      const teamsUsers = await TeamsUsers.destroy({
+        where: {
+          team_id: id,
+        },
+        transaction,
+      });
+      console.log("number of deleted rows in teamsUsers", teamsUsers);
+
+      // finally delete team!
+      const teamsDeleted = await Team.destroy({
+        where: {
+          id,
+        },
+        transaction,
+      });
+
+      return teamsDeleted;
+    });
+    console.log(`Deleted ${result} Teams`);
+    res.status(200).json(successResponse("Team deleted successfully"));
+  } catch (err) {
+    res.status(200).json(errorResponse("Error occured in deleting team", err));
+  }
 };
 
 exports.get_users = function (req, res, next) {
