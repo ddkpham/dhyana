@@ -301,12 +301,21 @@ class Project extends React.Component {
       { label: "Blocker", class: classes.chip5 },
     ];
     const isAuthorized = project.name ? true : false;
+    const showContent = this.state.showColumns ? true : false;
+    console.log("showContent is:")
 
     const editOpen = Boolean(editAnchor);
 
+    const handleEmpty = () => {
+      if (this.state.showColumns) {
+        return <EmptyCard />
+      }
+      return (null)
+    }
+
     return (
       <div className={classes.projectMainDiv}>
-        {isAuthorized ? (
+        {isAuthorized && showContent ? (
           <DndProvider backend={HTML5Backend}>
             <AddColumnModal
               isOpen={columnModalOpen}
@@ -430,25 +439,23 @@ class Project extends React.Component {
                     width={300}
                   />
                 ))}
-                {this.state.showColumns ? (
-                  <div>
-                    <Button
-                      className={classes.addColumnButton}
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      onClick={this.openColumnModal}
-                    >
-                      Add Column
-                    </Button>
-                  </div>
-                ) : null}
+                <div>
+                  <Button
+                    className={classes.addColumnButton}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={this.openColumnModal}
+                  >
+                    Add Column
+                  </Button>
+                </div>
               </ScrollingComponent>
             </div>
           </DndProvider>
         ) : (
           <div className={classes.emptyContainer}>
             {" "}
-            <EmptyCard />
+            {handleEmpty()}
             {" "}
           </div>
         )}
