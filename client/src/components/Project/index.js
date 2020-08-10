@@ -12,9 +12,10 @@ import { getCall, postCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Hidden from '@material-ui/core/Hidden';
 import ProjectTeam from "./teamList"
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   header: {
@@ -71,6 +72,7 @@ class Project extends React.Component {
     teamMembers: [],
     columnModalOpen: false,
     showColumns: false,
+    deleteOpen: false,
   };
 
   async componentWillMount() {
@@ -118,6 +120,14 @@ class Project extends React.Component {
       .catch((err) => console.log("delete project error", err));
   };
 
+  openDelete = () => {
+    this.setState({deleteOpen: true})
+  }
+
+  closeDelete = () => {
+    this.setState({deleteOpen: false})
+  }
+
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
     getCall(url)
@@ -153,7 +163,7 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, teamMembers, columnModalOpen } = this.state;
+    const { project, columns, teamMembers, columnModalOpen, deleteOpen } = this.state;
     const { classes } = this.props;
 
     console.log("Project -> render -> project", project);
@@ -166,6 +176,7 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
+          <ConfirmDialog message='This will irreversibly delete this project and all its tasks' open={deleteOpen} confirm={this.deleteProject} deny={this.closeDelete}/>
           <div className={classes.header}>
             <div className={classes.titleSection}>
               <Typography noWrap variant="h4">
@@ -182,10 +193,12 @@ class Project extends React.Component {
               <Button
                 variant="outlined"
                 startIcon={<DeleteForeverIcon/>}
-                onClick={this.deleteProject}
+                onClick={this.openDelete}
                 className={classes.deleteButton}
               >
-                Delete Project
+                <Hidden smDown>
+                  Delete Project
+                </Hidden>
               </Button>
             </div>
             <div className={classes.smallSection}>
