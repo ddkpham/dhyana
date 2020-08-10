@@ -16,6 +16,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { fade, makeStyles } from "@material-ui/core/styles";
 import Hidden from '@material-ui/core/Hidden';
 import ConfirmDialog from "../ConfirmDialog";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
 	teamWrapper: {
@@ -30,13 +31,13 @@ const useStyles = makeStyles((theme) => ({
 			backgroundColor: fade(theme.colours.bronze, 0.5)
 		}
 	},
-  userAvatarWrapper: {
-		padding: 2,
-  },
-  userAvatar:{
-    height: 30,
-    width: 30,
-    fontSize: 'small'
+	userAvatarWrapper: {
+			padding: 2,
+	},
+	userAvatar:{
+		height: 30,
+		width: 30,
+		fontSize: 'small'
 	},
 	teamPopover:{
 		maxWidth: 300,
@@ -63,6 +64,16 @@ const useStyles = makeStyles((theme) => ({
 		'& *': {
 			margin: '0px 10px'
 		}
+	},
+	serachField: {
+		height: 45,
+	},
+	popoverDiv: {
+		paddingTop: 5,
+		display: 'flex',
+		flexWrap: 'wrap',
+		flexDirection: 'column',
+		alignItems: "center",
 	}
 }));
 
@@ -191,25 +202,27 @@ const ProjectTeam = ({ teamMembers, teamId, reload }) => {
 					horizontal: 'center',
 				}}
 			>
-				<div className={classes.teamList}>
-				<Typography variant="h6">Team Members</Typography>
-					{teamMembers.map((t) => (
-						<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
-					))}
-				</div>
+				<div className={classes.popoverDiv}>
+					<div className={classes.teamList}>
+						{teamMembers.map((t) => (
+							<UserAvatar user={t} classes={{button: classes.userAvatarWrapper, avatar: classes.userAvatar}}/>
+						))}
+					</div>
 
-				<Typography>Add New Teammate:</Typography>
-				{addError && <Typography variant='body2' className={classes.errorMessage}>Error adding user</Typography>}
-				<Input
-					variant="outlined"
-					placeholder="Search..."
-					type='text'
-					onChange={(event) => {
-						setInput(event.target.value);
-						openSearchResults(event)
-						if(event.target.value.length===0) setOptions([]);
-					}}
-				/>
+					<Typography>Add New Teammate:</Typography>
+					{addError && <Typography variant='body2' className={classes.errorMessage}>Error adding user</Typography>}
+					<TextField
+						className={classes.serachField}
+						variant="outlined"
+						placeholder="Search..."
+						type='text'
+						onChange={(event) => {
+							setInput(event.target.value);
+							openSearchResults(event)
+							if(event.target.value.length===0) setOptions([]);
+						}}
+					/>
+				</div>
 				<Popover
 					id="search-results"
 					anchorEl={searchMenu}
