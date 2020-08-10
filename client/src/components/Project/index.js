@@ -147,6 +147,7 @@ class Project extends React.Component {
     teamMembers: [],
     columnModalOpen: false,
     showColumns: false,
+    showPage: false,
     deleteOpen: false,
     name: "",
     description: "",
@@ -165,6 +166,9 @@ class Project extends React.Component {
     } catch (err) {
       console.log("Project -> componentWillMount -> err", err);
     }
+
+    this.setState({showPage: true})
+    console.log("set showPage to true")
   }
 
   async componentWillUnmount() {
@@ -301,13 +305,12 @@ class Project extends React.Component {
       { label: "Blocker", class: classes.chip5 },
     ];
     const isAuthorized = project.name ? true : false;
-    const showContent = this.state.showColumns ? true : false;
-    console.log("showContent is:")
 
     const editOpen = Boolean(editAnchor);
 
     const handleEmpty = () => {
-      if (this.state.showColumns) {
+      console.log("entered handleEmpty with showPage ", this.state.showPage)
+      if (this.state.showPage) {
         return <EmptyCard />
       }
       return (null)
@@ -315,7 +318,7 @@ class Project extends React.Component {
 
     return (
       <div className={classes.projectMainDiv}>
-        {isAuthorized && showContent ? (
+        {isAuthorized ? (
           <DndProvider backend={HTML5Backend}>
             <AddColumnModal
               isOpen={columnModalOpen}
@@ -439,16 +442,18 @@ class Project extends React.Component {
                     width={300}
                   />
                 ))}
-                <div>
-                  <Button
-                    className={classes.addColumnButton}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={this.openColumnModal}
-                  >
-                    Add Column
-                  </Button>
-                </div>
+                {this.state.showColumns ? (
+                  <div>
+                    <Button
+                      className={classes.addColumnButton}
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={this.openColumnModal}
+                    >
+                      Add Column
+                    </Button>
+                  </div>
+                ) : null}
               </ScrollingComponent>
             </div>
           </DndProvider>
