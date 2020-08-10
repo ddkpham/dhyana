@@ -23,11 +23,16 @@ const styles = (theme) => ({
   header: {
     display: "flex",
     flexDirection: "row",
+  },
+  headerButtons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingBottom: 15,
     alignItems: "flex-start",
     height: "10%",
     minHeight: 45,
-    marginBottom: "40px",
+    marginBottom: 5,
   },
   root: {
     display: "flex",
@@ -60,6 +65,13 @@ const styles = (theme) => ({
     padding: 10,
     justifyContent: "space-evenly",
   },
+  smallSectionProject: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    padding: 10,
+    justifyContent: "space-evenly",
+  },
   deleteButton: {
     color: "red",
     borderColor: "red",
@@ -68,6 +80,10 @@ const styles = (theme) => ({
         margin: 0,
       },
     },
+    marginTop: "10px",
+  },
+  chipsContainer: {
+    margin: "10px",
   },
   chip0: {
     color: "white",
@@ -92,6 +108,20 @@ const styles = (theme) => ({
   chip5: {
     color: "white",
     backgroundColor: red[600],
+  },
+  teamButtonSection: {
+    display: "flex",
+    flexWrap: "wrap",
+    flexDirection: "column",
+    padding: 10,
+    justifyContent: "center",
+    textAlign: "center",
+    border: "1px solid grey",
+    borderRadius: 4,
+  },
+  headerDiv: {
+    textAlign: "center",
+    marginBottom: 10,
   },
 });
 
@@ -220,74 +250,74 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
-          <ConfirmDialog
-            message="This will irreversibly delete this project and all its tasks"
-            open={deleteOpen}
-            confirm={this.deleteProject}
-            deny={this.closeDelete}
-          />
-          <div className={classes.header}>
-            <div className={classes.titleSection}>
-              <Typography noWrap variant="h4">
+          <div>
+            <ConfirmDialog
+              message="This will irreversibly delete this project and all its tasks"
+              open={deleteOpen}
+              confirm={this.deleteProject}
+              deny={this.closeDelete}
+            />
+            <div className={classes.headerButtons}>
+              <div className={classes.teamButtonSection}>
+                <Typography variant="h6">Team Members</Typography>
+                <ProjectTeam
+                  teamMembers={teamMembers}
+                  teamId={project.team_id}
+                  reload={(id) => this.getTeamUserArray(id)}
+                />
+              </div>
+              <div className={classes.smallSectionProject}>
+                <ProjectToggle />
+                <Button
+                  variant="outlined"
+                  startIcon={<DeleteForeverIcon />}
+                  onClick={this.openDelete}
+                  className={classes.deleteButton}
+                >
+                  <Hidden smDown>Delete Project</Hidden>
+                </Button>
+              </div>
+            </div>
+            <div className={classes.headerDiv}>
+              <Typography variant="h4" style={{ marginBottom: 15 }}>
                 {project.name}
               </Typography>
-              <Typography variant="h6" className="hide-short">
-                {project.description}
-              </Typography>
+              <Typography variant="body1">{project.description}</Typography>
+            </div>
+            <div className={classes.chipsContainer}>
               {priorityArray.map((p) => (
                 <Chip label={p.label} className={p.class} />
               ))}
             </div>
-            <div className={classes.smallSection}>
-              <ProjectTeam
-                teamMembers={teamMembers}
-                teamId={project.team_id}
-                reload={(id) => this.getTeamUserArray(id)}
-              />
-            </div>
-            <div className={classes.smallSection}>
-              <Button
-                variant="outlined"
-                startIcon={<DeleteForeverIcon />}
-                onClick={this.openDelete}
-                className={classes.deleteButton}
-              >
-                <Hidden smDown>Delete Project</Hidden>
-              </Button>
-            </div>
-            <div className={classes.smallSection}>
-              <ProjectToggle />
-            </div>
+            <ScrollingComponent
+              spacing={2}
+              className={classes.root}
+              direction="row"
+            >
+              {columns.map((c) => (
+                <Column
+                  column={c}
+                  key={c.id}
+                  projectId={project.id}
+                  team={teamMembers}
+                  reload={this.getProject}
+                  width={300}
+                />
+              ))}
+              {this.state.showColumns ? (
+                <div>
+                  <Button
+                    className={classes.addColumnButton}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={this.openColumnModal}
+                  >
+                    Add Column
+                  </Button>
+                </div>
+              ) : null}
+            </ScrollingComponent>
           </div>
-
-          <ScrollingComponent
-            spacing={2}
-            className={classes.root}
-            direction="row"
-          >
-            {columns.map((c) => (
-              <Column
-                column={c}
-                key={c.id}
-                projectId={project.id}
-                team={teamMembers}
-                reload={this.getProject}
-                width={300}
-              />
-            ))}
-            {this.state.showColumns ? (
-              <div>
-                <Button
-                  className={classes.addColumnButton}
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.openColumnModal}
-                >
-                  Add Column
-                </Button>
-              </div>
-            ) : null}
-          </ScrollingComponent>
         </DndProvider>
       </div>
     );
