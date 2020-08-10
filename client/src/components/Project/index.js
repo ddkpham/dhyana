@@ -59,7 +59,12 @@ const styles = (theme) => ({
   },
   deleteButton: {
     color: 'red',
-    borderColor: 'red'
+    borderColor: 'red',
+    [theme.breakpoints.down("sm")]: {
+      '& .MuiButton-startIcon': {
+        margin: 0,
+      }
+    }
   }
 });
 
