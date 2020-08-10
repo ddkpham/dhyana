@@ -13,9 +13,8 @@ const projectTransactions = require("../transactions/projects");
 const { errorResponse, successResponse } = require("../utility/response");
 
 exports.create_team = function (req, res, next) {
-  console.log("exports.create_team -> req.body", req.body);
-
   body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.create_team -> req.body", req.body);
   const name = req.body.name.trim();
 
   const errors = validationResult(req.body);
@@ -167,6 +166,7 @@ exports.delete_user_from_team = async function (req, res, next) {
 };
 
 exports.get_users = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_user -> req.params", req.params);
   const team_id = req.params.id.trim();
 
@@ -187,7 +187,7 @@ exports.get_users = function (req, res, next) {
       }
 
       if (!usersArray.length) {
-        res.status(400).json(errorResponse("Didn't find any users in Team"));
+        res.status(404).json(errorResponse("Didn't find any users in Team"));
         return;
       }
 
@@ -213,9 +213,9 @@ exports.get_users = function (req, res, next) {
 };
 
 exports.add_user = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.add_user -> req.body", req.body);
 
-  body(req.body).trim().escape().not().isEmpty();
   const team_id = req.body.team_id;
   const user_id = req.body.user_id;
 
@@ -267,6 +267,7 @@ exports.add_user = function (req, res, next) {
 };
 
 exports.view_team = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   const name = req.params.name.trim();
   console.log("exports.view_team -> name", name);
 
@@ -370,16 +371,17 @@ exports.view_team = function (req, res, next) {
           .status(200)
           .json(successResponse("Sucessfully found team", teamInfo));
       } else {
-        res.status(200).json(errorResponse("Team not found."));
+        res.status(404).json(errorResponse("Team not found."));
       }
     } catch (err) {
-      res.status(404).json(errorResponse("Error in fetching team info.", err));
+      res.status(400).json(errorResponse("Error in fetching team info.", err));
     }
   };
   getTeamInfo();
 };
 
 exports.view_all = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   const { userId } = req.session;
   console.log("exports.view_all -> userId", userId);
   TeamsUsers.findAll({

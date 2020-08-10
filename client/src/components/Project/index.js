@@ -7,43 +7,64 @@ import Column from "../Column";
 import AddColumnModal from "../Column/addModal";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { baseURL } from "../../config/settings";
-import { getCall } from "../../apiCalls/apiCalls";
+import { baseURL, clientBaseURL } from "../../config/settings";
+import { getCall, postCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Hidden from '@material-ui/core/Hidden';
+import ProjectTeam from "./teamList"
+import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    alignItems: 'baseline',
+    paddingBottom: 15,
+    alignItems: 'flex-start',
+    height: '10%',
+    minHeight: 45,
   },
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    height: "100%",
-    minHeight: "95%",
+    height: "80%",
     justifyContent: 'left',
     border: "1px solid grey",
-    paddingTop: 20,
-    margin: 20,
-    borderRadius: 4,
-    justify: "center",
+    padding: '20px 0',
+    borderRadius: 4
   },
   projectMainDiv: {
     width: "100%",
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
-    height: 600,
   },
   addColumnButton: {
     margin: 10,
     width: '200px',
     height: '50px',
+  },
+  titleSection: {
+    width: '60%',
+    margin: 10,
+  },
+  smallSection: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    width: '40%',
+    padding: 10,
+    justifyContent: 'space-evenly',
+  },
+  deleteButton: {
+    color: 'red',
+    borderColor: 'red',
+    [theme.breakpoints.down("sm")]: {
+      '& .MuiButton-startIcon': {
+        margin: 0,
+      }
+    }
   }
 });
 
@@ -56,6 +77,7 @@ class Project extends React.Component {
     teamMembers: [],
     columnModalOpen: false,
     showColumns: false,
+    deleteOpen: false,
   };
 
   async componentWillMount() {
@@ -87,9 +109,29 @@ class Project extends React.Component {
         console.log("project fetch error", err)
         this.state.showColumns = true;
       });
-    
-    
   };
+
+  deleteProject = () => {
+    const { project } = this.state;
+    const url = `${baseURL}/project/delete`;
+    const body = { id: project.id };
+    console.log('hey toria body', body)
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("delete project success", data);
+        window.location.href = `${clientBaseURL}/home`;
+      })
+      .catch((err) => console.log("delete project error", err));
+  };
+
+  openDelete = () => {
+    this.setState({deleteOpen: true})
+  }
+
+  closeDelete = () => {
+    this.setState({deleteOpen: false})
+  }
 
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
@@ -126,8 +168,9 @@ class Project extends React.Component {
   };
 
   render() {
-    const { project, columns, teamMembers, columnModalOpen } = this.state;
+    const { project, columns, teamMembers, columnModalOpen, deleteOpen } = this.state;
     const { classes } = this.props;
+
     console.log("Project -> render -> project", project);
     return (
       <div className={classes.projectMainDiv}>
@@ -138,17 +181,34 @@ class Project extends React.Component {
             projectId={project?.id}
             order={columns.length || 0}
           />
+          <ConfirmDialog message='This will irreversibly delete this project and all its tasks' open={deleteOpen} confirm={this.deleteProject} deny={this.closeDelete}/>
           <div className={classes.header}>
-            <div>
-              <Typography variant="h4">
+            <div className={classes.titleSection}>
+              <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Typography variant="h6">
+              <Typography variant="h6" className='hide-short'>
                 {project.description}
               </Typography>
             </div>
-
-            <ProjectToggle />
+            <div className={classes.smallSection}>
+              <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+            </div>
+            <div className={classes.smallSection}>
+              <Button
+                variant="outlined"
+                startIcon={<DeleteForeverIcon/>}
+                onClick={this.openDelete}
+                className={classes.deleteButton}
+              >
+                <Hidden smDown>
+                  Delete Project
+                </Hidden>
+              </Button>
+            </div>
+            <div className={classes.smallSection}>
+              <ProjectToggle />
+            </div>
           </div>
 
           <ScrollingComponent

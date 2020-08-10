@@ -5,11 +5,60 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 import { useHistory } from "react-router-dom";
-import "./index.scss";
+import DeleteAccountDialog from "./DeleteAccountDialog";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    color: theme.palette.error.main,
+    "&:hover": {
+      backgroundColor: fade(theme.palette.error.main, 0.25),
+    },
+  },
+  mainDiv: {
+    display: "flex",
+    justifyContent: "center",
+    paddingTop: 25,
+  },
+  mainCard: {
+    width: 450,
+    alignSelf: "center",
+    textAlign: "center",
+    justifyContent: "center",
+    paddingBottom: 15,
+  },
+  title: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonCreateUser: {
+    marginBottom: 20,
+    justifyContent: "center",
+  },
+  backButton: {
+    marginRight: 15,
+  },
+  deleteTaskButton: {
+    marginRight: 5,
+  }
+}));
 
 function EditProfile() {
+  const classes = useStyles();  
   let history = useHistory();
   const [profileInfo, setProfileInfo] = useState({});
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     function getProfile() {
@@ -18,6 +67,7 @@ function EditProfile() {
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
+          console.log("getProfile -> payload", payload);
           setProfileInfo(payload.data[0]);
         })
         .catch((err) => console.log("project fetch error", err));
@@ -42,6 +92,7 @@ function EditProfile() {
     const { confirmation, message } = data;
     console.log(data);
     if (confirmation === "success") {
+      alert("Successfully updated your profile! 🤗");
       history.goBack();
     } else {
       alert(message);
@@ -60,10 +111,10 @@ function EditProfile() {
           Back
         </Button>
       </div>
-      <div id="mainDiv">
-        <Card className={"edit-user-wrapper"}>
-          <div className={"title"}>
-            <h2>Edit Your Info 🗄️ </h2>
+      <div className={classes.mainDiv}>
+        <Card className={classes.mainCard}>
+          <div className={classes.title}>
+            <Typography variant="h4">Edit your Info</Typography>
           </div>
           <div className="text-input-wrapper">
             <TextField
@@ -130,9 +181,30 @@ function EditProfile() {
             />
           </div>
           <div className="update-user-button">
-            <Button variant="outlined" color="primary" onClick={update}>
-              Update Information
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  handleClickOpen();
+                }}
+                classes={{ root: classes.root }}
+                className={classes.deleteTaskButton}
+              >
+                Delete Account
             </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={update}
+              className="edit-profile-btn"
+            >
+              Update Info
+            </Button>
+            <DeleteAccountDialog
+              open={open}
+              onClose={handleClose}
+              user={profileInfo}
+            />
           </div>
         </Card>
       </div>

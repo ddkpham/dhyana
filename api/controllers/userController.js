@@ -12,6 +12,7 @@ const Task = require("../models/Task");
 const ColumnsTasks = require("../models/ColumnsTasks");
 
 exports.get_user_info = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log(
     "exports.get_user_info -> req.params.username",
     req.params.username
@@ -52,6 +53,7 @@ exports.get_user_info = function (req, res, next) {
 };
 
 exports.get_my_profile = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_my_profile -> req.session", req.session);
   const { userId: id } = req.session;
   console.log("exports.get_my_profile -> req.session", req.session);
@@ -76,12 +78,13 @@ exports.get_my_profile = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(200).json(errorResponse("user doesn't exist", err));
+        res.status(404).json(errorResponse("user doesn't exist", err));
       });
   }
 };
 
 exports.get_user_from_id = function (req, res) {
+  body(req.body).trim().escape().not().isEmpty();
   console.log("exports.get_user_info -> req.params", req.params);
   const id = req.params.id;
   var userInfo = {};
@@ -127,10 +130,10 @@ exports.get_user_from_id = function (req, res) {
             successResponse("successfully found user and user info", userInfo)
           );
       } else {
-        res.status(200).json(errorResponse("no such user exists"));
+        res.status(404).json(errorResponse("no such user exists"));
       }
     } catch (err) {
-      res.status(200).json(errorResponse("error in fetching user info", err));
+      res.status(400).json(errorResponse("error in fetching user info", err));
     }
   };
   getUserInfo();
@@ -176,7 +179,7 @@ exports.search_user = function (req, res, next) {
           },
         ],
       },
-      attributes: [`username`, `first_name`, `last_name`],
+      attributes: [`id`, `username`, `first_name`, `last_name`],
     })
       .then((user) => {
         console.log("exports.search_user -> user", user);
@@ -194,9 +197,8 @@ exports.search_user = function (req, res, next) {
 };
 
 exports.create_new_user = function (req, res, next) {
-  console.log("exports.create_new_user -> req.body", req.body);
-
   body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.create_new_user -> req.body", req.body);
 
   user = req.body.username.trim();
   pass = req.body.password.trim();
@@ -265,7 +267,7 @@ exports.delete_user = async function (req, res, next) {
 
       // delete all tasks created by the user. Table constraint.
 
-      // first delete it from columnsTasks
+      // first delete it from columnsTasks and all comments with that task id
       const taskData = await Task.findAll({
         where: {
           user_id_created: id,
@@ -288,6 +290,16 @@ exports.delete_user = async function (req, res, next) {
       });
 
       console.log(`Deleted ${deletedColumnTasks} rows from ColumnTasks`);
+
+      // delete all comments that on tasks that user has created
+      const deletedComments2 = await Comment.destroy({
+        where: {
+          [Op.or]: taskQuery,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted ${deletedComments2} Comments by user ${id}`);
 
       const deletedTasks = await Task.destroy({
         where: {
@@ -343,10 +355,9 @@ exports.delete_user = async function (req, res, next) {
 };
 
 exports.edit_user = function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
   const { userId: id } = req.session;
   console.log("exports.edit_user -> req.body, id", req.body, id);
-
-  body(req.body).trim().escape().not().isEmpty();
 
   pass = req.body.password.trim();
   const errorsBody = validationResult(req.body);
@@ -381,7 +392,7 @@ exports.edit_user = function (req, res, next) {
         return Promise.reject();
       })
       .catch((err) => {
-        res.status(409).json(errorResponse("User couldn’t be modified.", err));
+        res.status(400).json(errorResponse("User couldn’t be modified.", err));
       });
   }
 };

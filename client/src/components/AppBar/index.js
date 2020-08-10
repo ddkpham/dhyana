@@ -18,6 +18,7 @@ import { baseURL } from "../../config/settings";
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
+    height: '10%'
   },
   menuButton: {
     marginRight: theme.spacing(2),

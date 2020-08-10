@@ -11,7 +11,6 @@ const useStyles = makeStyles({
   },
   media: {
     height: 140,
-    cursor: "pointer",
     width: "30vw",
     height: "40vh",
   },

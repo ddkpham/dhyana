@@ -8,7 +8,6 @@ import { makeStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 
-
 const useStyles = makeStyles((theme) => ({
   mainDiv: {
     display: "flex",
@@ -31,12 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
   backButton: {
     marginRight: 15,
-  }
+  },
 }));
 
-
 function CreateUser() {
-  const classes = useStyles();  
+  const classes = useStyles();
   let history = useHistory();
 
   const [username, setUsername] = useState("");
@@ -48,8 +46,8 @@ function CreateUser() {
 
   const create = async (user, name) => {
     if (password !== passwordConfirm) {
-      alert("Passwords do not match")
-      return
+      alert("Passwords do not match");
+      return;
     }
     const url = `${baseURL}/user/create`;
     const body = { username, password, first_name, last_name };
@@ -59,6 +57,7 @@ function CreateUser() {
     const { confirmation, message } = data;
     console.log(data);
     if (confirmation === "success") {
+      alert("Sign up was successful!");
       window.location.href = `${clientBaseURL}/home`;
     } else {
       alert(message);

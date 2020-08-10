@@ -9,6 +9,7 @@ import Popover from "@material-ui/core/Popover";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import Hidden from '@material-ui/core/Hidden';
 import { baseURL } from "../../config/settings";
 import { getCall } from "../../apiCalls/apiCalls";
 
@@ -16,6 +17,13 @@ const styles = (theme) => ({
   popover: {
     padding: "10px",
   },
+  button: {
+    [theme.breakpoints.down("sm")]: {
+      '& .MuiButton-endIcon': {
+        margin: 0,
+      }
+    }
+  }
 });
 
 class ProjectToggle extends React.Component {
@@ -55,9 +63,10 @@ class ProjectToggle extends React.Component {
           endIcon={buttonIcon}
           variant="contained"
           color="primary"
+          className={classes.button}
           onClick={this.handleClick}
         >
-          Projects
+          <Hidden smDown>Projects</Hidden>
         </Button>
         <Popover
           open={open}
