@@ -1,4 +1,4 @@
-import { baseURL } from "../../config/settings";
+import { baseURL, clientBaseURL } from "../../config/settings";
 import React, { useState, useEffect, Fragment } from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -11,7 +11,7 @@ import { images } from "../../static/finalspace/avatars";
 import "./index.scss";
 import ProjectCard from "../Project/card";
 import { useHistory } from "react-router-dom";
-import { getCall } from "../../apiCalls/apiCalls";
+import { getCall, postCall } from "../../apiCalls/apiCalls";
 
 
 function TeamPage(props) {
@@ -19,7 +19,26 @@ function TeamPage(props) {
   const [TeamInfo, setTeamInfo] = useState([]);
   const { name } = props;
   const [TeamUsers, getTeamUsers] = useState([]);
+  const [id, setTeamId] = useState("");
   console.log("TeamUsers", TeamUsers);
+  
+  const deleteTeam = async() => {
+    const url = `${baseURL}/team/delete`;
+    const body = { id: id };
+    console.log("body ->", body);
+
+    const response = await postCall(url, body);
+
+    const data = await response.json();
+    const { confirmation, message } = data;
+    console.log("the response is", data);
+    if (confirmation === "success") {
+      alert(`Success: ${message}`);
+      window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert(`Error: ${message}`);
+    }
+  };
 
   useEffect(() => {
     function getTeam() {
@@ -30,6 +49,7 @@ function TeamPage(props) {
         .then((payload) => {
           console.log("payload", payload);
           setTeamInfo(payload.data.projects);
+          setTeamId(payload.data.id);
 
           const teamId = payload.data.id;
           const userUrl = `${baseURL}/team/${teamId}/users`;
@@ -71,6 +91,13 @@ function TeamPage(props) {
                     <Typography variant="h4" color="primary">
                         {name}
                     </Typography>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={deleteTeam}
+                    >
+                      Delete Team
+                    </Button>
                     <Typography variant="h5" color="secondary">
                         Team Members
                     </Typography>
