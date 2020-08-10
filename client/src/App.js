@@ -48,7 +48,6 @@ function App(props) {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <div>
           <AppBar />
 
           {/*
@@ -130,7 +129,6 @@ function App(props) {
               </Switch>
             </div>
           ) : null}
-        </div>
       </Router>
     </ThemeProvider>
   );

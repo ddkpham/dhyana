@@ -12,34 +12,27 @@ import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import ColumnMenu from './menu';
 import { priorities } from '../constants';
 import { postCall, deleteCall } from "../../apiCalls/apiCalls";
 import { red, cyan, grey } from "@material-ui/core/colors";
-
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
+import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   columnPaper: {
-    padding: "5px",
-    height: "100%",
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
     minWidth: '300px',
-    minHeight: 550,
+    padding: "5px",
+    height: '100%',
   },
   taskContainer: {
     overflowY: 'scroll',
-    maxHeight: '60vh',
+    height: '80%',
     paddingBottom: '15px',
     paddingRight: '10px',
-    maxHeight: 450,
   },
   popover: {
     display: "flex",
@@ -52,10 +45,7 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    marginBottom: 25,
-  },
-  buttonDiv: {
-    margin: '10px',
+    height: '100%'
   },
   mainColumnDiv: {
     height: "100%",
@@ -68,6 +58,7 @@ const styles = (theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 3,
+    height: '7%'
   },
   columnName: {
     overflowX: "scroll",
@@ -80,34 +71,11 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
-    marginTop: 1,
+    paddingTop: 1,
+    height: '7%'
   },
 
 });
-
-const ConfirmDialog = ({message, open, confirm, deny}) => {
-  return (
-    <Dialog
-      open={open}
-      onClose={deny}
-    >
-      <DialogTitle>Are you sure?</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          {message}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={deny} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={confirm} color="primary" autoFocus>
-          Ok
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
 
 class Column extends React.Component {
   state = {

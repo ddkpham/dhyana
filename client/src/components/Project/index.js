@@ -12,39 +12,49 @@ import { getCall } from "../../apiCalls/apiCalls";
 import ProjectToggle from "./projectToggle";
 import GridList from '@material-ui/core/GridList';
 import withScrolling from 'react-dnd-scrolling';
+import Hidden from '@material-ui/core/Hidden';
+import ProjectTeam from "./teamList"
 
 const styles = (theme) => ({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    alignItems: 'baseline',
+    paddingBottom: 15,
+    alignItems: 'flex-start',
+    height: '10%',
+    minHeight: 45,
   },
   root: {
     display: 'flex',
     flexWrap: 'nowrap',
-    height: "100%",
-    minHeight: "95%",
+    height: "80%",
     justifyContent: 'left',
     border: "1px solid grey",
-    paddingTop: 20,
-    margin: 20,
-    borderRadius: 4,
-    justify: "center",
+    padding: '20px 0',
+    borderRadius: 4
   },
   projectMainDiv: {
     width: "100%",
     height: "100%",
     justifyContent: 'center',
     alignContent: 'center',
-    height: 600,
   },
   addColumnButton: {
     margin: 10,
     width: '200px',
     height: '50px',
-  }
+  },
+  titleSection: {
+    width: '60%',
+    margin: 10,
+  },
+  smallSection: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    width: '40%',
+    padding: 10,
+    justifyContent: 'space-evenly',
+  },
 });
 
 const ScrollingComponent = withScrolling(GridList);
@@ -87,8 +97,6 @@ class Project extends React.Component {
         console.log("project fetch error", err)
         this.state.showColumns = true;
       });
-    
-    
   };
 
   getColumns = (projectId) => {
@@ -128,6 +136,7 @@ class Project extends React.Component {
   render() {
     const { project, columns, teamMembers, columnModalOpen } = this.state;
     const { classes } = this.props;
+
     console.log("Project -> render -> project", project);
     return (
       <div className={classes.projectMainDiv}>
@@ -139,16 +148,20 @@ class Project extends React.Component {
             order={columns.length || 0}
           />
           <div className={classes.header}>
-            <div>
-              <Typography variant="h4">
+            <div className={classes.titleSection}>
+              <Typography noWrap variant="h4">
                 {project.name}
               </Typography>
-              <Typography variant="h6">
+              <Typography variant="h6" className='hide-short'>
                 {project.description}
               </Typography>
             </div>
-
-            <ProjectToggle />
+            <div className={classes.smallSection}>
+              <ProjectTeam teamMembers={teamMembers} teamId={project.team_id} reload={(id) => this.getTeamUserArray(id)}/>
+            </div>
+            <div className={classes.smallSection}>
+              <ProjectToggle />
+            </div>
           </div>
 
           <ScrollingComponent

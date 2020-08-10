@@ -2,12 +2,14 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Card from "@material-ui/core/Card";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import { baseURL, clientBaseURL } from "../../config/settings";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
+import "./new.scss";
 
 class NewProject extends React.Component {
   state = {
@@ -52,9 +54,14 @@ class NewProject extends React.Component {
   render() {
     const { name, description, team_id, team_options } = this.state;
     return (
-      <div>
-        <Typography variant="h4">Create New Project</Typography>
-        <div className="text-input">
+      <div id="main-project-div">
+      <Card className="create-project-wrapper">
+        <div className="page-title">
+          <Typography variant="h4" color="primary">
+              Create New Project
+          </Typography>
+        </div>
+        <div className="main-content-div">
           <TextField
             label="Name"
             variant="outlined"
@@ -93,11 +100,14 @@ class NewProject extends React.Component {
               <MenuItem value="">None</MenuItem>
             </Select>
           </FormControl>
-          <Button onClick={this.create} variant="outlined" color="primary">
-            Create
-          </Button>
+          <div className="create-project-button">
+            <Button className="create-btn" onClick={this.create} variant="outlined" color="primary">
+              Create
+            </Button>
+          </div>
         </div>
-      </div>
+      </Card>
+    </div>
     );
   }
 }
