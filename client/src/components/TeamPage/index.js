@@ -9,6 +9,7 @@ import CardContent from "@material-ui/core/CardContent";
 import { images } from "../../static/finalspace/avatars";
 
 import "./index.scss";
+import DeleteTeamDialog from "./DeleteTeamDialog";
 import ProjectCard from "../Project/card";
 import { useHistory } from "react-router-dom";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
@@ -22,6 +23,16 @@ function TeamPage(props) {
   const [id, setTeamId] = useState("");
   console.log("TeamUsers", TeamUsers);
   
+  const [open, setOpen] = useState(false);
+	
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+  };
+
   const deleteTeam = async() => {
     const url = `${baseURL}/team/delete`;
     const body = { id: id };
@@ -112,10 +123,17 @@ function TeamPage(props) {
                     <Button
                       variant="outlined"
                       color="primary"
-                      onClick={deleteTeam}
+                      onClick={() => {
+                        handleClickOpen();
+                      }}        
                     >
                       Delete Team
                     </Button>
+                    <DeleteTeamDialog
+                      open={open}
+                      onClose={handleClose}
+                      id={id}
+                    />
                     <Typography variant="h5" color="secondary">
                         Team Members
                     </Typography>
