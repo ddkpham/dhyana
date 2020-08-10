@@ -13,6 +13,12 @@ router.post(
   projectController.create_project
 );
 
+router.post(
+  "/check-authorization",
+  [body("project_name").isLength({ min: 1 })],
+  projectController.check_authorization
+);
+
 router.post("/delete", [body("id")], projectController.delete_project);
 
 router.get("/all", projectController.view_all);

@@ -11,6 +11,25 @@ const { Op } = require("sequelize");
 const sequelize = require("../config/database");
 const projectTransactions = require("../transactions/projects");
 
+exports.check_authorization = async function (req, res, next) {
+  body(req.body).trim().escape().not().isEmpty();
+  console.log("exports.create_project -> req.body", req.body);
+  const project_name = req.body.project_name.trim();
+  const { userId } = req.session;
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!project_name) {
+    res.status(400).json(errorResponse("missing  project name"));
+    return;
+  }
+
+  res.status(200).json(successResponse("user is authorized"));
+};
+
 exports.create_project = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_project -> req.body", req.body);
