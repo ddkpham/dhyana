@@ -1,11 +1,15 @@
 const { Op } = require("sequelize");
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
+const sequelize = require("../config/database");
 
-var User = require("../models/User");
-var TeamsUsers = require("../models/TeamsUsers");
-var Team = require("../models/Team");
-var Projects = require("../models/Project");
+const User = require("../models/User");
+const TeamsUsers = require("../models/TeamsUsers");
+const Team = require("../models/Team");
+const Projects = require("../models/Project");
+const Comment = require("../models/Comment");
+const Task = require("../models/Task");
+const ColumnsTasks = require("../models/ColumnsTasks");
 
 exports.get_user_info = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
@@ -228,6 +232,115 @@ exports.create_new_user = function (req, res, next) {
       .catch((err) => {
         res.status(409).json(errorResponse("user already exists", err));
       });
+  }
+};
+
+exports.delete_user = async function (req, res, next) {
+  console.log("exports.delete_user -> req.body", req.body);
+
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing user id"));
+    return;
+  }
+
+  // managed transaction - sequelize will automatically handle commits and rollbacks
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(async (transaction) => {
+      // delete all comments that the user has made
+      const deletedComments = await Comment.destroy({
+        where: {
+          user_id: id,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted ${deletedComments} Comments by user ${id}`);
+
+      // delete all tasks created by the user. Table constraint.
+
+      // first delete it from columnsTasks
+      const taskData = await Task.findAll({
+        where: {
+          user_id_created: id,
+        },
+        transaction,
+      });
+      console.log("taskData", taskData);
+      const taskQuery = taskData.map((t) => {
+        const {
+          dataValues: { id },
+        } = t;
+        return { task_id: id };
+      });
+
+      const deletedColumnTasks = await ColumnsTasks.destroy({
+        where: {
+          [Op.or]: taskQuery,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted ${deletedColumnTasks} rows from ColumnTasks`);
+
+      const deletedTasks = await Task.destroy({
+        where: {
+          user_id_created: id,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted ${deletedTasks} Tasks by user ${id}`);
+
+      // set all tasks that were assigned to user to null for assigned id column
+      const updatedTasks = await Task.update(
+        { user_id_assigned: null },
+        {
+          where: {
+            user_id_assigned: id,
+          },
+          transaction,
+        }
+      );
+      console.log(`Updated ${updatedTasks} Tasks by user ${id}`);
+
+      // delete user from all teams it is a part of now
+
+      const teamsUserRemovedFrom = await TeamsUsers.destroy({
+        where: {
+          user_id: id,
+        },
+        transaction,
+      });
+
+      console.log(`Removed user from  ${teamsUserRemovedFrom} teams`);
+
+      // finally delete user!
+      const deletedUser = await User.destroy({
+        where: {
+          id,
+        },
+        transaction,
+      });
+
+      console.log(`Deleted user!`);
+
+      return deletedUser;
+    });
+    console.log("finished transaction....");
+    console.log("exports.delete user -> Number of deleted users: ", result);
+    res.status(200).json(successResponse("successfully deleted user!"));
+  } catch (err) {
+    console.log("err", err);
+    res.status(200).json(errorResponse("Error occured in deleting user", err));
   }
 };
 

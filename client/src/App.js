@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   withRouter,
 } from "react-router-dom";
 import Home from "./components/Home/index";
@@ -14,8 +13,7 @@ import SearchUser from "./components/SearchUser/index";
 import ProfilePage from "./components/ProfilePage/index";
 import MyProfile from "./components/MyProfile/index";
 import EditProfile from "./components/EditProfile/index";
-import Button from "@material-ui/core/Button";
-import { clientBaseURL, baseURL } from "./config/settings";
+import { baseURL } from "./config/settings";
 import { getCall } from "./apiCalls/apiCalls";
 import AppBar from "./components/AppBar";
 import NewProject from "./components/Project/new";
@@ -23,6 +21,7 @@ import Project from "./components/Project/index";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./styles/theme";
 import "./styles/styles.css";
+import TeamPage from "./components/TeamPage";
 
 // Simple auth
 
@@ -78,6 +77,20 @@ function App(props) {
                 <Route path="/search-user">
                   {authenticated ? <SearchUser /> : <Login />}
                 </Route>
+                <Route
+                  path="/team/:name"
+                  render={(props) => {
+                    const {
+                      match: {
+                        params: { name },
+                      },
+                    } = props;
+                    if (authenticated) {
+                      return <TeamPage name={name} />;
+                    }
+                    return <Login />;
+                  }}
+                />
 
                 <Route
                   path="/user/:username"

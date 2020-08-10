@@ -3,12 +3,24 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import DragTarget from "./DragTarget";
 import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import ColumnMenu from './menu';
+import { priorities } from '../constants';
 import { postCall, deleteCall } from "../../apiCalls/apiCalls";
+import { red, cyan, grey } from "@material-ui/core/colors";
 
 import "./index.scss";
 import TaskDetail from "../Task/TaskDetail";
@@ -17,9 +29,17 @@ const styles = (theme) => ({
   columnPaper: {
     padding: "5px",
     height: "100%",
-    minHeight: 500,
     backgroundColor: "rgba(200,200,200,0.25)",
     width: (props) => props.width,
+    minWidth: '300px',
+    minHeight: 550,
+  },
+  taskContainer: {
+    overflowY: 'scroll',
+    maxHeight: '60vh',
+    paddingBottom: '15px',
+    paddingRight: '10px',
+    maxHeight: 450,
   },
   popover: {
     display: "flex",
@@ -32,8 +52,25 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    marginBottom: "50px",
-    minHeight: 400,
+    marginBottom: 25,
+  },
+  buttonDiv: {
+    margin: '10px',
+  },
+  mainColumnDiv: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  columnHeader: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 3,
+  },
+  columnName: {
+    overflowX: "scroll",
   },
   addTaskButton: {
     marginBottom: 10,
@@ -43,38 +80,68 @@ const styles = (theme) => ({
     alignItems: "center",
     justifyContent: "center",
     display: "flex",
+    marginTop: 1,
   },
-  mainColumnDiv: {
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  columnName: {
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-  },
+
 });
+
+const ConfirmDialog = ({message, open, confirm, deny}) => {
+  return (
+    <Dialog
+      open={open}
+      onClose={deny}
+    >
+      <DialogTitle>Are you sure?</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          {message}
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={deny} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={confirm} color="primary" autoFocus>
+          Ok
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 class Column extends React.Component {
   state = {
     tasks: [],
-    anchorEl: null,
+    anchorTask: null,
+    anchorMenu: null,
+    deleteOpen: false,
     currTaskName: "",
     currDescription: "",
+    sort: "",
+    sortAsc: true,
+    filters: {},
   };
 
   componentDidMount() {
     this.getTasks();
   }
 
-  handleClick = (event) => {
-    console.log("Column -> handleClick -> event", event);
-    this.setState({ anchorEl: event.currentTarget });
+  openTaskPopover = (event) => {
+    console.log("Column -> openTaskPopover -> event", event.currentTarget);
+    this.setState({ anchorTask: event.currentTarget });
   };
 
-  handleClose = () => {
-    this.setState({ anchorEl: null });
+  closeTaskPopover = () => {
+    this.setState({ anchorTask: null });
+  };
+
+  openMenu = (event) => {
+    console.log("Column -> openMenu -> event", event.currentTarget);
+    this.setState({ anchorMenu: event.currentTarget });
+  };
+
+  closeMenu = () => {
+    this.setState({ anchorMenu: null });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -94,7 +161,8 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetch Tasks Response", data);
-        this.setState({ tasks: data.data });
+        const tasks = data.data.map((t) => ({...t, date_created: new Date(t.date_created)}))
+        this.setState({ tasks: tasks });
       })
       .catch((err) => console.log("task fetch error", err));
   };
@@ -105,7 +173,7 @@ class Column extends React.Component {
       name,
       description,
       userIdAssigned,
-      assignedPriority,
+      priority,
       time_estimated,
       flag,
     } = details;
@@ -115,7 +183,7 @@ class Column extends React.Component {
       name: name,
       description: description,
       user_id_assigned: userIdAssigned,
-      priority: assignedPriority,
+      priority,
       time_estimated: time_estimated,
       flag: flag,
       column_id: column.id,
@@ -126,14 +194,14 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Add Task Response", data);
-        this.handleClose();
+        this.closeTaskPopover();
         window.location.reload(false);
       })
       .catch((err) => console.log("Add Task Error", err));
   };
 
   editTask = (task) => {
-    const { column, projectId, reload } = this.props;
+    const { reload } = this.props;
     console.log("Column - entered editTask with: ", task);
     const url = `${baseURL}/project/task/${task.id}/edit`;
     const body = {
@@ -150,7 +218,7 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Edit Task Response", data);
-        this.handleClose();
+        this.closeTaskPopover();
         reload();
       })
       .catch((err) => console.log("Edit Task error", err));
@@ -185,47 +253,156 @@ class Column extends React.Component {
       .catch((err) => console.log("Delete Task error", err));
   };
 
+  closeDelete = () => {
+    this.setState({ deleteOpen: false });
+  }
+
+  openDelete = () => {
+    this.setState({ deleteOpen: true });
+  }
+
+  deleteColumn = () => {
+    const { column, reload } = this.props;
+    const url = `${baseURL}/project/column/${column.id}`;
+    deleteCall(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("delete column success", data);
+        reload();
+      })
+      .catch((err) => console.log("delete column error", err));
+  };
+
+  setFilters = (newFilter, filterId) => {
+    const { filters } = this.state;
+    if(newFilter.length) filters[filterId] = newFilter;
+    else delete filters[filterId]
+    this.setState({ filters });
+  }
+
+  setSortBy = ({sortBy}) => {
+    this.setState({sort: sortBy, sortAsc: true});
+  }
+
+  switchSortDirection = () => {
+    const { sortAsc } = this.state;
+    this.setState({ sortAsc: !sortAsc});
+  }
+
+  compareFunc = (a, b) => {
+    const { sort, sortAsc } = this.state;
+    if(a[sort] > b[sort]) return sortAsc ? 1 : -1;
+    if(a[sort] < b[sort]) return sortAsc ? -1 : 1;
+
+    return 0;
+  }
+
+  setPriorityTaskColor = (priority) => {
+    console.log("entered setPriorityTaskColor with priority: ", priority)
+    switch (priority) {
+        case 5:
+          return red[600]
+        case 4:
+          return red[300]
+        case 3:
+          return "orange"
+        case 2:
+          return "yellow"
+        case 1:
+          return "lightgreen"
+        default:
+          return cyan[50]
+    }
+  }
+
+  setNewBackgroundColor = (flag, isOverdue) => {
+    if (flag) {
+      return grey[200]
+    } else if (isOverdue) {
+      return red[100]
+    } else {
+      return "white"
+    }
+  }
+
   render() {
-    const { column, classes } = this.props;
-    const { tasks, anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-    const id = open ? "simple-popover" : undefined;
+    const { column, classes, team } = this.props;
+    const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters, deleteOpen } = this.state;
+    const taskOpen = Boolean(anchorTask);
+    console.log("Column -> render -> open", taskOpen);
+    const id = taskOpen ? "simple-popover" : undefined;
+
+    const teamMembers = team.map((u) => ({id: u.id, name: u.username}));
+
+    const filterOptions = [
+      {name: 'Assigned User', id: 'user_id_assigned', displayName: true, options: teamMembers},
+      {name: 'Priority', id: 'priority', options: priorities}
+    ];
+
+    let filteredTasks = tasks.slice();
+    if(!!sort) filteredTasks.sort(this.compareFunc);
+
+    if(!!Object.keys(filters).length) filteredTasks = filteredTasks.filter((t) => {
+      for(let f of Object.keys(filters)) {
+        if(filters[f]?.indexOf(t[f]) < 0) return false;
+      }
+      return true;
+    })
+
     return (
       <div className={classes.mainColumnDiv}>
-        <div className={classes.buttonDiv}>
-          <Button
-            variant="outlined"
-            className={classes.addTaskButton}
-            onClick={this.handleClick}
-          >
-            Add task
-          </Button>
-        </div>
         <Grid item key={column.id} className={classes.column}>
-          <DragTarget columnName={column.name} onDrop={this.onDrop}>
+          <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
+          
+          <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
-              <Typography variant="h6" className={classes.columnName}>
-                {column.name}
-              </Typography>
-
-              {tasks?.map((t) => (
-                <Task
+              <div className={classes.buttonDiv}>
+                <Button
+                  variant="outlined"
+                  onClick={this.openTaskPopover}
+                >
+                  Add task
+                </Button>
+              </div>
+              <div className={classes.columnHeader}>
+                <Typography className={classes.columnName}>{column.name}</Typography>
+                <span>
+                  {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
+                  <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
+                </span>
+                <ColumnMenu
+                  anchorEl={anchorMenu}
+                  handleClose={this.closeMenu}
+                  sort={sort}
+                  setSort={this.setSortBy}
+                  filters={filters}
+                  filterOptions={filterOptions}
+                  setFilters={this.setFilters}
+                  deleteFunction={this.openDelete}
+                />
+              </div>
+              <div className={classes.taskContainer}>
+                {filteredTasks?.map((t) => (
+                  <Task
                   task={t}
                   key={t.id}
                   columnId={column.id}
                   deleteTask={this.deleteTask.bind(this)}
                   editTask={this.editTask.bind(this)}
-                  team_id={this.props.teamId}
-                />
-              ))}
+                  team={team}
+                  priorityColor={this.setPriorityTaskColor(t.priority)}
+                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
+                  />
+                ))}
+              </div>
             </Paper>
           </DragTarget>
-
+          
           <Popover
             id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={this.handleClose}
+            open={taskOpen}
+            anchorEl={anchorTask}
+            onClose={this.closeTaskPopover}
             anchorReference={"none"}
             classes={{
               root: classes.popover,
@@ -234,7 +411,7 @@ class Column extends React.Component {
             <TaskDetail
               addTask={this.addTask.bind(this)}
               className={classes.taskDetail}
-              team_id={this.props.teamId}
+              team={team}
             />
           </Popover>
         </Grid>

@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { baseURL } from "../../../config/settings";
-import { getCall } from "../../../apiCalls/apiCalls";
+import React, { useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import TextField from "@material-ui/core/TextField";
@@ -12,7 +10,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { withStyles } from "@material-ui/core/styles";
-import { cyan, grey } from "@material-ui/core/colors";
+import { cyan } from "@material-ui/core/colors";
+import { priorities } from '../../constants';
 
 const ColouredSwitch = withStyles({
   switchBase: {
@@ -69,55 +68,27 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
     height: 650,
     alignItems: "center",
-    alignItems: "center",
   },
 }));
 
 function TaskDetail(props) {
   const classes = useStyles();
 
-  const { team_id } = props;
+  const { team } = props;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [userIdAssigned, setUserAssigned] = useState(null);
   const [priority, setPriority] = useState("");
   const [timeEstimated, setTimeEstimated] = useState(null);
   const [flag, setFlag] = useState(false);
-  const [teamUserArray, setteamUserArray] = useState([]);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
-  const prioritiesArray = [
-    "5 - blocker",
-    "4 - critical",
-    "3 - high",
-    "2 - medium",
-    "1 - low",
-    "0 - None",
-  ];
-
-  useEffect(() => {
-    async function getTeamUserArray() {
-      console.log("getting team users for: ", team_id);
-      const url = `${baseURL}/team/${props.team_id}/users`;
-      const response = await getCall(url);
-
-      const payload = await response.json();
-      const { data: teamMembers } = payload;
-      console.log(teamMembers);
-      if (response.status === 200) {
-        setteamUserArray(teamMembers);
-      }
-    }
-    getTeamUserArray(team_id);
-  }, [team_id]);
-
   const createTask = () => {
-    const assignedPriority = priority == "" ? null : priority.charAt(0);
     const details = {
       name,
       description,
       userIdAssigned,
-      assignedPriority,
+      priority: priority || null,
       time_estimated: timeEstimated,
       flag,
     };
@@ -154,7 +125,7 @@ function TaskDetail(props) {
   const assignTitle = (event) => {
     console.log("event value is: ", event.target.value);
     setName(event.target.value);
-    if (event.target.value != "") {
+    if (event.target.value !== "") {
       setBtnDisabled(false);
     } else {
       setBtnDisabled(true);
@@ -196,7 +167,7 @@ function TaskDetail(props) {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
-            {teamUserArray.map((user) => (
+            {team.map((user) => (
               <MenuItem value={user.id}>
                 {user.username} - {user.first_name} {user.last_name}
               </MenuItem>
@@ -211,8 +182,8 @@ function TaskDetail(props) {
             value={priority}
             onChange={assignPriority}
           >
-            {prioritiesArray.map((priority) => (
-              <MenuItem value={priority}>{priority}</MenuItem>
+            {priorities.map((priority) => (
+              <MenuItem value={priority.id}>{priority.name}</MenuItem>
             ))}
           </Select>
         </FormControl>

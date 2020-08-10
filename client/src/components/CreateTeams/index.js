@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
+import Typography from "@material-ui/core/Typography";
+import GroupIcon from "@material-ui/icons/Group";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 import "./index.scss";
 
@@ -47,7 +49,6 @@ function CreateTeam() {
           postCall(addUserUrl, addUserBody)
             .then((response) => response.json())
             .then((payload) => {
-              const { confirmation, message } = payload;
               console.log(payload);
               window.location.href = `${clientBaseURL}/home`;
             });
@@ -61,7 +62,10 @@ function CreateTeam() {
     <div id="mainDiv">
       <Card className={"sign-up-wrapper"}>
         <div className={"title"}>
-          <h2>Create New Team</h2>
+          <Typography variant="h4" color="primary">
+              Create New Team
+          </Typography>
+          <GroupIcon className="group-icon" color="primary" style={{ fontSize: 40 }}/>
         </div>
         <div className="text-input-wrapper">
           <TextField

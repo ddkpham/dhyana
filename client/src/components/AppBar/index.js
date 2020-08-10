@@ -4,23 +4,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import AddIcon from "@material-ui/icons/Add";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import GroupIcon from "@material-ui/icons/Group";
 import { useHistory } from "react-router-dom";
 import PageviewIcon from "@material-ui/icons/Pageview";
 import { getCall } from "../../apiCalls/apiCalls";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { baseURL, clientBaseURL } from "../../config/settings";
+import { baseURL } from "../../config/settings";
 
 const useStyles = makeStyles((theme) => ({
   grow: {

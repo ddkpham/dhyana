@@ -8,6 +8,8 @@ const Comment = require("../models/Comment");
 const Task = require("../models/Task");
 const { errorResponse, successResponse } = require("../utility/response");
 const { Op } = require("sequelize");
+const sequelize = require("../config/database");
+const projectTransactions = require("../transactions/projects");
 
 exports.create_project = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
@@ -41,6 +43,42 @@ exports.create_project = function (req, res, next) {
     .catch((err) => {
       res.status(409).json(errorResponse("Project exists already.", err));
     });
+};
+
+exports.delete_project = async function (req, res, next) {
+  console.log("exports.delete_project -> req.body", req.body);
+  body(req.body).trim().escape().not().isEmpty();
+  const id = req.body.id;
+
+  const errors = validationResult(req.body);
+  if (!errors.isEmpty()) {
+    res.status(400).json(errorResponse("errors in inputted data"));
+  }
+
+  if (!id) {
+    res.status(400).json(errorResponse("missing project id"));
+    return;
+  }
+
+  // managed transaction - sequelize will automatically handle commits and rollbacks
+
+  try {
+    console.log("starting transaction....");
+    const result = await sequelize.transaction(
+      projectTransactions.projectDelete(id)
+    );
+    console.log("finished transaction....");
+    console.log(
+      "exports.delete_project -> Number of deleted Projects: ",
+      result
+    );
+    res.status(200).json(successResponse("successfully deleted project!"));
+  } catch (err) {
+    console.log("err", err);
+    res
+      .status(200)
+      .json(errorResponse("Error occured in deleting project", err));
+  }
 };
 
 exports.create_task_comment = function (req, res, next) {
@@ -388,6 +426,60 @@ exports.view_project_columns = function (req, res, next) {
     );
 };
 
+exports.delete_column = async function (req, res, next) {
+  console.log("exports.delete_column -> req.params", req.params);
+  const column_id = req.params.column_id.trim();
+
+  if (!column_id) {
+    res.status(400).json(errorResponse("missing column_id"));
+    return;
+  }
+
+  const tasks = await ColumnTask.findAll({
+    where: {
+      column_id,
+    },
+  });
+
+  const taskPromises = [];
+
+  for (let t of tasks) {
+    taskPromises.push(DeleteTask(t.task_id));
+  }
+
+  Promise.all(taskPromises)
+    .then(() => {
+      ProjectColumns.destroy({
+        where: {
+          column_id,
+        },
+      })
+        .then(() => {
+          Column.destroy({
+            where: {
+              id: column_id,
+            },
+          })
+            .then(() =>
+              res
+                .status(200)
+                .json(successResponse("successfully deleted column"))
+            )
+            .catch((err) =>
+              res
+                .status(400)
+                .json(errorResponse("column destroy error: " + err.message))
+            );
+        })
+        .catch((err) =>
+          res
+            .status(400)
+            .json(errorResponse("projectcolumn destroy error: " + err.message))
+        );
+    })
+    .catch((error) => res.status(400).json(errorResponse(error)));
+};
+
 exports.create_new_task = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("exports.create_new_task -> req.body", req.body);
@@ -561,17 +653,8 @@ exports.edit_task = function (req, res, next) {
     });
 };
 
-exports.delete_task = function (req, res, next) {
-  body(req.body).trim().escape().not().isEmpty();
-  console.log("exports.delete_task -> req.params", req.params);
-  const task_id = req.params.task_id.trim();
-
-  if (!task_id) {
-    res.status(400).json(errorResponse("missing task_id"));
-    return;
-  }
-
-  ColumnTask.destroy({
+function DeleteTask(task_id) {
+  return ColumnTask.destroy({
     where: {
       task_id,
     },
@@ -582,18 +665,30 @@ exports.delete_task = function (req, res, next) {
           id: task_id,
         },
       })
-        .then(() =>
-          res.status(200).json(successResponse("successfully deleted task"))
-        )
-        .catch((err) =>
-          res
-            .status(400)
-            .json(errorResponse("task destroy error: " + err.message))
-        );
+        .then(() => 1)
+        .catch((err) => {
+          throw "task destroy error: " + err.message;
+        });
     })
-    .catch((err) =>
-      res
-        .status(400)
-        .json(errorResponse("columntask destroy error: " + err.message))
-    );
+    .catch((err) => {
+      throw "task destroy error: " + err.message;
+    });
+}
+
+exports.delete_task = function (req, res, next) {
+  console.log("exports.delete_task -> req.params", req.params);
+  const task_id = req.params.task_id.trim();
+
+  if (!task_id) {
+    res.status(400).json(errorResponse("missing task_id"));
+    return;
+  }
+
+  DeleteTask(task_id)
+    .then(() => {
+      res.status(200).json(successResponse("successfully deleted task"));
+    })
+    .catch((error) => {
+      res.status(400).json(errorResponse(error));
+    });
 };
