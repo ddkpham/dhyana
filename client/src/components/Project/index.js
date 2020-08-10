@@ -11,17 +11,17 @@ import { baseURL, clientBaseURL } from "../../config/settings";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
 import Chip from "@material-ui/core/Chip";
 import ProjectToggle from "./projectToggle";
-import GridList from '@material-ui/core/GridList';
-import withScrolling from 'react-dnd-scrolling';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import Hidden from '@material-ui/core/Hidden';
-import EditIcon from '@material-ui/icons/Edit';
-import SaveIcon from '@material-ui/icons/Save';
-import Popover from '@material-ui/core/Popover';
+import GridList from "@material-ui/core/GridList";
+import withScrolling from "react-dnd-scrolling";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import Hidden from "@material-ui/core/Hidden";
+import EditIcon from "@material-ui/icons/Edit";
+import SaveIcon from "@material-ui/icons/Save";
+import Popover from "@material-ui/core/Popover";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
 import Input from "@material-ui/core/Input";
-import ProjectTeam from "./teamList"
+import ProjectTeam from "./teamList";
 import ConfirmDialog from "../ConfirmDialog";
 import { red, cyan, grey } from "@material-ui/core/colors";
 
@@ -77,9 +77,9 @@ const styles = (theme) => ({
     flexDirection: "row",
     padding: 10,
     justifyContent: "space-evenly",
-    '& .MuiButtonBase-root':{
-      margin: 5
-    }
+    "& .MuiButtonBase-root": {
+      margin: 5,
+    },
   },
   deleteButton: {
     color: "red",
@@ -144,7 +144,7 @@ class Project extends React.Component {
     showColumns: false,
     deleteOpen: false,
     name: "",
-    description: ""
+    description: "",
   };
 
   async componentWillMount() {
@@ -205,10 +205,12 @@ class Project extends React.Component {
 
     const url = `${baseURL}/project/edit/${project.id}`;
     const newName = name.length ? name : project.name;
-    const newDescription = description.length ? description : project.description
+    const newDescription = description.length
+      ? description
+      : project.description;
     const body = {
       name: newName,
-      description: newDescription
+      description: newDescription,
     };
 
     postCall(url, body)
@@ -222,12 +224,12 @@ class Project extends React.Component {
 
   openEdit = (event) => {
     const { project } = this.state;
-    this.setState({editAnchor: event.currentTarget})
-  }
+    this.setState({ editAnchor: event.currentTarget });
+  };
 
   closeEdit = () => {
-    this.setState({editAnchor: null});
-  }
+    this.setState({ editAnchor: null });
+  };
 
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
@@ -271,6 +273,7 @@ class Project extends React.Component {
       deleteOpen,
       editAnchor,
     } = this.state;
+    console.log("Project -> render -> project", project);
 
     const { classes } = this.props;
     const priorityArray = [
@@ -284,7 +287,6 @@ class Project extends React.Component {
 
     const editOpen = Boolean(editAnchor);
 
-    console.log("Project -> render -> project", project);
     return (
       <div className={classes.projectMainDiv}>
         <DndProvider backend={HTML5Backend}>
@@ -320,12 +322,12 @@ class Project extends React.Component {
                   open={editOpen}
                   onClose={this.closeEdit}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: "bottom",
+                    horizontal: "left",
                   }}
                   transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
+                    vertical: "top",
+                    horizontal: "left",
                   }}
                 >
                   <MenuList>
@@ -334,9 +336,9 @@ class Project extends React.Component {
                         variant="outlined"
                         placeholder="Name"
                         defaultValue={project.name}
-                        type='text'
+                        type="text"
                         onChange={(event) => {
-                          this.setState({name: event.target.value})
+                          this.setState({ name: event.target.value });
                         }}
                       />
                     </MenuItem>
@@ -345,47 +347,42 @@ class Project extends React.Component {
                         variant="outlined"
                         placeholder="Description"
                         defaultValue={project.description}
-                        type='text'
+                        type="text"
                         multiline
+                        rows={4}
                         onChange={(event) => {
-                          this.setState({description: event.target.value})
+                          this.setState({ description: event.target.value });
                         }}
                       />
                     </MenuItem>
                     <MenuItem>
                       <Button
                         variant="outlined"
-                        startIcon={<SaveIcon/>}
+                        startIcon={<SaveIcon />}
                         onClick={this.editProject}
                       >
-                        <Hidden smDown>
-                          Save
-                        </Hidden>
+                        <Hidden smDown>Save</Hidden>
                       </Button>
                     </MenuItem>
                     <MenuItem>
                       <Button
                         variant="outlined"
-                        startIcon={<DeleteForeverIcon/>}
+                        startIcon={<DeleteForeverIcon />}
                         onClick={this.openDelete}
                         className={classes.deleteButton}
                       >
-                        <Hidden smDown>
-                          Delete Project
-                        </Hidden>
+                        <Hidden smDown>Delete Project</Hidden>
                       </Button>
                     </MenuItem>
                   </MenuList>
                 </Popover>
                 <Button
                   variant="outlined"
-                  startIcon={<EditIcon/>}
+                  startIcon={<EditIcon />}
                   onClick={this.openEdit}
                   className={classes.editButton}
                 >
-                  <Hidden smDown>
-                    Edit Project
-                  </Hidden>
+                  <Hidden smDown>Edit Project</Hidden>
                 </Button>
               </div>
             </div>
@@ -393,8 +390,8 @@ class Project extends React.Component {
               <Typography variant="h4" style={{ marginBottom: 15 }}>
                 {project.name}
               </Typography>
-              <Typography variant="h6" className='hide-short'>
-                {project.description}
+              <Typography variant="h6" className="hide-short">
+                {project.description || ""}
               </Typography>
             </div>
             <ScrollingComponent

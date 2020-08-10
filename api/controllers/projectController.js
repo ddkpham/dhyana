@@ -202,11 +202,7 @@ exports.edit_project = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
   console.log("exports.edit_project -> req.body", req.body);
   const project_id = req.params.project_id;
-  console.log('hey toria project id', project_id)
-  const {
-    name,
-    description,
-  } = req.body;
+  const { name, description } = req.body;
 
   if (!project_id) {
     res.status(400).json(errorResponse("missing project id"));
