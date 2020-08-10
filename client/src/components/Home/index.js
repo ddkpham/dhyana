@@ -161,7 +161,7 @@ class Home extends React.Component {
         </div>
 
         <div className="empty-projects-container">
-          {noProjects ? <EmptyCard /> : null}
+          {this.state.teams.length === 0 ? <EmptyCard /> : null}
         </div>
 
         <div className={classes.mainWrapper}>

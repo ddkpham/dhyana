@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     height: 350,
   },
   titlePrompt: {
-    paddingTop: 35,
+    paddingTop: 25,
   }
 });
 
@@ -40,7 +40,7 @@ function EmptyCard(props) {
           title="Contemplative Reptile"
         />
         <div>
-          <Typography className={classes.titlePrompt}>You must be part of a team to make a project.</Typography>
+          <Typography className={classes.titlePrompt}>You must be part of a team to make a project. Add a team above, or be added to an existing team to begin!</Typography>
         </div>
       </div>
     </Card>
