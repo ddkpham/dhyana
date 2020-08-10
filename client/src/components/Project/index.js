@@ -11,11 +11,17 @@ import { baseURL, clientBaseURL } from "../../config/settings";
 import { getCall, postCall } from "../../apiCalls/apiCalls";
 import Chip from "@material-ui/core/Chip";
 import ProjectToggle from "./projectToggle";
-import GridList from "@material-ui/core/GridList";
-import withScrolling from "react-dnd-scrolling";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import Hidden from "@material-ui/core/Hidden";
-import ProjectTeam from "./teamList";
+import GridList from '@material-ui/core/GridList';
+import withScrolling from 'react-dnd-scrolling';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Hidden from '@material-ui/core/Hidden';
+import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+import Popover from '@material-ui/core/Popover';
+import MenuList from "@material-ui/core/MenuList";
+import MenuItem from "@material-ui/core/MenuItem";
+import Input from "@material-ui/core/Input";
+import ProjectTeam from "./teamList"
 import ConfirmDialog from "../ConfirmDialog";
 import { red, cyan, grey } from "@material-ui/core/colors";
 
@@ -68,9 +74,12 @@ const styles = (theme) => ({
   smallSectionProject: {
     display: "flex",
     flexWrap: "wrap",
-    flexDirection: "column",
+    flexDirection: "row",
     padding: 10,
     justifyContent: "space-evenly",
+    '& .MuiButtonBase-root':{
+      margin: 5
+    }
   },
   deleteButton: {
     color: "red",
@@ -189,6 +198,30 @@ class Project extends React.Component {
     this.setState({ deleteOpen: false });
   };
 
+  editProject = () => {
+    const { title, description, project } = this.state;
+    const url = `${baseURL}/project/edit/${project.id}`;
+    const body = { title, description };
+    console.log('hey toria body', body)
+    postCall(url, body)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("edit project success", data);
+        this.getProject();
+        this.closeEdit();
+      })
+      .catch((err) => console.log("edit project error", err));
+  };
+
+  openEdit = (event) => {
+    const { project } = this.state;
+    this.setState({editAnchor: event.currentTarget})
+  }
+
+  closeEdit = () => {
+    this.setState({editAnchor: null});
+  }
+
   getColumns = (projectId) => {
     const url = `${baseURL}/project/${projectId}/columns`;
     getCall(url)
@@ -229,7 +262,9 @@ class Project extends React.Component {
       teamMembers,
       columnModalOpen,
       deleteOpen,
+      editAnchor,
     } = this.state;
+
     const { classes } = this.props;
     const priorityArray = [
       { label: "None", class: classes.chip0 },
@@ -239,6 +274,8 @@ class Project extends React.Component {
       { label: "Critical", class: classes.chip4 },
       { label: "Blocker", class: classes.chip5 },
     ];
+
+    const editOpen = Boolean(editAnchor);
 
     console.log("Project -> render -> project", project);
     return (
@@ -268,13 +305,78 @@ class Project extends React.Component {
               </div>
               <div className={classes.smallSectionProject}>
                 <ProjectToggle />
+                <Popover
+                  id="search-results"
+                  anchorEl={editAnchor}
+                  disableAutoFocus
+                  disableEnforceFocus
+                  open={editOpen}
+                  onClose={this.closeEdit}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                >
+                  <MenuList>
+                    <MenuItem>
+                      <Input
+                        variant="outlined"
+                        placeholder="Name"
+                        type='text'
+                        onChange={(event) => {
+                          this.setState({title: event.target.value})
+                        }}
+                      />
+                    </MenuItem>
+                    <MenuItem>
+                      <Input
+                        variant="outlined"
+                        placeholder="Description"
+                        type='text'
+                        multiline
+                        onChange={(event) => {
+                          this.setState({description: event.target.value})
+                        }}
+                      />
+                    </MenuItem>
+                    <MenuItem>
+                      <Button
+                        variant="outlined"
+                        startIcon={<SaveIcon/>}
+                        onClick={this.editProject}
+                      >
+                        <Hidden smDown>
+                          Save
+                        </Hidden>
+                      </Button>
+                    </MenuItem>
+                    <MenuItem>
+                      <Button
+                        variant="outlined"
+                        startIcon={<DeleteForeverIcon/>}
+                        onClick={this.openDelete}
+                        className={classes.deleteButton}
+                      >
+                        <Hidden smDown>
+                          Delete Project
+                        </Hidden>
+                      </Button>
+                    </MenuItem>
+                  </MenuList>
+                </Popover>
                 <Button
                   variant="outlined"
-                  startIcon={<DeleteForeverIcon />}
-                  onClick={this.openDelete}
-                  className={classes.deleteButton}
+                  startIcon={<EditIcon/>}
+                  onClick={this.openEdit}
+                  className={classes.editButton}
                 >
-                  <Hidden smDown>Delete Project</Hidden>
+                  <Hidden smDown>
+                    Edit Project
+                  </Hidden>
                 </Button>
               </div>
             </div>
