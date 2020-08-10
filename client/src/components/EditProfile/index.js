@@ -42,6 +42,7 @@ function EditProfile() {
     const { confirmation, message } = data;
     console.log(data);
     if (confirmation === "success") {
+      alert("Successfully updated your profile! 🤗");
       history.goBack();
     } else {
       alert(message);
@@ -130,8 +131,23 @@ function EditProfile() {
             />
           </div>
           <div className="update-user-button">
-            <Button variant="outlined" color="primary" onClick={update}>
-              Update Information
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={update}
+              className="edit-profile-btn"
+            >
+              Update Info
+            </Button>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                console.log("deleting account");
+              }}
+              className="edit-profile-btn"
+            >
+              Delete Account
             </Button>
           </div>
         </Card>
