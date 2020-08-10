@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     maxWidth: 140,
   },
   media: {
-    height: 140,
+    height: 250,
     width: "25vw",
   },
   mainDiv: {
@@ -20,9 +20,10 @@ const useStyles = makeStyles({
     flexDirection: "column",
     textAlign: "center",
     alignItems: "center",
+    height: 350,
   },
   titlePrompt: {
-    paddingTop: 15,
+    paddingTop: 35,
   }
 });
 
@@ -31,7 +32,7 @@ function EmptyCard(props) {
   const classes = useStyles();
 
   return (
-    <Card raised className="empty-card-container">
+    <Card raised>
       <div className={classes.mainDiv}>
         <CardMedia
           className={classes.media}

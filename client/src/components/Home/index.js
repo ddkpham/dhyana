@@ -21,12 +21,14 @@ const styles = (theme) => ({
     width: 250,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "center",
     height: "100%",
     width: "100%",
+    overflowX: 'scroll',
   },
   mainCard: {
     width: 350,
+    minWidth: 350,
+    minHeight: 600,
   },
   title: {
     textAlign: "center",
@@ -39,6 +41,12 @@ const styles = (theme) => ({
   headerDiv: {
     width: "100%",
     display: "flex",
+  },
+  buttonDiv: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
   },
   teamsColumn: {
     display: "flex",
@@ -125,6 +133,36 @@ class Home extends React.Component {
           Dashboard
         </Typography>
         
+        <div className={classes.buttonDiv}>
+          <Card raised className="home-project-add-btn">
+            <CardActionArea href={"/create-team"}>
+              <CardContent>
+                <Typography variant="h5" color="textSecondary">
+                  <AddIcon />
+                  Add Team
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+
+          {this.state.teams.length >= 1 ? (
+            <Card raised className="home-project-add-btn">
+              <CardActionArea href={"/project/new"}>
+                <CardContent>
+                  <Typography variant="h5" color="textSecondary">
+                    <AddIcon />
+                    Add Project
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+            ) : (null)
+          }
+        </div>
+
+        <div className="empty-projects-container">
+          {noProjects ? <EmptyCard /> : null}
+        </div>
 
         <div className={classes.mainWrapper}>
           {this.state.columns.map((column) => (
