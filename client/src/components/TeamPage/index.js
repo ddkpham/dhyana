@@ -145,13 +145,25 @@ function TeamPage(props) {
                                     <Typography className="profile-name" variant="h6" color="primary">
                                         @{user.username}
                                     </Typography>
+                                    { (TeamUsers.length > 1)? (
                                     <Button
+                                      className="delete-member-btn"
                                       variant="outlined"
                                       color="primary"
                                       onClick={()=> deleteTeamMember(user.id)}
                                     >
                                       Delete Member
                                     </Button>
+                                    ):
+                                    <Button
+                                    className="delete-member-btn"
+                                    variant="outlined"
+                                    color="primary"
+                                    disabled
+                                    onClick={()=> deleteTeamMember(user.id)}
+                                  >
+                                    Delete Member
+                                  </Button>}
                                 </div>
                                 </div>
                             </CardContent>
