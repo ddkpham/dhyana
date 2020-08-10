@@ -26,6 +26,13 @@ const useStyles = makeStyles({
     backgroundColor: blue[100],
     color: blue[600],
   },
+  mainDiv: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+  }
 });
 
 function SimpleDialog(props) {
@@ -80,38 +87,40 @@ function SimpleDialog(props) {
 
   return (
     <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
-      <DialogTitle id="simple-dialog-title">
-        We're sad to see you go 😢{" "}
-      </DialogTitle>
-      <Typography>Confirm account deletion with username</Typography>
-      <List>
-        <ListItem button key={"confirm-deletion"}>
-          <ListItemAvatar>
-            <Avatar className={classes.avatar}>
-              <SentimentDissatisfiedIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <TextField
-            id="outlined-basic"
-            label="Confirm Username"
-            variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </ListItem>
-        <ListItem autoFocus button onClick={deleteAccount}>
-          <ListItemAvatar>
-            <Avatar>
-              <DeleteForeverIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Delete account" />
-        </ListItem>
-      </List>
+        onClose={handleClose}
+        aria-labelledby="simple-dialog-title"
+        open={open}
+      >
+        <div className={classes.mainDiv}>
+        <DialogTitle id="simple-dialog-title">
+          We're sad to see you go 😢{" "}
+        </DialogTitle>
+        <Typography>Confirm account deletion with username</Typography>
+        <List>
+          <ListItem button key={"confirm-deletion"}>
+            <ListItemAvatar>
+              <Avatar className={classes.avatar}>
+                <SentimentDissatisfiedIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <TextField
+              id="outlined-basic"
+              label="Confirm Username"
+              variant="outlined"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </ListItem>
+          <ListItem autoFocus button onClick={deleteAccount}>
+            <ListItemAvatar>
+              <Avatar>
+                <DeleteForeverIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Delete account" />
+          </ListItem>
+        </List>
+        </div>
     </Dialog>
   );
 }
