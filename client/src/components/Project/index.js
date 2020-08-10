@@ -391,12 +391,9 @@ class Project extends React.Component {
               <Typography variant="h4" style={{ marginBottom: 15 }}>
                 {project.name}
               </Typography>
-              <Typography variant="body1">{project.description}</Typography>
-            </div>
-            <div className={classes.chipsContainer}>
-              {priorityArray.map((p) => (
-                <Chip label={p.label} className={p.class} />
-              ))}
+              <Typography variant="h6" className='hide-short'>
+                {project.description}
+              </Typography>
             </div>
             <ScrollingComponent
               spacing={2}
