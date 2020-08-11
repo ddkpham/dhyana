@@ -6,7 +6,7 @@ projects and manage them all in one single simple interface.
 
 **To launch the platform:**
 1. run docker-compose build && docker-compose up in the terminal
-2. navigate to localhost:8080 on your web browser of choice
+2. navigate to http://localhost:8080/ on your web browser of choice
 
 
 **Features implemented:**
