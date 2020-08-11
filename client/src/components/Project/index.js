@@ -164,15 +164,15 @@ class Project extends React.Component {
         this.getProject();
       }
     } catch (err) {
+      this.setState({showPage: true})
+      console.log("set showPage to true")
       console.log("Project -> componentWillMount -> err", err);
     }
-
-    this.setState({showPage: true})
-    console.log("set showPage to true")
   }
 
   async componentWillUnmount() {
     this.setState({showColumns: false})
+    this.setState({showPage: false})
   }
 
   getProject = () => {
@@ -187,7 +187,8 @@ class Project extends React.Component {
       .then((data) => {
         console.log("fetch project success", data);
         const project = data.data[0];
-        this.setState({ project });
+        this.setState({ project }, 
+          () => {this.setState({showPage: true})});
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
         this.setState({showColumns: true})
@@ -310,6 +311,7 @@ class Project extends React.Component {
 
     const handleEmpty = () => {
       console.log("entered handleEmpty with showPage ", this.state.showPage)
+      console.log("isAuthorized is ", isAuthorized)
       if (this.state.showPage) {
         return <EmptyCard />
       }
