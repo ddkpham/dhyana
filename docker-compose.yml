@@ -5,7 +5,7 @@ services:
     build: ./client
     restart: always
     ports:
-      - "8080:8080"
+      - "8080:80"
     stdin_open: true
     volumes:
       - ./client:/usr/src/client
@@ -23,7 +23,7 @@ services:
       DB_PORT: 5432
       POSTGRES_USER: "postgres"
 
-    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "run", "devstart"]
+    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
     stdin_open: true
     tty: true
     volumes:
