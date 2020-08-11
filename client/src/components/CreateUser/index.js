@@ -66,7 +66,7 @@ function CreateUser() {
 
   const onChangeUsername = (input) => {
     console.log("before", input);
-    const regex = /^[a-zA-Z0-9_-]*$/;
+    const regex = /^[\w\-\s]+$/;
     if (regex.test(input) || input == "") {
       console.log("after", input);
       setUsername(input);
