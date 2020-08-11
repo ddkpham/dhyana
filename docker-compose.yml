@@ -23,7 +23,7 @@ services:
       DB_PORT: 5432
       POSTGRES_USER: "postgres"
 
-    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "run", "devstart"]
+    command: ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
     stdin_open: true
     tty: true
     volumes:
