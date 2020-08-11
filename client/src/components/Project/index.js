@@ -187,11 +187,9 @@ class Project extends React.Component {
       .then((data) => {
         console.log("fetch project success", data);
         const project = data.data[0];
-        this.setState({ project }, 
-          () => {this.setState({showPage: true})});
+        this.setState({ project });
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
-        this.setState({showColumns: true})
       })
       .catch((err) => {
         console.log("project fetch error", err)
@@ -259,9 +257,16 @@ class Project extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("fetch columns success", data);
-        this.setState({ columns: data.data });
+        this.setState({ columns: data.data }, 
+          () => {
+            this.setState({showPage: true})
+            this.setState({showColumns: true})
+          });
       })
-      .catch((err) => console.log("column fetch error", err));
+      .catch((err) => {
+        this.setState({showPage: true})
+        console.log("column fetch error", err)
+      });
   };
 
   getTeamUserArray = (team_id) => {
