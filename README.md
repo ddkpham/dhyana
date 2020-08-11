@@ -4,69 +4,51 @@ Project management software and collaboration tool. Helps organize and
 structure project planning to maximize success. Teams can create multiple
 projects and manage them all in one single simple interface.
 
-## Compiling Instructions:
+**To launch the platform:**
 
-1. From the root folder simply run `docker-compose build && docker-compose up`
-2. Access the app from [localhost:8080](http://localhost:8080/)
-3. The database and the api also require ports `5432` and `3000` to be available
+1. run docker-compose build && docker-compose up in the terminal
+2. navigate to localhost:8080 on your web browser of choice
 
-## Features implemented:
+**Features implemented:**
 
-1. Users
+1. Sign up & Login
 
-- You can create a new user using the sign up button on the login page.
-- You must enter a password and a unique username, but can include a first and last
-- name, a job title, and a biography
-- Once created you can use the username and password to login.
-- Or you can use one of our premade users, each of which has at least one team and project
-  - username: testuser1, password: testuser1
-  - username: ironman, password: ironman
-  - username: thanos, password: thanos
-  - username: srogers, password: srogers
-- You can view your profile by clicking on the icon in the app bar menu
-- You can then edit your names, job title, biography, and password by
-  clicking "Edit Profile".
-- You can logout by clicking on the button in the app bar.
+   - create a dhyana user by clicking sign up on the login page
+   - fill in required information. (first and last name are optional)
 
-2. Home page
+2. User Feature
 
-- All of your current teams are listed here.
-- Any projects that belong to your teams are listed underneath them
-- From here you can create a team or project. If you have no teams you
-  must create at least one before you can create a project.
-- Both team and project cards are clickable to take you to management pages.
+   - In the app bar, there is a search icon. This takes you to the search user page, which provides the ability to find any user on the platform, and view their Profile Page
+   - The Profile Page shows what teams a user belongs to, and what projects they are working on. It additionally shows information about the user, and provides the ability to add that user to any team you currently belong to
+   - My Profile and Edit Profile provide the ability to view and edit your own information, and delete your account, if you desire
 
-3. Teams
+3. Home Page
 
-- Teams can be created from the home page or from menu in the app bar.
-- You can view a team's current memebers and projects through the team management page.
-- You can add members to a team from the project page or from the team management page.
-- Teams can be deleted from the team management page. This will delete all of the team's projects.
+   - The Home page displays all teams and projects that a user belongs to
+   - Each team and its associated projects are contained in a column, for ease of identifcation
+   - Contains buttons to create team and create project
+   - Ability to navigate into your teams' pages and your projects' pages
 
-4. Projects
+4. Project Page
 
-- Projects can be created from the home page. After creation you should be redirected to
-  the project management page.
-- Projects belong to a team and only memebers of that team should be able to see and edit it.
-- Projects can be viewed, edited, from the project management page.
-- Deleting a project will delete all of its columns and tasks.
-- You currently cannot assign a project to a new team.
+   - This is the main feature of the app
+   - Provides the ability to create, read, update, and delete columns (such as backlog, in progress, in review, done, etc)
+   - Provides the ability to create, read, update, and delete tasks
+     - Contain fields such as title, description, time estimated and completed, user assigned, priority and flag
+     - Provides ability to leave comments on individual tasks
+   - Ability to quickly swap between different projects
+   - Ability to sort or filter tasks by priority, assigned user, date created and title
+   - Ability to see who is in the team, quickly navigate to their profile pages, and add users to a team
 
-5. Columns
+5. Team Page
 
-- Projects are made up of multiple columns.
-- Columns can be viewed and created from the project management page.
-- Columns have a menu where you can filter or sort tasks.
-- The menu also provides delete functionality. Deleting a columns
-  deletes all its tasks
-- You currently cannot reorder the columns.
+   - Ability to see who is in your team
+   - Ability to see what projects belong to that team
+   - Abiity to remove members
+   - Ability to delete the team
 
-6. Tasks
+**Preloaded Users (usernames are the same as passwords)**
 
-- Tasks belong to columns.
-- In the project management page you can create, view, and edit tasks.
-- Tasks need a title
-- Tasks can have a description, a priority, and an estimated time.
-- Tasks can also be assigned to a user in the team.
-- Tasks can be moved between columns with drang and drop.
-- Once created, the task card can be clicked to edit or delete a task
+    - testuser1 - has a large amount of teams and projects to view
+    - ironman, thanos, srogers: can all view and edit the teams and projects made by testuser1
+    - "Endgame" is a good project to view the variety of states the TaskCard can be in
