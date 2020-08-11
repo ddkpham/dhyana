@@ -164,15 +164,15 @@ class Project extends React.Component {
         this.getProject();
       }
     } catch (err) {
+      this.setState({showPage: true})
+      console.log("set showPage to true")
       console.log("Project -> componentWillMount -> err", err);
     }
-
-    this.setState({showPage: true})
-    console.log("set showPage to true")
   }
 
   async componentWillUnmount() {
     this.setState({showColumns: false})
+    this.setState({showPage: false})
   }
 
   getProject = () => {
@@ -190,11 +190,11 @@ class Project extends React.Component {
         this.setState({ project });
         this.getTeamUserArray(project.team_id);
         this.getColumns(project.id);
-        this.setState({showColumns: true})
       })
       .catch((err) => {
         console.log("project fetch error", err)
         this.setState({showColumns: true})
+        this.setState({showPage: true})
       });
   };
 
@@ -257,9 +257,16 @@ class Project extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("fetch columns success", data);
-        this.setState({ columns: data.data });
+        this.setState({ columns: data.data }, 
+          () => {
+            this.setState({showPage: true})
+            this.setState({showColumns: true})
+          });
       })
-      .catch((err) => console.log("column fetch error", err));
+      .catch((err) => {
+        this.setState({showPage: true})
+        console.log("column fetch error", err)
+      });
   };
 
   getTeamUserArray = (team_id) => {
@@ -310,6 +317,7 @@ class Project extends React.Component {
 
     const handleEmpty = () => {
       console.log("entered handleEmpty with showPage ", this.state.showPage)
+      console.log("isAuthorized is ", isAuthorized)
       if (this.state.showPage) {
         return <EmptyCard />
       }
