@@ -4,8 +4,12 @@ Project management software and collaboration tool. Helps organize and
 structure project planning to maximize success. Teams can create multiple
 projects and manage them all in one single simple interface. 
 
-Steps to demo / features implemented:
+## Compiling Instructions:
+1. From the root folder simply run ```docker-compose build && docker-compose up```
+2. Access the app from [localhost:8080](http://localhost:8080/)
+3. The database and the api require ports ```5433``` and ```3000``` to be available
 
+## Features implemented:
 1. Users
  - You can create a new user using the sign up button on the login page.
  - You must enter a password and a unique username, but can include a first and last 
