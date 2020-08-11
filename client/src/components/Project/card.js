@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
   contentDiv: {
     maxWidth: 325,
-    minWidth: 200,
+    minWidth: 325,
   }
 });
 
