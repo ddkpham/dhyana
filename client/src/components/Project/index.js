@@ -196,6 +196,7 @@ class Project extends React.Component {
       .catch((err) => {
         console.log("project fetch error", err)
         this.setState({showColumns: true})
+        this.setState({showPage: true})
       });
   };
 
