@@ -147,6 +147,7 @@ class Project extends React.Component {
     teamMembers: [],
     columnModalOpen: false,
     showColumns: false,
+    showPage: false,
     deleteOpen: false,
     name: "",
     description: "",
@@ -165,6 +166,9 @@ class Project extends React.Component {
     } catch (err) {
       console.log("Project -> componentWillMount -> err", err);
     }
+
+    this.setState({showPage: true})
+    console.log("set showPage to true")
   }
 
   async componentWillUnmount() {
@@ -303,6 +307,14 @@ class Project extends React.Component {
     const isAuthorized = project.name ? true : false;
 
     const editOpen = Boolean(editAnchor);
+
+    const handleEmpty = () => {
+      console.log("entered handleEmpty with showPage ", this.state.showPage)
+      if (this.state.showPage) {
+        return <EmptyCard />
+      }
+      return (null)
+    }
 
     return (
       <div className={classes.projectMainDiv}>
@@ -448,7 +460,7 @@ class Project extends React.Component {
         ) : (
           <div className={classes.emptyContainer}>
             {" "}
-            <EmptyCard />
+            {handleEmpty()}
             {" "}
           </div>
         )}
