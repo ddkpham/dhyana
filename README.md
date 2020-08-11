@@ -54,4 +54,4 @@ projects and manage them all in one single simple interface.
 
     - testuser1 - has a large amount of teams and projects to view
     - ironman, thanos, srogers: can all view and edit the teams and projects made by testuser1
-    - "Endgame" is a good project to view the variety of states the TaskCard can be in
+    - "The Avengers Initiative" is a good project to view the variety of states the TaskCard can be in
