@@ -44,9 +44,19 @@ function ProfilePage(props) {
   const [userProjects, setUserProjects] = useState([]);
   const [userTeams, setUserTeams] = useState([]);
   const [team_id, getTeamId] = useState("");
+  const [teamEmpty, setTeamEmpty] = useState("");
 
   console.log("Team id", team_id);
   console.log("user_id", userInfo.id);
+
+  const handleEmpty = () => {
+    console.log("entered handleEmpty with showPage ", )
+    if (teamEmpty) {
+      return <EmptyCard />
+    }
+    return (null)
+  }
+
 
   const addUserToTeam = async () => {
     const url = `${baseURL}/team/add-user`;
@@ -83,6 +93,10 @@ function ProfilePage(props) {
         const { projects, teams } = payload.data;
         setUserProjects(projects);
         setUserTeams(teams);
+        if (teams.length > 0)
+        {
+          setTeamEmpty(true);
+        }
         console.log("getUser -> payload", payload);
       } catch (err) {
         console.log("project fetch error", err);
@@ -227,7 +241,7 @@ function ProfilePage(props) {
                 })}
               </div>): 
               (<div>
-                <EmptyCard />
+                {handleEmpty()}
               </div>)}
             </div>
             <Typography className="project-title" variant="h4" color="secondary">
@@ -260,7 +274,7 @@ function ProfilePage(props) {
               })}
               </div>):
               (<div>
-                <EmptyCard />
+                {handleEmpty()}
             </div>)}
             </div>
           </CardContent>
