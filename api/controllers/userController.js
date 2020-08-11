@@ -376,11 +376,17 @@ exports.edit_user = function (req, res, next) {
     return;
   } else {
     const { password, first_name, last_name, biography, job_title } = req.body;
+
+    // hash pwd before putting it into db
+    const salt = bcrypt.genSaltSync(saltRounds);
+    console.log("salt", salt);
+    const pwHash = bcrypt.hashSync(password, salt);
+
     User.update(
       {
         first_name,
         last_name,
-        password,
+        password: pwHash,
         biography,
         job_title,
       },
