@@ -40,6 +40,7 @@ projects and manage them all in one single simple interface.
     - Ability to quickly swap between different projects
     - Ability to sort or filter tasks by priority, assigned user, date created and title
     - Ability to see who is in the team, quickly navigate to their profile pages, and add users to a team
+    - Ability to update or delete the project
     
     
 5. Team Page
