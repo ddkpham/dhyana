@@ -15,7 +15,11 @@ projects and manage them all in one single simple interface.
  - You must enter a password and a unique username, but can include a first and last 
  - name, a job title, and a biography
  - Once created you can use the username and password to login.
- - TODO: example users needed
+ - Or you can use one of our premade users, each of which has at least one team and project
+    - username: testuser1, password: testuser1
+    - username: ironman, password: ironman
+    - username: thanos, password: thanos
+    - username: srogers, password: srogers
  - You can view your profile by clicking on the icon in the app bar menu
  - You can then edit your names, job title, biography, and password by 
 clicking "Edit Profile".
