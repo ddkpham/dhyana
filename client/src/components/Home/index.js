@@ -70,7 +70,6 @@ class Home extends React.Component {
   };
   async componentWillMount() {
     this.getTeams();
-    this.getProjects();
   }
 
   getProjects = () => {
@@ -79,7 +78,8 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("projects", data);
-        this.setState({ projects: data.data });
+        this.setState({ projects: data.data}, () => {this.teamColumns()});
+        this.setState({ showContent: true });
       })
       .catch((err) => console.log("project fetch error", err));
   };
@@ -90,9 +90,8 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("teams", data);
-        this.setState({ teams: data.data }, 
-          () => {this.teamColumns()});
-        this.setState({ showContent: true })
+        this.setState({ teams: data.data });
+        this.getProjects();
       })
       .catch((err) => {
         this.setState({ showContent: true })
