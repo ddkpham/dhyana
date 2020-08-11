@@ -21,6 +21,8 @@ import { team_images } from "../../static/teams/teamImages";
 import { useHistory } from "react-router-dom";
 import { postCall, getCall } from "../../apiCalls/apiCalls";
 
+import EmptyCard from "./EmptyCard";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
@@ -225,22 +227,7 @@ function ProfilePage(props) {
                 })}
               </div>): 
               (<div>
-                  <Card raised>
-                    <CardContent className="team-card-container">
-                      <CardMedia
-                        className="teamcard-image"
-                        image={team_images[0]}
-                        title="Live from space album cover"
-                      />
-                      <div className="teamcard-div">
-                        <CardActionArea>
-                          <Typography variant="h6" color="primary">
-                            Sorry. The user does not belong to any teams.
-                          </Typography>
-                        </CardActionArea>
-                      </div>
-                    </CardContent>
-                  </Card>
+                <EmptyCard />
               </div>)}
             </div>
             <Typography className="project-title" variant="h4" color="secondary">
@@ -273,22 +260,7 @@ function ProfilePage(props) {
               })}
               </div>):
               (<div>
-                <Card raised>
-                  <CardContent className="team-card-container">
-                    <CardMedia
-                      className="teamcard-image"
-                      image={team_images[1]}
-                      title="Live from space album cover"
-                    />
-                    <div className="teamcard-div">
-                      <CardActionArea>
-                        <Typography variant="h6" color="primary">
-                          Sorry. The user does not have any projects.
-                        </Typography>
-                      </CardActionArea>
-                    </div>
-                  </CardContent>
-                </Card>
+                <EmptyCard />
             </div>)}
             </div>
           </CardContent>
