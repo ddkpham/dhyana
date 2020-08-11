@@ -20,13 +20,13 @@ projects and manage them all in one single simple interface.
 2. User Feature
 
     - In the app bar, there is a search icon. This takes you to the search user page, which provides the ability to find any user on the platform, and view their Profile Page
-    - The Profile Page shows what teams a user belongs to, and what projects they are working on. It additionally shows information about the user, and provides the ability to add that user to any team you currently belong to.
-    - My Profile and Edit Profile provide the ability to view and edit your own information, and delete your account, if you desire.
+    - The Profile Page shows what teams a user belongs to, and what projects they are working on. It additionally shows information about the user, and provides the ability to add that user to any team you currently belong to
+    - My Profile and Edit Profile provide the ability to view and edit your own information, and delete your account, if you desire
 
 3. Home Page
 
-    - The Home page displays all teams and projects that a user belongs to, 
-    - Each team and its associated projects are contained in a column, for ease of identifcation.
+    - The Home page displays all teams and projects that a user belongs to
+    - Each team and its associated projects are contained in a column, for ease of identifcation
     - Contains buttons to create team and create project
     - Ability to navigate into your teams' pages and your projects' pages
     
@@ -34,7 +34,7 @@ projects and manage them all in one single simple interface.
 
     - This is the main feature of the app
     - Provides the ability to create, read, update, and delete columns (such as backlog, in progress, in review, done, etc)
-    - Provides the ability to create, read, update, and delete tasks. 
+    - Provides the ability to create, read, update, and delete tasks
         - Contain fields such as title, description, time estimated and completed, user assigned, priority and flag
         - Provides ability to leave comments on individual tasks
     - Ability to quickly swap between different projects
