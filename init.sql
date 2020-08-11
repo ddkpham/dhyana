@@ -510,6 +510,8 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 7	brady-7		9
 9	killer mike's project	killer mikes project	15
 10	christmas party	get swifty	4
+12	dhyana project	test project	9
+13	dhyana project	test project	9
 \.
 
 
@@ -651,7 +653,7 @@ SELECT pg_catalog.setval('public.projectcolumns_id_seq', 11, true);
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 10, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 13, true);
 
 
 --
@@ -736,14 +738,6 @@ ALTER TABLE ONLY public.teams
 
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT unique_name UNIQUE (name);
-
-
---
--- Name: projects unique_project_name; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.projects
-    ADD CONSTRAINT unique_project_name UNIQUE (name);
 
 
 --
