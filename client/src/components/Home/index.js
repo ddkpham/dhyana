@@ -93,6 +93,7 @@ class Home extends React.Component {
         console.log("teams", data);
         this.setState({ teams: data.data }, 
           () => {this.getProjects()});
+        this.setState({ showContent: true })
       })
       .catch((err) => {
         this.setState({ showContent: true })
@@ -104,6 +105,7 @@ class Home extends React.Component {
     console.log("entered teamRows constructor")
     console.log("this.state.teams.length is: ", this.state.teams.length)
     console.log("this.state.projects.length is: ", this.state.projects.length)
+    var columns = []
     for (var i=0; i < this.state.teams.length; i++) {
       var teamColumn = []
       const team = this.state.teams[i]
@@ -117,10 +119,9 @@ class Home extends React.Component {
         }
       }
 
-      var columns = this.state.columns
       columns.push(teamColumn)
-      this.setState({ columns: columns })
     }
+    this.setState({ columns: columns })
   }
 
   render() {
