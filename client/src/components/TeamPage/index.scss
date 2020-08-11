@@ -23,6 +23,7 @@
       flex-direction: row;
       flex-wrap: wrap;
       width: 70vw;
+      pointer-events: none !important;
     }
 }
 
