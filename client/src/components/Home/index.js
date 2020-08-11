@@ -57,7 +57,6 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "row",
     backgroundColor: "green",
-    // height: "100%",
     overflowX: "scroll",
   }
 });
@@ -67,10 +66,11 @@ class Home extends React.Component {
     projects: [],
     teams: [],
     columns: [],
+    showContent: false,
   };
   async componentWillMount() {
-    this.getProjects();
     this.getTeams();
+    this.getProjects();
   }
 
   getProjects = () => {
@@ -92,8 +92,12 @@ class Home extends React.Component {
         console.log("teams", data);
         this.setState({ teams: data.data }, 
           () => {this.teamColumns()});
+        this.setState({ showContent: true })
       })
-      .catch((err) => console.log("project fetch error", err));
+      .catch((err) => {
+        this.setState({ showContent: true })
+        console.log("project fetch error", err)
+      });
   };
 
   teamColumns = () => {    
@@ -129,51 +133,50 @@ class Home extends React.Component {
 
     return (
       <div className={classes.homeRoot}>
-        <Typography variant="h4" color="primary" gutterBottom>
-          Dashboard
-        </Typography>
-        
-        <div className={classes.buttonDiv}>
-          <Card raised className="home-project-add-btn">
-            <CardActionArea href={"/create-team"}>
-              <CardContent>
-                <Typography variant="h5" color="textSecondary">
-                  <AddIcon />
-                  Add Team
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-
-          {this.state.teams.length >= 1 ? (
+          <Typography variant="h4" color="primary" gutterBottom>
+            Dashboard
+          </Typography>
+          
+          {this.state.showContent  ? (
+          <div className={classes.buttonDiv}>
             <Card raised className="home-project-add-btn">
-              <CardActionArea href={"/project/new"}>
+              <CardActionArea href={"/create-team"}>
                 <CardContent>
                   <Typography variant="h5" color="textSecondary">
                     <AddIcon />
-                    Add Project
+                    Add Team
                   </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
-            ) : (null)
-          }
-        </div>
 
-        <div className="empty-projects-container">
-          {this.state.teams.length === 0 ? <EmptyHomeCard /> : null}
-        </div>
+            {this.state.teams.length >= 1 ? (
+              <Card raised className="home-project-add-btn">
+                <CardActionArea href={"/project/new"}>
+                  <CardContent>
+                    <Typography variant="h5" color="textSecondary">
+                      <AddIcon />
+                      Add Project
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+              ) : (null)
+            }
+          </div>
+          ) : (null)}
 
-        <div className={classes.mainWrapper}>
-          {this.state.columns.map((column) => (
-            <Card className={classes.mainCard}>{column}</Card>
-          ))}
-        </div>
+          <div className="empty-projects-container">
+            {this.state.teams.length === 0 && this.state.showContent  ? <EmptyHomeCard /> : null}
+          </div>
 
+          <div className={classes.mainWrapper}>
+            {this.state.columns.map((column) => (
+              <Card className={classes.mainCard}>{column}</Card>
+            ))}
+          </div>
       </div>
-
-    )
-    
+    );
   }
 }
 

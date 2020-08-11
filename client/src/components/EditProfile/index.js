@@ -119,18 +119,6 @@ function EditProfile() {
           <div className="text-input-wrapper">
             <TextField
               className={"sign-up-text-input"}
-              label="password"
-              variant="outlined"
-              value={profileInfo.password || ""}
-              onChange={(event) => {
-                setProfileInfo({
-                  ...profileInfo,
-                  password: event.target.value,
-                });
-              }}
-            />
-            <TextField
-              className={"sign-up-text-input"}
               label="firstName"
               variant="outlined"
               value={profileInfo.first_name || ""}
@@ -150,6 +138,17 @@ function EditProfile() {
                 setProfileInfo({
                   ...profileInfo,
                   last_name: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              className={"sign-up-text-input"}
+              label="password"
+              variant="outlined"
+              onChange={(event) => {
+                setProfileInfo({
+                  ...profileInfo,
+                  password: event.target.value,
                 });
               }}
             />

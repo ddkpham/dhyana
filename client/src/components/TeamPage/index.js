@@ -216,13 +216,9 @@ function TeamPage(props) {
                         Projects
                     </Typography>
                     <div className="team-projects-container">
-                        <Fragment>
-                          <div className="disabled">
-                            {TeamInfo.map((project) =>
-                                <ProjectCard key={project.id} project={project} team="" />
-                            )}
-                          </div>
-                        </Fragment>
+                        {TeamInfo.map((project) =>
+                            <ProjectCard key={project.id} project={project} team="" />
+                        )}
                     </div>
                 </div>
             </div>
