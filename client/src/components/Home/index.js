@@ -70,7 +70,6 @@ class Home extends React.Component {
   };
   async componentWillMount() {
     this.getTeams();
-    this.getProjects();
   }
 
   getProjects = () => {
@@ -79,7 +78,8 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("projects", data);
-        this.setState({ projects: data.data });
+        this.setState({ projects: data.data }, 
+          () => {this.teamColumns()});
       })
       .catch((err) => console.log("project fetch error", err));
   };
@@ -91,7 +91,7 @@ class Home extends React.Component {
       .then((data) => {
         console.log("teams", data);
         this.setState({ teams: data.data }, 
-          () => {this.teamColumns()});
+          () => {this.getProjects()});
         this.setState({ showContent: true })
       })
       .catch((err) => {
@@ -103,6 +103,8 @@ class Home extends React.Component {
   teamColumns = () => {    
     console.log("entered teamRows constructor")
     console.log("this.state.teams.length is: ", this.state.teams.length)
+    console.log("this.state.projects.length is: ", this.state.projects.length)
+    var columns = []
     for (var i=0; i < this.state.teams.length; i++) {
       var teamColumn = []
       const team = this.state.teams[i]
@@ -116,10 +118,9 @@ class Home extends React.Component {
         }
       }
 
-      var columns = this.state.columns
       columns.push(teamColumn)
-      this.setState({ columns: columns })
     }
+    this.setState({ columns: columns })
   }
 
   render() {
