@@ -32,7 +32,7 @@ class AddColumnDialog extends React.Component {
 
   onChange = (e) => {
     const input = e.target.value;
-    const regex = /^[a-zA-Z0-9_-]*$/;
+    const regex = /^[\w\-\s]+$/;
     if (regex.test(input) || input == "") {
       this.setState({ name: input });
     }

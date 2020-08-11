@@ -55,7 +55,7 @@ class NewProject extends React.Component {
 
   onChangeProjectName = (e) => {
     const input = e.target.value;
-    const regex = /^[a-zA-Z0-9_-]*$/;
+    const regex = /^[\w\-\s]+$/;
     if (regex.test(input) || input == "") {
       this.setState({ name: input });
     }
