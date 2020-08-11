@@ -70,7 +70,6 @@ class Home extends React.Component {
   };
   async componentWillMount() {
     this.getTeams();
-    this.getProjects();
   }
 
   getProjects = () => {
