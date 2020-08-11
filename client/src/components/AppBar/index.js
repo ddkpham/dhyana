@@ -202,6 +202,12 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         Create Team
       </MenuItem>
+      <MenuItem onClick={() => history.push("/search-user")}>
+        <IconButton aria-label="account of current user" color="inherit">
+          <PageviewIcon />
+        </IconButton>
+        Find User
+      </MenuItem>
       <MenuItem onClick={logOut}>
         <IconButton aria-label="account of current user" color="inherit">
           <ExitToAppIcon />
