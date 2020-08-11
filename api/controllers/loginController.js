@@ -2,6 +2,7 @@ var User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 const { errorResponse, successResponse } = require("../utility/response");
 const sessionConfig = require("../config/session");
+const bcrypt = require("bcrypt");
 
 exports.login_post = function (req, res, next) {
   body(req.body).trim().escape().not().isEmpty();
@@ -16,13 +17,15 @@ exports.login_post = function (req, res, next) {
   User.findAll({
     where: {
       username: username,
-      password: password,
     },
   })
     .then((users) => {
       console.log("exports.login_post -> users", users);
 
-      if (users.length) {
+      if (
+        users.length &&
+        bcrypt.compareSync(password, users[0].dataValues.password)
+      ) {
         const user = users[0];
         const {
           dataValues: { id: userId },
