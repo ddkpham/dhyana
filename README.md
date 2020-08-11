@@ -7,7 +7,7 @@ projects and manage them all in one single simple interface.
 **To launch the platform:**
 
 1. run docker-compose build && docker-compose up in the terminal
-2. navigate to localhost:8080 on your web browser of choice
+2. navigate to http://localhost:8080/ on your web browser of choice
 
 **Features implemented:**
 
@@ -39,8 +39,11 @@ projects and manage them all in one single simple interface.
    - Ability to quickly swap between different projects
    - Ability to sort or filter tasks by priority, assigned user, date created and title
    - Ability to see who is in the team, quickly navigate to their profile pages, and add users to a team
+   - Ability to update or delete the project
 
 5. Team Page
+
+6. Team Page
 
    - Ability to see who is in your team
    - Ability to see what projects belong to that team
@@ -51,4 +54,4 @@ projects and manage them all in one single simple interface.
 
     - testuser1 - has a large amount of teams and projects to view
     - ironman, thanos, srogers: can all view and edit the teams and projects made by testuser1
-    - "Endgame" is a good project to view the variety of states the TaskCard can be in
+    - "The Avengers Initiative" is a good project to view the variety of states the TaskCard can be in
