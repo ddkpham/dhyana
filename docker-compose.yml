@@ -10,7 +10,8 @@ services:
     volumes:
       - ./client:/usr/src/client
       - /usr/src/client/node_modules/
-
+    environment:
+      NODE_ENV: "prod"
   api:
     container_name: dhyana-api
     build: ./api
