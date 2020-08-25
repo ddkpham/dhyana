@@ -19,7 +19,7 @@ var projectRouter = require("./routes/project");
 var app = express();
 
 // prevents attackers from knowing that express is used on the backend
-app.disable("x-powered-by");
+// app.disable("x-powered-by");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -34,7 +34,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // add session middleware.
 app.use(session(sessionConfig));
-app.use(helmet.contentSecurityPolicy({ directives: directives }));
+// enables Content Security Policy
+// app.use(helmet.contentSecurityPolicy({ directives: directives }));
 
 // authentication/session middleware
 const authMiddleware = (req, res, next) => {
