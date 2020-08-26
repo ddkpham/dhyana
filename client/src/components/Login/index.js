@@ -82,7 +82,9 @@ function Login() {
     <div className={"outer-wrapper"}>
       <Card className={"login-inner-wrapper"}>
         <div className={"title-wrapper"}>
-          <Typography variant="h4">Login 👋</Typography>
+          <Typography variant="h4" color="secondary">
+            Welcome 👋
+          </Typography>
         </div>
         <div className="text-input-wrapper">
           <TextField
@@ -151,7 +153,7 @@ function Login() {
           <Button
             className={"button"}
             variant="outlined"
-            color="primary"
+            color="secondary"
             onClick={handleClickOpen}
           >
             Login as guest

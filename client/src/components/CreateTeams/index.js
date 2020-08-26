@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardDiv: {
     marginTop: 25,
-  }
+  },
 }));
 
 function CreateTeam() {
@@ -97,10 +97,14 @@ function CreateTeam() {
       <div className={classes.cardDiv}>
         <Card className={"sign-up-wrapper"}>
           <div className={"title"}>
-            <Typography variant="h4" color="primary">
-                Create New Team
+            <Typography variant="h4" color="secondary">
+              Create New Team
             </Typography>
-            <GroupIcon className="group-icon" color="primary" style={{ fontSize: 40 }}/>
+            <GroupIcon
+              className="group-icon"
+              color="primary"
+              style={{ fontSize: 40 }}
+            />
           </div>
           <div className="text-input-wrapper">
             <TextField

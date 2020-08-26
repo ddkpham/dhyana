@@ -164,15 +164,15 @@ class Project extends React.Component {
         this.getProject();
       }
     } catch (err) {
-      this.setState({showPage: true})
-      console.log("set showPage to true")
+      this.setState({ showPage: true });
+      console.log("set showPage to true");
       console.log("Project -> componentWillMount -> err", err);
     }
   }
 
   async componentWillUnmount() {
-    this.setState({showColumns: false})
-    this.setState({showPage: false})
+    this.setState({ showColumns: false });
+    this.setState({ showPage: false });
   }
 
   getProject = () => {
@@ -192,9 +192,9 @@ class Project extends React.Component {
         this.getColumns(project.id);
       })
       .catch((err) => {
-        console.log("project fetch error", err)
-        this.setState({showColumns: true})
-        this.setState({showPage: true})
+        console.log("project fetch error", err);
+        this.setState({ showColumns: true });
+        this.setState({ showPage: true });
       });
   };
 
@@ -257,15 +257,14 @@ class Project extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("fetch columns success", data);
-        this.setState({ columns: data.data }, 
-          () => {
-            this.setState({showPage: true})
-            this.setState({showColumns: true})
-          });
+        this.setState({ columns: data.data }, () => {
+          this.setState({ showPage: true });
+          this.setState({ showColumns: true });
+        });
       })
       .catch((err) => {
-        this.setState({showPage: true})
-        console.log("column fetch error", err)
+        this.setState({ showPage: true });
+        console.log("column fetch error", err);
       });
   };
 
@@ -316,13 +315,13 @@ class Project extends React.Component {
     const editOpen = Boolean(editAnchor);
 
     const handleEmpty = () => {
-      console.log("entered handleEmpty with showPage ", this.state.showPage)
-      console.log("isAuthorized is ", isAuthorized)
+      console.log("entered handleEmpty with showPage ", this.state.showPage);
+      console.log("isAuthorized is ", isAuthorized);
       if (this.state.showPage) {
-        return <EmptyCard />
+        return <EmptyCard />;
       }
-      return (null)
-    }
+      return null;
+    };
 
     return (
       <div className={classes.projectMainDiv}>
@@ -343,7 +342,9 @@ class Project extends React.Component {
               />
               <div className={classes.headerButtons}>
                 <div className={classes.teamButtonSection}>
-                  <Typography variant="h6">Team Members</Typography>
+                  <Typography variant="h6" color="secondary">
+                    Team Members
+                  </Typography>
                   <ProjectTeam
                     teamMembers={teamMembers}
                     teamId={project.team_id}
@@ -419,13 +420,18 @@ class Project extends React.Component {
                     startIcon={<EditIcon />}
                     onClick={this.openEdit}
                     className={classes.editButton}
+                    color="primary"
                   >
                     <Hidden smDown>Edit Project</Hidden>
                   </Button>
                 </div>
               </div>
               <div className={classes.headerDiv}>
-                <Typography variant="h4" style={{ marginBottom: 15 }}>
+                <Typography
+                  variant="h4"
+                  style={{ marginBottom: 15 }}
+                  color="primary"
+                >
                   {project.name}
                 </Typography>
                 <Typography variant="h6" className="hide-short">
@@ -466,11 +472,7 @@ class Project extends React.Component {
             </div>
           </DndProvider>
         ) : (
-          <div className={classes.emptyContainer}>
-            {" "}
-            {handleEmpty()}
-            {" "}
-          </div>
+          <div className={classes.emptyContainer}> {handleEmpty()} </div>
         )}
       </div>
     );

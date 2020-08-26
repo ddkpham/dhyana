@@ -3,17 +3,17 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import IconButton from "@material-ui/core/IconButton";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import DragTarget from "./DragTarget";
 import Task from "../Task/TaskCard";
 import { baseURL } from "../../config/settings";
 import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
-import ColumnMenu from './menu';
-import { priorities } from '../constants';
+import ColumnMenu from "./menu";
+import { priorities } from "../constants";
 import { postCall, deleteCall } from "../../apiCalls/apiCalls";
 import { red, cyan, grey } from "@material-ui/core/colors";
 import "./index.scss";
@@ -22,17 +22,17 @@ import ConfirmDialog from "../ConfirmDialog";
 
 const styles = (theme) => ({
   columnPaper: {
-    backgroundColor: "rgba(200,200,200,0.25)",
+    backgroundColor: "rgba(230,220,220,0.25)",
     width: (props) => props.width,
-    minWidth: '300px',
+    minWidth: "300px",
     padding: "5px",
-    height: '100%',
+    height: "100%",
   },
   taskContainer: {
-    overflowY: 'scroll',
-    height: '80%',
-    paddingBottom: '15px',
-    paddingRight: '10px',
+    overflowY: "scroll",
+    height: "80%",
+    paddingBottom: "15px",
+    paddingRight: "10px",
   },
   popover: {
     display: "flex",
@@ -45,7 +45,7 @@ const styles = (theme) => ({
   },
   column: {
     minWidth: "300px",
-    height: '100%'
+    height: "100%",
   },
   mainColumnDiv: {
     height: "100%",
@@ -53,15 +53,16 @@ const styles = (theme) => ({
     justifyContent: "center",
   },
   columnHeader: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingLeft: 3,
-    height: '7%'
+    height: "7%",
   },
   columnName: {
     overflowX: "scroll",
+    marginLeft: "4px",
   },
   addTaskButton: {
     marginBottom: 10,
@@ -72,9 +73,8 @@ const styles = (theme) => ({
     justifyContent: "center",
     display: "flex",
     paddingTop: 1,
-    height: '7%'
+    height: "7%",
   },
-
 });
 
 class Column extends React.Component {
@@ -129,7 +129,10 @@ class Column extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetch Tasks Response", data);
-        const tasks = data.data.map((t) => ({...t, date_created: new Date(t.date_created)}))
+        const tasks = data.data.map((t) => ({
+          ...t,
+          date_created: new Date(t.date_created),
+        }));
         this.setState({ tasks: tasks });
       })
       .catch((err) => console.log("task fetch error", err));
@@ -223,16 +226,16 @@ class Column extends React.Component {
 
   closeDelete = () => {
     this.setState({ deleteOpen: false });
-  }
+  };
 
   openDelete = () => {
     this.setState({ deleteOpen: true });
-  }
+  };
 
   deleteColumn = () => {
     const { column, reload } = this.props;
     const url = `${baseURL}/project/column/delete`;
-    postCall(url, {id: column.id})
+    postCall(url, { id: column.id })
       .then((response) => response.json())
       .then((data) => {
         console.log("delete column success", data);
@@ -243,100 +246,128 @@ class Column extends React.Component {
 
   setFilters = (newFilter, filterId) => {
     const { filters } = this.state;
-    if(newFilter.length) filters[filterId] = newFilter;
-    else delete filters[filterId]
+    if (newFilter.length) filters[filterId] = newFilter;
+    else delete filters[filterId];
     this.setState({ filters });
-  }
+  };
 
-  setSortBy = ({sortBy}) => {
-    this.setState({sort: sortBy, sortAsc: true});
-  }
+  setSortBy = ({ sortBy }) => {
+    this.setState({ sort: sortBy, sortAsc: true });
+  };
 
   switchSortDirection = () => {
     const { sortAsc } = this.state;
-    this.setState({ sortAsc: !sortAsc});
-  }
+    this.setState({ sortAsc: !sortAsc });
+  };
 
   compareFunc = (a, b) => {
     const { sort, sortAsc } = this.state;
-    if(a[sort] > b[sort]) return sortAsc ? 1 : -1;
-    if(a[sort] < b[sort]) return sortAsc ? -1 : 1;
+    if (a[sort] > b[sort]) return sortAsc ? 1 : -1;
+    if (a[sort] < b[sort]) return sortAsc ? -1 : 1;
 
     return 0;
-  }
+  };
 
   setPriorityTaskColor = (priority) => {
-    console.log("entered setPriorityTaskColor with priority: ", priority)
+    console.log("entered setPriorityTaskColor with priority: ", priority);
     switch (priority) {
-        case 5:
-          return red[600]
-        case 4:
-          return red[300]
-        case 3:
-          return "orange"
-        case 2:
-          return "yellow"
-        case 1:
-          return "lightgreen"
-        default:
-          return cyan[50]
+      case 5:
+        return red[600];
+      case 4:
+        return red[300];
+      case 3:
+        return "orange";
+      case 2:
+        return "yellow";
+      case 1:
+        return "lightgreen";
+      default:
+        return cyan[50];
     }
-  }
+  };
 
   setNewBackgroundColor = (flag, isOverdue) => {
     if (flag) {
-      return grey[200]
+      return grey[200];
     } else if (isOverdue) {
-      return red[100]
+      return red[100];
     } else {
-      return "white"
+      return "white";
     }
-  }
+  };
 
   render() {
     const { column, classes, team } = this.props;
-    const { tasks, anchorTask, anchorMenu, sort, sortAsc, filters, deleteOpen } = this.state;
+    const {
+      tasks,
+      anchorTask,
+      anchorMenu,
+      sort,
+      sortAsc,
+      filters,
+      deleteOpen,
+    } = this.state;
     const taskOpen = Boolean(anchorTask);
-    console.log("Column -> render -> open", taskOpen);
     const id = taskOpen ? "simple-popover" : undefined;
 
-    const teamMembers = team.map((u) => ({id: u.id, name: u.username}));
+    const teamMembers = team.map((u) => ({ id: u.id, name: u.username }));
 
     const filterOptions = [
-      {name: 'Assigned User', id: 'user_id_assigned', displayName: true, options: teamMembers},
-      {name: 'Priority', id: 'priority', options: priorities}
+      {
+        name: "Assigned User",
+        id: "user_id_assigned",
+        displayName: true,
+        options: teamMembers,
+      },
+      { name: "Priority", id: "priority", options: priorities },
     ];
 
     let filteredTasks = tasks.slice();
-    if(!!sort) filteredTasks.sort(this.compareFunc);
+    if (!!sort) filteredTasks.sort(this.compareFunc);
 
-    if(!!Object.keys(filters).length) filteredTasks = filteredTasks.filter((t) => {
-      for(let f of Object.keys(filters)) {
-        if(filters[f]?.indexOf(t[f]) < 0) return false;
-      }
-      return true;
-    })
+    if (!!Object.keys(filters).length)
+      filteredTasks = filteredTasks.filter((t) => {
+        for (let f of Object.keys(filters)) {
+          if (filters[f]?.indexOf(t[f]) < 0) return false;
+        }
+        return true;
+      });
 
     return (
       <div className={classes.mainColumnDiv}>
         <Grid item key={column.id} className={classes.column}>
-          <ConfirmDialog message='This will delete this column and all its tasks' open={deleteOpen} confirm={this.deleteColumn} deny={this.closeDelete}/>
-          
+          <ConfirmDialog
+            message="This will delete this column and all its tasks"
+            open={deleteOpen}
+            confirm={this.deleteColumn}
+            deny={this.closeDelete}
+          />
+
           <DragTarget onDrop={this.onDrop}>
             <Paper elevation={4} className={classes.columnPaper}>
               <div className={classes.buttonDiv}>
                 <Button
                   variant="outlined"
                   onClick={this.openTaskPopover}
+                  color="secondary"
+                  className={classes.addTaskButton}
                 >
                   Add task
                 </Button>
               </div>
-              <div className={classes.columnHeader}>
-                <Typography className={classes.columnName}>{column.name}</Typography>
+              <Paper className={classes.columnHeader}>
+                <Typography className={classes.columnName} color="secondary">
+                  {column.name}
+                </Typography>
                 <span>
-                  {!!sort && <IconButton onClick={this.switchSortDirection}>{sortAsc ? <ArrowUpwardIcon/> : <ArrowDownwardIcon/>}</IconButton>}
-                  <IconButton onClick={this.openMenu}><MoreVertIcon/></IconButton>
+                  {!!sort && (
+                    <IconButton onClick={this.switchSortDirection}>
+                      {sortAsc ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+                    </IconButton>
+                  )}
+                  <IconButton onClick={this.openMenu}>
+                    <MoreVertIcon />
+                  </IconButton>
                 </span>
                 <ColumnMenu
                   anchorEl={anchorMenu}
@@ -348,24 +379,27 @@ class Column extends React.Component {
                   setFilters={this.setFilters}
                   deleteFunction={this.openDelete}
                 />
-              </div>
+              </Paper>
               <div className={classes.taskContainer}>
                 {filteredTasks?.map((t) => (
                   <Task
-                  task={t}
-                  key={t.id}
-                  columnId={column.id}
-                  deleteTask={this.deleteTask.bind(this)}
-                  editTask={this.editTask.bind(this)}
-                  team={team}
-                  priorityColor={this.setPriorityTaskColor(t.priority)}
-                  backgroundColor={this.setNewBackgroundColor(t.flag, (t.time_elapsed > t.time_estimated))}
+                    task={t}
+                    key={t.id}
+                    columnId={column.id}
+                    deleteTask={this.deleteTask.bind(this)}
+                    editTask={this.editTask.bind(this)}
+                    team={team}
+                    priorityColor={this.setPriorityTaskColor(t.priority)}
+                    backgroundColor={this.setNewBackgroundColor(
+                      t.flag,
+                      t.time_elapsed > t.time_estimated
+                    )}
                   />
                 ))}
               </div>
             </Paper>
           </DragTarget>
-          
+
           <Popover
             id={id}
             open={taskOpen}

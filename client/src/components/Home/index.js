@@ -23,7 +23,7 @@ const styles = (theme) => ({
     flexDirection: "row",
     height: "100%",
     width: "100%",
-    overflowX: 'scroll',
+    overflowX: "scroll",
   },
   mainCard: {
     width: 350,
@@ -58,7 +58,7 @@ const styles = (theme) => ({
     flexDirection: "row",
     backgroundColor: "green",
     overflowX: "scroll",
-  }
+  },
 });
 
 class Home extends React.Component {
@@ -78,8 +78,9 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("projects", data);
-        this.setState({ projects: data.data }, 
-          () => {this.teamColumns()});
+        this.setState({ projects: data.data }, () => {
+          this.teamColumns();
+        });
       })
       .catch((err) => console.log("project fetch error", err));
   };
@@ -90,38 +91,47 @@ class Home extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("teams", data);
-        this.setState({ teams: data.data }, 
-          () => {this.getProjects()});
-        this.setState({ showContent: true })
+        this.setState({ teams: data.data }, () => {
+          this.getProjects();
+        });
+        this.setState({ showContent: true });
       })
       .catch((err) => {
-        this.setState({ showContent: true })
-        console.log("project fetch error", err)
+        this.setState({ showContent: true });
+        console.log("project fetch error", err);
       });
   };
 
-  teamColumns = () => {    
-    console.log("entered teamRows constructor")
-    console.log("this.state.teams.length is: ", this.state.teams.length)
-    console.log("this.state.projects.length is: ", this.state.projects.length)
-    var columns = []
-    for (var i=0; i < this.state.teams.length; i++) {
-      var teamColumn = []
-      const team = this.state.teams[i]
-      console.log("team is: ", team)
-      teamColumn.push(<TeamCard style={{width: 100, height: 150}} name={team.name} id={team.id} />)
+  teamColumns = () => {
+    console.log("entered teamRows constructor");
+    console.log("this.state.teams.length is: ", this.state.teams.length);
+    console.log("this.state.projects.length is: ", this.state.projects.length);
+    var columns = [];
+    for (var i = 0; i < this.state.teams.length; i++) {
+      var teamColumn = [];
+      const team = this.state.teams[i];
+      console.log("team is: ", team);
+      teamColumn.push(
+        <TeamCard
+          style={{ width: 100, height: 150 }}
+          name={team.name}
+          id={team.id}
+        />
+      );
 
-      for (var j=0; j < this.state.projects.length; j++) {
-        const project = this.state.projects[j]
+      for (var j = 0; j < this.state.projects.length; j++) {
+        const project = this.state.projects[j];
         if (team.id === project.team_id) {
-          teamColumn.push(<ProjectCard key={project.id} project={project} team={team.name} />)
+          teamColumn.push(
+            <ProjectCard key={project.id} project={project} team={team.name} />
+          );
         }
       }
 
-      columns.push(teamColumn)
+      columns.push(teamColumn);
     }
-    this.setState({ columns: columns })
-  }
+    this.setState({ columns: columns });
+  };
 
   render() {
     const { projects, teams } = this.state;
@@ -134,11 +144,11 @@ class Home extends React.Component {
 
     return (
       <div className={classes.homeRoot}>
-          <Typography variant="h4" color="primary" gutterBottom>
-            Dashboard
-          </Typography>
-          
-          {this.state.showContent  ? (
+        <Typography variant="h4" color="secondary" gutterBottom>
+          Dashboard
+        </Typography>
+
+        {this.state.showContent ? (
           <div className={classes.buttonDiv}>
             <Card raised className="home-project-add-btn">
               <CardActionArea href={"/create-team"}>
@@ -162,20 +172,21 @@ class Home extends React.Component {
                   </CardContent>
                 </CardActionArea>
               </Card>
-              ) : (null)
-            }
+            ) : null}
           </div>
-          ) : (null)}
+        ) : null}
 
-          <div className="empty-projects-container">
-            {this.state.teams.length === 0 && this.state.showContent  ? <EmptyHomeCard /> : null}
-          </div>
+        <div className="empty-projects-container">
+          {this.state.teams.length === 0 && this.state.showContent ? (
+            <EmptyHomeCard />
+          ) : null}
+        </div>
 
-          <div className={classes.mainWrapper}>
-            {this.state.columns.map((column) => (
-              <Card className={classes.mainCard}>{column}</Card>
-            ))}
-          </div>
+        <div className={classes.mainWrapper}>
+          {this.state.columns.map((column) => (
+            <Card className={classes.mainCard}>{column}</Card>
+          ))}
+        </div>
       </div>
     );
   }

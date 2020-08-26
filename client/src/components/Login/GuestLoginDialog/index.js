@@ -24,6 +24,9 @@ const useStyles = makeStyles({
     display: "flex",
     justifyContent: "center",
   },
+  body: {
+    margin: "10px",
+  },
 });
 
 export default function SimpleDialog(props) {
@@ -45,7 +48,7 @@ export default function SimpleDialog(props) {
           Login with shared guest account
         </Typography>
       </DialogTitle>
-      <Typography variant="body1">
+      <Typography variant="body1" className={classes.body}>
         This is a shared profile. Every guest user will have access to this
         information. If you require a more secure profile, please create your
         own account. We cannot control the behaviour of everyone on this

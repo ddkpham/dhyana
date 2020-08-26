@@ -77,7 +77,9 @@ function CreateUser() {
     <div className={classes.mainDiv}>
       <Card className={classes.mainCard}>
         <div className={classes.title}>
-          <Typography variant="h4">Create an Account</Typography>
+          <Typography variant="h4" color="secondary">
+            Create an Account
+          </Typography>
         </div>
         <div className="text-input-wrapper">
           <TextField
