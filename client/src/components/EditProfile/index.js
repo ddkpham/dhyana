@@ -114,7 +114,9 @@ function EditProfile() {
       <div className={classes.mainDiv}>
         <Card className={classes.mainCard}>
           <div className={classes.title}>
-            <Typography variant="h4">Edit your Info</Typography>
+            <Typography variant="h4" color="secondary">
+              Edit your Info
+            </Typography>
           </div>
           <div className="text-input-wrapper">
             <TextField
@@ -188,6 +190,7 @@ function EditProfile() {
               }}
               classes={{ root: classes.root }}
               className={classes.deleteTaskButton}
+              disabled={profileInfo.username == "guest"}
             >
               Delete Account
             </Button>
@@ -196,6 +199,7 @@ function EditProfile() {
               color="primary"
               onClick={update}
               className="edit-profile-btn"
+              disabled={profileInfo.username == "guest"}
             >
               Update Info
             </Button>
