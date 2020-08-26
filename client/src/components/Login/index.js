@@ -14,11 +14,13 @@ import { useHistory } from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 import "./index.scss";
 import { postCall } from "../../apiCalls/apiCalls";
+import GuestLoginDialog from "./GuestLoginDialog";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const history = useHistory();
 
   const login = async () => {
@@ -37,6 +39,22 @@ function Login() {
     }
   };
 
+  const guestLogin = async () => {
+    const url = `${baseURL}/login`;
+    const body = { username: "guest", password: "guest" };
+    const response = await postCall(url, body);
+
+    const data = await response.json();
+    const { confirmation } = data;
+    console.log(data);
+    if (confirmation === "success") {
+      localStorage.setItem("auth-token", "success");
+      window.location.href = `${clientBaseURL}/home`;
+    } else {
+      alert("Server error: please email ddkpham@gmail.com");
+    }
+  };
+
   const keyPressed = (event) => {
     console.log("entered key pressed with event: ", event);
     if (event.key === "Enter") {
@@ -44,20 +62,20 @@ function Login() {
     }
   };
 
-  // document.getElementById('idOfInputField').addEventListener("keyup", function(event) {
-  //   event.preventDefault();
-  //   if (event.keyCode === 13) {
-  //     document.getElementById('idOfAddMsgBtn').click();
-  //   }
-  // })
-
   const onChangeUsername = (input) => {
     console.log("before", input);
     const regex = /^[\w\-\s]+$/;
     if (regex.test(input) || input == "") {
-      console.log("after", input);
       setUsername(input);
     }
+  };
+
+  const handleClickOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setDialogOpen(false);
   };
 
   return (
@@ -122,6 +140,21 @@ function Login() {
             }}
           >
             Sign Up
+          </Button>
+        </div>
+        <div className={"button-container"}>
+          <GuestLoginDialog
+            open={dialogOpen}
+            onClose={handleClose}
+            login={guestLogin}
+          />
+          <Button
+            className={"button"}
+            variant="outlined"
+            color="primary"
+            onClick={handleClickOpen}
+          >
+            Login as guest
           </Button>
         </div>
       </Card>

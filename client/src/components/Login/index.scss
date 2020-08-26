@@ -10,7 +10,7 @@
   display: flex;
   justify-self: center;
   margin-top: 120px;
-  height: 320px;
+  height: 370px;
 }
 
 .login-inner-wrapper {
@@ -43,4 +43,14 @@
 
 .password-textfield {
   width: 90%;
+}
+
+.guest-login-button {
+  width: 100px;
+}
+
+.guest-login-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
 }
