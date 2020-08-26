@@ -445,6 +445,44 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.columnstasks (column_id, task_id, id) FROM stdin;
+23	23	17
+27	24	18
+27	25	19
+27	26	20
+28	27	21
+28	28	22
+29	29	23
+29	30	24
+29	31	25
+29	32	26
+31	33	27
+32	34	28
+32	35	29
+30	36	30
+33	37	31
+34	38	32
+34	39	33
+34	40	34
+35	41	35
+27	43	37
+27	44	38
+27	45	39
+27	46	40
+28	47	41
+28	48	42
+28	49	43
+27	50	44
+30	51	45
+30	52	46
+29	53	47
+29	54	48
+29	55	49
+28	56	50
+30	57	51
+30	58	52
+30	59	53
+30	60	54
+27	42	36
 \.
 
 
@@ -454,6 +492,40 @@ COPY public.columnstasks (column_id, task_id, id) FROM stdin;
 
 COPY public.comments (id, user_id, date_created, description, task_id) FROM stdin;
 1	9	2010-10-10	good work	22
+2	42	2020-08-11	buy a lot of them	33
+3	42	2020-08-11	task 1task 1task 1	24
+4	42	2020-08-11	task 1task 1task 1task 1task 1task 1	24
+5	42	2020-08-11	task 1	43
+6	42	2020-08-11	task 1task 1task 1task 1task 1	43
+7	42	2020-08-11	task 1task 1task 1task 1task 1task 1	44
+8	42	2020-08-11	get an a in this class	45
+9	42	2020-08-11	tf? go for an a+	45
+10	42	2020-08-11	create	46
+11	42	2020-08-11	a. 	46
+12	42	2020-08-11	chain 	46
+13	42	2020-08-11	of 	46
+14	42	2020-08-11	comments	46
+15	42	2020-08-11	to 	46
+16	42	2020-08-11	get	46
+17	42	2020-08-11	a	46
+18	42	2020-08-11	scroll	46
+19	42	2020-08-11	-	46
+20	42	2020-08-11	bar	46
+21	42	2020-08-11	task2	49
+22	42	2020-08-11	task2	49
+23	42	2020-08-11	task2	49
+24	42	2020-08-11	task2task2	48
+25	42	2020-08-11	task2	48
+26	42	2020-08-11	task2task2	48
+27	42	2020-08-11	dsfdsf	42
+28	42	2020-08-11	dsfsdf	42
+29	42	2020-08-11	sdfsdfsdf	42
+30	42	2020-08-11	sdf sdf sd	42
+31	42	2020-08-11	sdf sdf 	42
+32	42	2020-08-11	dsf sdf sdf 	25
+33	42	2020-08-11	dsf sdf	25
+34	42	2020-08-11	 sdf sdf sd	25
+35	42	2020-08-11	dsf sdf dsf	25
 \.
 
 
@@ -479,6 +551,18 @@ COPY public.pcolumns (id, name, column_order) FROM stdin;
 20	sprint	1
 21	back log	0
 22	sprint	1
+23	Bigfoot	0
+24	Tinyfoot	1
+26	Nofoot	2
+27	Help the world	0
+28	Asgard	1
+29	Battle	2
+30	Victory	3
+31	Queue up	0
+32	devour tacos alone	1
+33	start of the saga	0
+34	recruit other humans	1
+35	Get gods in	2
 \.
 
 
@@ -497,6 +581,18 @@ COPY public.projectcolumns (project_id, column_id, id) FROM stdin;
 4	20	9
 10	21	10
 10	22	11
+14	23	12
+14	24	13
+14	26	15
+17	27	16
+17	28	17
+17	29	18
+17	30	19
+15	31	20
+15	32	21
+16	33	22
+16	34	23
+16	35	24
 \.
 
 
@@ -512,6 +608,10 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 10	christmas party	get swifty	4
 12	dhyana project	test project	9
 13	dhyana project	test project	9
+14	Bigfoot	a foot that&#x27;s big	22
+15	Hornet Frogs	frogs that have horns	26
+16	The avengers initiative	thanos did nothing wrong	24
+17	Endgame	we are in the endgame now	24
 \.
 
 
@@ -522,6 +622,44 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 COPY public.tasks (id, name, description, date_created, date_modified, user_id_created, user_id_assigned, priority, time_estimated, time_elapsed, flag) FROM stdin;
 21	testtesttest	\N	2020-12-12	\N	4	\N	\N	\N	\N	\N
 22	testtesttest	\N	2020-12-12	\N	4	\N	\N	\N	\N	\N
+23	Seed the db	add data through the app	2020-08-11	2020-08-11	42	14	4	1	\N	t
+27	Get the hammer	Am i worthy?	2020-08-11	\N	42	45	1	\N	\N	t
+28	bring the stones		2020-08-11	\N	42	44	3	\N	\N	f
+29	First battle	we lost	2020-08-11	\N	42	44	\N	13.5	\N	t
+30	go to ny		2020-08-11	\N	42	45	\N	1.5	\N	f
+55	task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2	task2task2task2task2task2	2020-08-11	\N	42	1	1	\N	\N	t
+33	Go to TB	buy tacos from taco bell\n	2020-08-11	2020-08-11	42	\N	0	\N	\N	f
+34	im full		2020-08-11	\N	42	\N	\N	\N	\N	f
+35	victory?		2020-08-11	2020-08-11	42	27	0	1	2	f
+56	task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2task2	task2task2task2task2task2	2020-08-11	\N	42	45	\N	123124314123	\N	t
+57	task3	task3	2020-08-11	\N	42	44	2	123124213123	\N	t
+31	how jarvis came about		2020-08-11	2020-08-11	42	44	0	1.2312432534534566e+18	\N	t
+32	meet peggy carter		2020-08-11	2020-08-11	42	\N	3	0.5	\N	f
+37	recruit caption america	recruit cpt. ameriaca	2020-08-11	\N	42	45	3	1.5	\N	t
+38	recruit iron man		2020-08-11	\N	42	44	\N	\N	\N	f
+39	recruit black widow		2020-08-11	\N	42	1	1	\N	\N	t
+40	recruit mr bow and arrow	hawkeye is useless	2020-08-11	\N	42	42	2	0.5	\N	t
+41	recruit thor		2020-08-11	\N	42	46	4	1	\N	t
+36	tony is dead	:(	2020-08-11	2020-08-11	42	44	4	2	\N	t
+26	go back in time		2020-08-11	2020-08-11	42	42	2	\N	\N	t
+24	Get the stones	as the title suggests	2020-08-11	2020-08-11	42	1	5	24	29	t
+43	repeat	get the second championship	2020-08-11	2020-08-11	42	46	2	18.5	\N	t
+44	go for the 3peat	hattrick!!!	2020-08-11	2020-08-11	42	42	4	0.5	\N	t
+45	Get cracked	Become a disciple of that cracked kid ;)	2020-08-11	2020-08-11	42	46	4	33	\N	t
+58	sdfsdf	fsdf sdf sdf	2020-08-11	\N	42	46	5	123124314	\N	t
+46	task 1	first task in help the world	2020-08-11	2020-08-11	42	1	1	123124	2.131534556456564e+15	t
+47	task1	task1	2020-08-11	\N	42	1	5	\N	\N	f
+50	task2task2	task2vtask2task2task2	2020-08-11	\N	42	1	3	123124	\N	t
+49	task2t ask2 task 2 task2ta sk 2	task2	2020-08-11	2020-08-11	42	46	5	2	12312	t
+48	task1task1task1task1task1 task1task1task1task1task1task1	task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1task1	2020-08-11	2020-08-11	42	42	2	0.5	\N	f
+51	task2	task2	2020-08-11	\N	42	44	3	123	\N	f
+52	task2task2	task2	2020-08-11	\N	42	44	3	1	\N	t
+53	task2task2task2task2	task2task2task2	2020-08-11	\N	42	46	2	\N	\N	f
+54	task2	task2	2020-08-11	\N	42	42	4	9	\N	f
+59	sdggjg. hgfhj ghjk l; 		2020-08-11	2020-08-11	42	46	3	0.5	\N	t
+60	task3task3task3task3task3	task3task3task3task3	2020-08-11	\N	42	42	2	\N	\N	t
+42	get the first championship	as the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do it	2020-08-11	2020-08-11	42	45	1	2.5	7.5	t
+25	get tony on board		2020-08-11	2020-08-11	42	46	4	2	\N	t
 \.
 
 
@@ -546,6 +684,12 @@ COPY public.teams (id, name) FROM stdin;
 13	gold fire
 15	deep-space
 17	killer mike
+18	flying cheetahs
+19	test project
+22	ok boomer
+24	greefood challenge
+25	Tokimon Finders
+26	Taco Tuesdays
 \.
 
 
@@ -558,6 +702,20 @@ COPY public.teamsusers (team_id, user_id, id) FROM stdin;
 1	8	2
 4	8	3
 5	8	4
+22	42	6
+24	42	7
+25	42	8
+26	42	9
+22	23	10
+22	43	11
+22	44	12
+22	14	13
+22	45	14
+24	46	15
+24	1	16
+24	45	17
+24	44	18
+26	27	19
 \.
 
 
@@ -604,6 +762,11 @@ COPY public.users (id, username, password, first_name, last_name, job_title, bio
 40	rbobby	rbobby	ricky	bobby	\N	\N
 41	sb1	1234	simon	barer	\N	\N
 1	tlou2	tlo	tlo	u2	\N	\N
+42	testuser1	$2b$10$qjvBxAD8VTsctr/Dd6zvReM8v.67DsQj47FXdTHf28EkHCdnovkKS	testuser1	testuser1	\N	\N
+43	thanos	$2b$10$0WIv3i4IuCtkAABTnThCYOex51zM/psDkHm7rVBlgri2qWi8nlCqa	the world	saver	\N	\N
+44	ironman	$2b$10$E/FJ.lnq/zp0VPFYYX0/geMzin3R.M./JCyqY30J1LrTw6cVGzb/a	iron	man	\N	\N
+45	srogers	$2b$10$72USJ4Sq8NqI6o3maJVEJuMXZqvSuRRVJmWLqaT.M74QzNvITqu/O	Steve 	Rogers	\N	\N
+46	ggbaker	$2b$10$FMItHxDoSdeF2YtZj7DW2elbIk2WFed14OvHlHtxZphA.SxVlxypK	Greg	Baker	\N	\N
 \.
 
 
@@ -611,7 +774,7 @@ COPY public.users (id, username, password, first_name, last_name, job_title, bio
 -- Name: columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.columns_id_seq', 22, true);
+SELECT pg_catalog.setval('public.columns_id_seq', 35, true);
 
 
 --
@@ -625,7 +788,7 @@ SELECT pg_catalog.setval('public.columnstasks_column_id_seq', 1, false);
 -- Name: columnstasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.columnstasks_id_seq', 16, true);
+SELECT pg_catalog.setval('public.columnstasks_id_seq', 54, true);
 
 
 --
@@ -639,49 +802,49 @@ SELECT pg_catalog.setval('public.columnstasks_tasks_id_seq', 1, false);
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 1, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 35, true);
 
 
 --
 -- Name: projectcolumns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projectcolumns_id_seq', 11, true);
+SELECT pg_catalog.setval('public.projectcolumns_id_seq', 24, true);
 
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 13, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 17, true);
 
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 22, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 60, true);
 
 
 --
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teams_id_seq', 17, true);
+SELECT pg_catalog.setval('public.teams_id_seq', 26, true);
 
 
 --
 -- Name: teamsusers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teamsusers_id_seq', 4, true);
+SELECT pg_catalog.setval('public.teamsusers_id_seq', 19, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 41, true);
+SELECT pg_catalog.setval('public.users_id_seq', 46, true);
 
 
 --

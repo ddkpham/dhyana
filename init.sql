@@ -483,6 +483,20 @@ COPY public.columnstasks (column_id, task_id, id) FROM stdin;
 30	59	53
 30	60	54
 27	42	36
+36	61	55
+37	62	56
+38	63	57
+39	64	58
+36	65	59
+36	66	60
+36	67	61
+36	68	62
+36	69	63
+37	70	64
+37	71	65
+38	72	66
+38	73	67
+38	74	68
 \.
 
 
@@ -526,6 +540,23 @@ COPY public.comments (id, user_id, date_created, description, task_id) FROM stdi
 33	42	2020-08-11	dsf sdf	25
 34	42	2020-08-11	 sdf sdf sd	25
 35	42	2020-08-11	dsf sdf dsf	25
+36	47	2020-08-26	Seems fun!	61
+37	49	2020-08-26	Thanks for the invite!	67
+38	49	2020-08-26	So many things!	65
+39	49	2020-08-26	Dont stop making tasks	71
+40	49	2020-08-26	Dont delete an important column!	74
+41	49	2020-08-26	Easy peasy.	64
+42	49	2020-08-26	Is Leo on the app?	68
+43	49	2020-08-26	Make one for famous people.	70
+44	49	2020-08-26	Maybe make one for my upcoming movie. Cars 10. 	63
+45	50	2020-08-26	it is fun. duhhhh	61
+46	50	2020-08-26	all the things!	65
+47	50	2020-08-26	Thanks for the invite!	67
+48	50	2020-08-26	Check out my profile!	69
+49	50	2020-08-26	Nope. Its not a dating app lol. 	68
+50	50	2020-08-26	Do you boo	74
+51	50	2020-08-26	Dont remove me!	72
+52	50	2020-08-26	Make one for rappers. 	70
 \.
 
 
@@ -563,6 +594,10 @@ COPY public.pcolumns (id, name, column_order) FROM stdin;
 33	start of the saga	0
 34	recruit other humans	1
 35	Get gods in	2
+36	TODO	0
+37	IN PROGRESS	1
+38	BLOCKED	2
+39	FINISHED	3
 \.
 
 
@@ -593,6 +628,10 @@ COPY public.projectcolumns (project_id, column_id, id) FROM stdin;
 16	33	22
 16	34	23
 16	35	24
+18	36	25
+18	37	26
+18	38	27
+18	39	28
 \.
 
 
@@ -612,6 +651,7 @@ COPY public.projects (id, name, description, team_id) FROM stdin;
 15	Hornet Frogs	frogs that have horns	26
 16	The avengers initiative	thanos did nothing wrong	24
 17	Endgame	we are in the endgame now	24
+18	Learning Dhyana	A project board designed to get users used to Dhyana&#x27;s project board.	28
 \.
 
 
@@ -660,6 +700,20 @@ COPY public.tasks (id, name, description, date_created, date_modified, user_id_c
 60	task3task3task3task3task3	task3task3task3task3	2020-08-11	\N	42	42	2	\N	\N	t
 42	get the first championship	as the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do itas the title suggests, do it	2020-08-11	2020-08-11	42	45	1	2.5	7.5	t
 25	get tony on board		2020-08-11	2020-08-11	42	46	4	2	\N	t
+61	Create a new account	Create a new account by logging out. After logging out, you can sign up for an account. This account will be a private account that only you can access. Using this account you can interact with others on the application via team projects.	2020-08-26	2020-08-26	47	\N	1	\N	\N	f
+63	Create a collaborative project	Create a project by adding a project name, description, and assigned team. Teams are in charge of multiple projects and there is no limit to the amount of users that can be added to a team!	2020-08-26	\N	47	\N	\N	\N	\N	f
+64	Login	Enter the site.	2020-08-26	\N	47	47	\N	\N	\N	f
+65	Check out the different things you can add to a task	Tasks have a description, assigned user, time completion estimation, priority, flag, comments, and time completed so far. These fields can all be changed to fit a teams need.	2020-08-26	2020-08-26	47	\N	2	\N	\N	f
+62	Create a new team	Teams are a way for users on the application to interact. Create a new team and add members to it!	2020-08-26	2020-08-26	47	\N	0	2	\N	f
+66	Create a new project	Once you&amp;#x27;re comfortable with the board. Try creating a new project and adding your own team members.	2020-08-26	2020-08-26	47	\N	3	\N	\N	f
+67	Invite a new member to the project	You can add new members to the project by clicking on the bread crumb icon in the top left of the screen.	2020-08-26	2020-08-26	47	\N	2	4	\N	f
+69	Look at profile	The guest profile does not have a profile, but all other accounts should have one. You can navigate to your own profile by clicking on the menu list on the top right or by searching users and viewing their profile.	2020-08-26	2020-08-26	47	\N	0	2	\N	f
+68	Search for Team members	You can also search through the user directory to see what users are on the site.	2020-08-26	2020-08-26	47	\N	0	3	\N	f
+70	Add a new column	Project demands growing? Maybe adding another column to help organize your tasks may be the way to go. At the very end of the list of columns is the add a new column button.	2020-08-26	\N	47	\N	4	4	\N	f
+71	Add a new Task	This one may be self explanatory.	2020-08-26	2020-08-26	47	\N	0	6	\N	f
+72	Remove a team member from a project	Dont like someone on the team&#x2F;project anymore? You can remove them from your team by navigating to the team page.	2020-08-26	\N	47	\N	3	\N	\N	f
+73	Remove a project	Tired of a congested project board and want to start from scratch? Delete the project!	2020-08-26	\N	47	\N	2	\N	\N	f
+74	Delete a column	Made a mistake in adding a column? You can delete the column easily with the column menu located on the top right.	2020-08-26	\N	47	\N	3	5	\N	f
 \.
 
 
@@ -690,6 +744,7 @@ COPY public.teams (id, name) FROM stdin;
 24	greefood challenge
 25	Tokimon Finders
 26	Taco Tuesdays
+28	Orientation Team
 \.
 
 
@@ -716,6 +771,12 @@ COPY public.teamsusers (team_id, user_id, id) FROM stdin;
 24	45	17
 24	44	18
 26	27	19
+28	47	21
+28	8	23
+28	13	24
+28	14	25
+28	49	26
+28	50	27
 \.
 
 
@@ -767,6 +828,9 @@ COPY public.users (id, username, password, first_name, last_name, job_title, bio
 44	ironman	$2b$10$E/FJ.lnq/zp0VPFYYX0/geMzin3R.M./JCyqY30J1LrTw6cVGzb/a	iron	man	\N	\N
 45	srogers	$2b$10$72USJ4Sq8NqI6o3maJVEJuMXZqvSuRRVJmWLqaT.M74QzNvITqu/O	Steve 	Rogers	\N	\N
 46	ggbaker	$2b$10$FMItHxDoSdeF2YtZj7DW2elbIk2WFed14OvHlHtxZphA.SxVlxypK	Greg	Baker	\N	\N
+47	guest	$2b$10$.DKysHW4RJS2FYExNm89SefAl9PXWM8PcUTS3I7c7jjtZeWYAyVOO	Jane	Doe	\N	\N
+49	bpitt	$2b$10$RWF8CvCRVYqiKoO.QnyzruztZT9fusZwJ89VOrQUs/mEZi8w1HfsO	Brad	Pitt	\N	\N
+50	klamar	$2b$10$K0jF9ZO.DRNim73i9J6kAODM30LbKb6XKgClNc7bPqi/.QQ.C7OgW	kendrick	lamar	\N	\N
 \.
 
 
@@ -774,7 +838,7 @@ COPY public.users (id, username, password, first_name, last_name, job_title, bio
 -- Name: columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.columns_id_seq', 35, true);
+SELECT pg_catalog.setval('public.columns_id_seq', 39, true);
 
 
 --
@@ -788,7 +852,7 @@ SELECT pg_catalog.setval('public.columnstasks_column_id_seq', 1, false);
 -- Name: columnstasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.columnstasks_id_seq', 54, true);
+SELECT pg_catalog.setval('public.columnstasks_id_seq', 68, true);
 
 
 --
@@ -802,49 +866,49 @@ SELECT pg_catalog.setval('public.columnstasks_tasks_id_seq', 1, false);
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 35, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 52, true);
 
 
 --
 -- Name: projectcolumns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projectcolumns_id_seq', 24, true);
+SELECT pg_catalog.setval('public.projectcolumns_id_seq', 28, true);
 
 
 --
 -- Name: projects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.projects_id_seq', 17, true);
+SELECT pg_catalog.setval('public.projects_id_seq', 18, true);
 
 
 --
 -- Name: tasks_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.tasks_id_seq', 60, true);
+SELECT pg_catalog.setval('public.tasks_id_seq', 74, true);
 
 
 --
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teams_id_seq', 26, true);
+SELECT pg_catalog.setval('public.teams_id_seq', 28, true);
 
 
 --
 -- Name: teamsusers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.teamsusers_id_seq', 19, true);
+SELECT pg_catalog.setval('public.teamsusers_id_seq', 27, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 46, true);
+SELECT pg_catalog.setval('public.users_id_seq', 50, true);
 
 
 --
