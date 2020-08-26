@@ -10,7 +10,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.error.main,
@@ -43,13 +42,14 @@ const useStyles = makeStyles((theme) => ({
   },
   deleteTaskButton: {
     marginRight: 5,
-  }
+  },
 }));
 
 function EditProfile() {
-  const classes = useStyles();  
+  const classes = useStyles();
   let history = useHistory();
   const [profileInfo, setProfileInfo] = useState({});
+  console.log("EditProfile -> profileInfo", profileInfo);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -181,15 +181,15 @@ function EditProfile() {
           </div>
           <div className="update-user-button">
             <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  handleClickOpen();
-                }}
-                classes={{ root: classes.root }}
-                className={classes.deleteTaskButton}
-              >
-                Delete Account
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                handleClickOpen();
+              }}
+              classes={{ root: classes.root }}
+              className={classes.deleteTaskButton}
+            >
+              Delete Account
             </Button>
             <Button
               variant="outlined"

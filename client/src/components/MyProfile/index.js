@@ -99,6 +99,7 @@ function MyProfile() {
             onClick={() => {
               history.push("/edit-profile");
             }}
+            disabled={ProfileInfo.username == "guest"}
           >
             Edit Profile
           </Button>

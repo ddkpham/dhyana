@@ -67,7 +67,7 @@ class NewProject extends React.Component {
       <div id="main-project-div">
         <Card className="create-project-wrapper">
           <div className="page-title">
-            <Typography variant="h4" color="primary">
+            <Typography variant="h4" color="secondary">
               Create New Project
             </Typography>
           </div>

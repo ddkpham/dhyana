@@ -9,13 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
 const useStyles = makeStyles((theme) => ({
-  mainDiv: {
-    
-  },
+  mainDiv: {},
   searchField: {
     width: 350,
     mx: "auto",
@@ -59,9 +57,8 @@ const useStyles = makeStyles((theme) => ({
   },
   buttonPrev: {
     marginRight: 5,
-  }
+  },
 }));
-
 
 function SearchUser() {
   const classes = useStyles();
@@ -99,9 +96,15 @@ function SearchUser() {
         contactList.length
       );
       for (var i = firstIndexPresented; i < ceiling; i++) {
-        results.push(<UserCard className={classes.userCard} user={contactList[i]} key={i} />);
+        results.push(
+          <UserCard
+            className={classes.userCard}
+            user={contactList[i]}
+            key={i}
+          />
+        );
       }
-      return results
+      return results;
     } else if (hasSearched && contactList.length === 0) {
       return <h4>Sorry, no results match your search</h4>;
     } else {
@@ -119,7 +122,7 @@ function SearchUser() {
             setFirstIndexPresented(firstIndexPresented + numResultsToShow)
           }
         >
-          <ArrowForwardIcon/>
+          <ArrowForwardIcon />
         </Button>
       );
     } else {
@@ -138,7 +141,7 @@ function SearchUser() {
             setFirstIndexPresented(firstIndexPresented - numResultsToShow)
           }
         >
-          <ArrowBackIcon/>
+          <ArrowBackIcon />
         </Button>
       );
     } else {
@@ -161,24 +164,28 @@ function SearchUser() {
       <div className={classes.searchDiv}>
         <Grid container className={classes.searchGrid}>
           <div className={classes.searchCardDiv}>
-          <Card elevation={4} className={classes.searchCard}>
-            <Typography variant="h4" className={classes.title}>Search for Users</Typography>
-            <TextField
-              className={classes.searchField}
-              variant="outlined"
-              onChange={(event) => {
-                setInput(event.target.value);
-              }}
-            />
-          </Card>
+            <Card elevation={4} className={classes.searchCard}>
+              <Typography
+                variant="h4"
+                className={classes.title}
+                color="primary"
+              >
+                Search for Users
+              </Typography>
+              <TextField
+                className={classes.searchField}
+                variant="outlined"
+                onChange={(event) => {
+                  setInput(event.target.value);
+                }}
+              />
+            </Card>
           </div>
 
           <div className={classes.resultsDiv}>
-              {prevButton()}
-              {nextButton()}
-              <div className={classes.resultsTable}>
-                {searchResults()}
-              </div>
+            {prevButton()}
+            {nextButton()}
+            <div className={classes.resultsTable}>{searchResults()}</div>
           </div>
         </Grid>
       </div>
