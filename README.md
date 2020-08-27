@@ -1,10 +1,14 @@
 # Dhyana Project Management Software
 
+Live URL: http://d1sylk8toew9tv.cloudfront.net/
+
+Deployed using Docker-compose, EC2, AWS Load balancer, S3, and CloudFront
+
 Project management software and collaboration tool. Helps organize and
 structure project planning to maximize success. Teams can create multiple
 projects and manage them all in one single simple interface.
 
-**To launch the platform:**
+**To launch the platform locally:**
 
 1. run docker-compose build && docker-compose up in the terminal
 2. navigate to http://localhost:8080/ on your web browser of choice
