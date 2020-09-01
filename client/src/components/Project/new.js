@@ -25,6 +25,7 @@ class NewProject extends React.Component {
 
   create = async () => {
     const { name, description, team_id } = this.state;
+    const { history } = this.props;
     const url = `${baseURL}/project/create`;
     const body = { name, description, team_id };
     postCall(url, body)
@@ -32,7 +33,8 @@ class NewProject extends React.Component {
       .then((data) => {
         console.log("project create success", data);
         if (data.confirmation === "success" && data.data) {
-          window.location.href = `${clientBaseURL}/project/${data.data.name}`;
+          // window.location.href = `${clientBaseURL}/project/${data.data.name}`;
+          history.push(`/project/${data.data.name}`);
         } else {
           console.log("project create error", data.message);
           alert(

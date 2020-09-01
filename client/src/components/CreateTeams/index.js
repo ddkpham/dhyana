@@ -33,7 +33,6 @@ function CreateTeam() {
       getCall(url)
         .then((response) => response.json())
         .then((payload) => {
-          console.log("payload", payload);
           setUser(payload.data[0]);
         })
         .catch((err) => console.log("project fetch error", err));
@@ -59,13 +58,12 @@ function CreateTeam() {
           const user_id = userInfo.id;
           const addUserUrl = `${baseURL}/team/add-user`;
           const addUserBody = { team_id, user_id };
-          console.log("body", addUserBody);
 
           postCall(addUserUrl, addUserBody)
             .then((response) => response.json())
             .then((payload) => {
-              console.log(payload);
-              window.location.href = `${clientBaseURL}/home`;
+              // window.location.href = `${clientBaseURL}/home`;
+              history.push("/home");
             });
         } else {
           alert(`team was not created. Error: ${message}`);

@@ -45,7 +45,8 @@ function TeamPage(props) {
     console.log("the response is", data);
     if (confirmation === "success") {
       alert(`Success: ${message}`);
-      window.location.href = `${clientBaseURL}/team/${name}`;
+      // window.location.href = `${clientBaseURL}/team/${name}`;
+      history.push(`/team/${name}`);
     } else {
       alert(`Error: ${message}`);
     }

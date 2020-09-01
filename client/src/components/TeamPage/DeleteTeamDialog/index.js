@@ -17,20 +17,19 @@ import { useHistory } from "react-router-dom";
 
 import { blue } from "@material-ui/core/colors";
 
-
 const useStyles = makeStyles({
   avatar: {
     backgroundColor: blue[100],
     color: blue[600],
   },
-  
+
   mainDiv: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-  }
+  },
 });
 
 function SimpleDialog(props) {
@@ -39,11 +38,9 @@ function SimpleDialog(props) {
   const history = useHistory();
   const [teamName, setTeamName] = useState("");
 
-
   const handleClose = () => {
     onClose();
   };
-
 
   const deleteAccount = async () => {
     console.log("deleting team");
@@ -53,7 +50,6 @@ function SimpleDialog(props) {
       setTeamName("");
       return;
     }
-
 
     const url = `${baseURL}/team/delete`;
     const body = { id: id };
@@ -66,7 +62,8 @@ function SimpleDialog(props) {
     console.log("the response is", data);
     if (confirmation === "success") {
       alert(`Success: ${message}`);
-      window.location.href = `${clientBaseURL}/home`;
+      // window.location.href = `${clientBaseURL}/home`;
+      history.push("/home");
     } else {
       alert(`Error: ${message}`);
     }
@@ -78,12 +75,12 @@ function SimpleDialog(props) {
       aria-labelledby="simple-dialog-title"
       open={open}
     >
-    <div className={classes.mainDiv}>
-      <DialogTitle id="simple-dialog-title">
-        Are you sure you want to delete this team?
-      </DialogTitle>
-      <List>
-        <ListItem button key={"confirm-deletion"}>
+      <div className={classes.mainDiv}>
+        <DialogTitle id="simple-dialog-title">
+          Are you sure you want to delete this team?
+        </DialogTitle>
+        <List>
+          <ListItem button key={"confirm-deletion"}>
             <ListItemAvatar>
               <Avatar className={classes.avatar}>
                 <SentimentDissatisfiedIcon />
@@ -96,17 +93,17 @@ function SimpleDialog(props) {
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
             />
-        </ListItem>
+          </ListItem>
 
-        <ListItem autoFocus button onClick={deleteAccount}>
-          <ListItemAvatar>
-            <Avatar>
-              <DeleteForeverIcon />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Delete team" />
-        </ListItem>
-      </List>
+          <ListItem autoFocus button onClick={deleteAccount}>
+            <ListItemAvatar>
+              <Avatar>
+                <DeleteForeverIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Delete team" />
+          </ListItem>
+        </List>
       </div>
     </Dialog>
   );

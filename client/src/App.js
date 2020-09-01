@@ -22,8 +22,10 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./styles/theme";
 import "./styles/styles.css";
 import TeamPage from "./components/TeamPage";
+import { createBrowserHistory } from "history";
 
 // Simple auth
+const history = createBrowserHistory({ forceRefresh: true });
 
 function App(props) {
   const [authenticated, setAuthenticated] = useState(false);
@@ -47,88 +49,96 @@ function App(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-          <AppBar />
+      <Router history={history}>
+        <AppBar />
 
-          {/*
+        {/*
             A <Switch> looks through all its children <Route>
             elements and renders the first one whose path
             matches the current URL. Use a <Switch> any time
             you have multiple routes, but you want only one
             of them to render at a time
           */}
-          {pageLoaded ? (
-            <div className="root">
-              <Switch>
-                <Route exact path="/">
-                  {authenticated ? <Home /> : <Login />}
-                </Route>
-                <Route path="/create-user">{<CreateUser />}</Route>
-                <Route path="/create-team">
-                  {authenticated ? <CreateTeam /> : <Login />}
-                </Route>
-                <Route path="/my-profile">
-                  {authenticated ? <MyProfile /> : <Login />}
-                </Route>
-                <Route path="/edit-profile">
-                  {authenticated ? <EditProfile /> : <Login />}
-                </Route>
-                <Route path="/search-user">
-                  {authenticated ? <SearchUser /> : <Login />}
-                </Route>
-                <Route
-                  path="/team/:name"
-                  render={(props) => {
-                    const {
-                      match: {
-                        params: { name },
-                      },
-                    } = props;
-                    if (authenticated) {
-                      return <TeamPage name={name} />;
-                    }
-                    return <Login />;
-                  }}
-                />
+        {pageLoaded ? (
+          <div className="root">
+            <Switch>
+              <Route exact path="/">
+                {authenticated ? <Home /> : <Login history={history} />}
+              </Route>
+              <Route path="/create-user">{<CreateUser />}</Route>
+              <Route path="/create-team">
+                {authenticated ? <CreateTeam /> : <Login history={history} />}
+              </Route>
+              <Route path="/my-profile">
+                {authenticated ? <MyProfile /> : <Login history={history} />}
+              </Route>
+              <Route path="/edit-profile">
+                {authenticated ? <EditProfile /> : <Login history={history} />}
+              </Route>
+              <Route path="/search-user">
+                {authenticated ? <SearchUser /> : <Login history={history} />}
+              </Route>
+              <Route
+                path="/team/:name"
+                render={(props) => {
+                  const {
+                    match: {
+                      params: { name },
+                    },
+                  } = props;
+                  if (authenticated) {
+                    return <TeamPage name={name} />;
+                  }
+                  return <Login history={history} />;
+                }}
+              />
 
-                <Route
-                  path="/user/:username"
-                  render={(props) => {
-                    const {
-                      match: {
-                        params: { username },
-                      },
-                    } = props;
-                    if (authenticated) {
-                      return <ProfilePage username={username} />;
-                    }
-                    return <Login />;
-                  }}
-                />
+              <Route
+                path="/user/:username"
+                render={(props) => {
+                  const {
+                    match: {
+                      params: { username },
+                    },
+                  } = props;
+                  if (authenticated) {
+                    return <ProfilePage username={username} />;
+                  }
+                  return <Login history={history} />;
+                }}
+              />
 
-                <Route path="/home">
-                  {authenticated ? <Home /> : <Login />}
-                </Route>
-                <Route path="/project/new">
-                  {authenticated ? <NewProject /> : <Login />}
-                </Route>
-                <Route
-                  path="/project/:name"
-                  render={(props) => {
-                    const {
-                      match: {
-                        params: { name },
-                      },
-                    } = props;
-                    if (authenticated) {
-                      return <Project name={name} />;
-                    }
-                    return <Login />;
-                  }}
-                />
-              </Switch>
-            </div>
-          ) : null}
+              <Route path="/home">
+                {authenticated ? (
+                  <Home history={history} />
+                ) : (
+                  <Login history={history} />
+                )}
+              </Route>
+              <Route path="/project/new">
+                {authenticated ? (
+                  <NewProject history={history} />
+                ) : (
+                  <Login history={history} />
+                )}
+              </Route>
+              <Route
+                path="/project/:name"
+                render={(props) => {
+                  const {
+                    match: {
+                      params: { name },
+                    },
+                  } = props;
+                  if (authenticated) {
+                    return <Project name={name} history={history} />;
+                  }
+                  return <Login history={history} />;
+                }}
+              />
+            </Switch>
+          </div>
+        ) : null}
       </Router>
     </ThemeProvider>
   );

@@ -103,9 +103,7 @@ class Home extends React.Component {
   };
 
   teamColumns = () => {
-    console.log("entered teamRows constructor");
-    console.log("this.state.teams.length is: ", this.state.teams.length);
-    console.log("this.state.projects.length is: ", this.state.projects.length);
+    const { history } = this.props;
     var columns = [];
     for (var i = 0; i < this.state.teams.length; i++) {
       var teamColumn = [];
@@ -116,6 +114,7 @@ class Home extends React.Component {
           style={{ width: 100, height: 150 }}
           name={team.name}
           id={team.id}
+          history={history}
         />
       );
 

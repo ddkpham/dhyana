@@ -155,6 +155,7 @@ class Project extends React.Component {
 
   async componentWillMount() {
     const { name } = this.props;
+    console.log("Project -> componentWillMount -> this.props", this.props);
     try {
       const url = `${baseURL}/project/check-authorization`;
       const body = { project_name: name };
@@ -165,8 +166,6 @@ class Project extends React.Component {
       }
     } catch (err) {
       this.setState({ showPage: true });
-      console.log("set showPage to true");
-      console.log("Project -> componentWillMount -> err", err);
     }
   }
 
@@ -178,14 +177,11 @@ class Project extends React.Component {
   getProject = () => {
     const { name } = this.props;
     const url = `${baseURL}/project/${name}`;
-    console.log("get project", name);
     getCall(url)
       .then((response) => {
-        console.log("in first promise");
         return response.json();
       })
       .then((data) => {
-        console.log("fetch project success", data);
         const project = data.data[0];
         this.setState({ project });
         this.getTeamUserArray(project.team_id);
@@ -200,6 +196,7 @@ class Project extends React.Component {
 
   deleteProject = () => {
     const { project } = this.state;
+    const { history } = this.props;
     const url = `${baseURL}/project/delete`;
     const body = { id: project.id };
 
@@ -207,7 +204,8 @@ class Project extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("delete project success", data);
-        window.location.href = `${clientBaseURL}/home`;
+        // window.location.href = `${clientBaseURL}/home`;
+        history.push("/home");
       })
       .catch((err) => console.log("delete project error", err));
   };
@@ -222,7 +220,7 @@ class Project extends React.Component {
 
   editProject = () => {
     const { name, description, project } = this.state;
-
+    const { history } = this.props;
     const url = `${baseURL}/project/edit/${project.id}`;
     const newName = name.length ? name : project.name;
     const newDescription = description.length
@@ -237,7 +235,8 @@ class Project extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("edit project success", data);
-        window.location.href = `${clientBaseURL}/project/${newName}`;
+        // window.location.href = `${clientBaseURL}/project/${newName}`;
+        history.push(`/project/${newName}`);
       })
       .catch((err) => console.log("edit project error", err));
   };
@@ -299,7 +298,6 @@ class Project extends React.Component {
       deleteOpen,
       editAnchor,
     } = this.state;
-    console.log("Project -> render -> project", project);
 
     const { classes } = this.props;
     const priorityArray = [
@@ -315,8 +313,6 @@ class Project extends React.Component {
     const editOpen = Boolean(editAnchor);
 
     const handleEmpty = () => {
-      console.log("entered handleEmpty with showPage ", this.state.showPage);
-      console.log("isAuthorized is ", isAuthorized);
       if (this.state.showPage) {
         return <EmptyCard />;
       }

@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ProfilePage(props) {
-
   const classes = useStyles();
   const { username } = props;
   let history = useHistory();
@@ -60,7 +59,8 @@ function ProfilePage(props) {
     console.log(data);
     if (confirmation === "success") {
       alert(`Success: ${message}`);
-      window.location.href = `${clientBaseURL}/home`;
+      // window.location.href = `${clientBaseURL}/home`;
+      history.push("/home");
     } else {
       alert(`Error: ${message}`);
     }
@@ -129,64 +129,62 @@ function ProfilePage(props) {
       <div className="profile-page-container">
         <Card className="profileDiv">
           <CardContent>
-          <div className="centerProfile">
+            <div className="centerProfile">
               <Avatar
                 alt={username}
                 src={images[imgIndex]}
                 className="profile-my-avatar"
               />
-            <Typography variant="h5" color="primary">
-              {userInfo.first_name || "John"}{" "}
-              {userInfo.last_name || "Doe"}
-            </Typography>
-            <Typography variant="h6" color="secondary">
-              @{userInfo.username}
-            </Typography>
-            {userInfo.job_title ?
-            <Typography variant="h6" color="secondary">
-              Job Title: {" "}
-              {userInfo.job_title}
-            </Typography>: null
-            }
-            <TextField
-              disabled
-              rowsMax={5}
-              label="Biography"
-              multiline
-              variant="outlined"
-              rows={4}
-              aria-label="maximum height"
-              placeholder="Maximum 4 rows"
-              defaultValue={"Nothing here yet."}
-              value={userInfo.biography}
-            />
-            <FormControl className={classes.formControl} variant="outlined">
-              <InputLabel>Team</InputLabel>
-              <Select
-                label="Team"
-                onChange={(event) => {
-                  getTeamId(event.target.value);
-                }}
-              >
-                <MenuItem>
-                  <em>None</em>
-                </MenuItem>
-                {teamInfo.map((info) => (
-                  <MenuItem value={info.id} key={info.id}>
-                    {info.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <div>
-              <Button
+              <Typography variant="h5" color="primary">
+                {userInfo.first_name || "John"} {userInfo.last_name || "Doe"}
+              </Typography>
+              <Typography variant="h6" color="secondary">
+                @{userInfo.username}
+              </Typography>
+              {userInfo.job_title ? (
+                <Typography variant="h6" color="secondary">
+                  Job Title: {userInfo.job_title}
+                </Typography>
+              ) : null}
+              <TextField
+                disabled
+                rowsMax={5}
+                label="Biography"
+                multiline
                 variant="outlined"
-                color="primary"
-                onClick={addUserToTeam}
-              >
-                Add User to Team
-              </Button>
-            </div>
+                rows={4}
+                aria-label="maximum height"
+                placeholder="Maximum 4 rows"
+                defaultValue={"Nothing here yet."}
+                value={userInfo.biography}
+              />
+              <FormControl className={classes.formControl} variant="outlined">
+                <InputLabel>Team</InputLabel>
+                <Select
+                  label="Team"
+                  onChange={(event) => {
+                    getTeamId(event.target.value);
+                  }}
+                >
+                  <MenuItem>
+                    <em>None</em>
+                  </MenuItem>
+                  {teamInfo.map((info) => (
+                    <MenuItem value={info.id} key={info.id}>
+                      {info.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <div>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={addUserToTeam}
+                >
+                  Add User to Team
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -197,71 +195,85 @@ function ProfilePage(props) {
               Teams
             </Typography>
             <div className="profile-page-team-container">
-              {(userTeams.length > 0)? (
-              <div>
-                {userTeams.map((team) => {
-                  console.log("ProfilePage -> team", team);
-                  let imgIndex = Math.floor(Math.random() * team_images.length);
-                  console.log("imgIndex", imgIndex);
-                  return (
-                    <Card raised
-                      onClick={() => {
-                        history.push("/team/" + team.name);
-                      }}>
-                      <CardContent className="team-card-container">
-                        <CardMedia
-                          className="teamcard-image"
-                          image={team_images[imgIndex]}
-                          title="Live from space album cover"
-                        />
-                        <div className="teamcard-div">
-                          <CardActionArea>
-                            <Typography variant="h5" color="primary">
-                              {team.name}
-                            </Typography>
-                          </CardActionArea>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>): 
-              (<div>
-                <EmptyCard />
-              </div>)}
+              {userTeams.length > 0 ? (
+                <div>
+                  {userTeams.map((team) => {
+                    console.log("ProfilePage -> team", team);
+                    let imgIndex = Math.floor(
+                      Math.random() * team_images.length
+                    );
+                    console.log("imgIndex", imgIndex);
+                    return (
+                      <Card
+                        raised
+                        onClick={() => {
+                          history.push("/team/" + team.name);
+                        }}
+                      >
+                        <CardContent className="team-card-container">
+                          <CardMedia
+                            className="teamcard-image"
+                            image={team_images[imgIndex]}
+                            title="Live from space album cover"
+                          />
+                          <div className="teamcard-div">
+                            <CardActionArea>
+                              <Typography variant="h5" color="primary">
+                                {team.name}
+                              </Typography>
+                            </CardActionArea>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>
+                  <EmptyCard />
+                </div>
+              )}
             </div>
-            <Typography className="project-title" variant="h4" color="secondary">
+            <Typography
+              className="project-title"
+              variant="h4"
+              color="secondary"
+            >
               Projects
             </Typography>
             <div className="profile-page-team-container">
-            {(userTeams.length > 0)? (
-              <div>
-              {userProjects.map((project) => {
-                console.log("ProfilePage -> project", project);
-                let projectImgIndex = Math.floor(Math.random() * team_images.length);
-                return (
-                  <Card raised>
-                  <CardContent className="team-card-container">
-                    <CardMedia
-                      className="teamcard-image"
-                      image={team_images[projectImgIndex]}
-                      title="Live from space album cover"
-                    />
-                    <div className="teamcard-div">
-                      <CardActionArea>
-                        <Typography variant="h5" color="primary">
-                          {project.name}
-                        </Typography>
-                      </CardActionArea>
-                    </div>
-                  </CardContent>
-                </Card>
-                );
-              })}
-              </div>):
-              (<div>
-                <EmptyCard />
-            </div>)}
+              {userTeams.length > 0 ? (
+                <div>
+                  {userProjects.map((project) => {
+                    console.log("ProfilePage -> project", project);
+                    let projectImgIndex = Math.floor(
+                      Math.random() * team_images.length
+                    );
+                    return (
+                      <Card raised>
+                        <CardContent className="team-card-container">
+                          <CardMedia
+                            className="teamcard-image"
+                            image={team_images[projectImgIndex]}
+                            title="Live from space album cover"
+                          />
+                          <div className="teamcard-div">
+                            <CardActionArea>
+                              <Typography variant="h5" color="primary">
+                                {project.name}
+                              </Typography>
+                            </CardActionArea>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>
+                  <EmptyCard />
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

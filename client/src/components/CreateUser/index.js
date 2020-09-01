@@ -58,7 +58,8 @@ function CreateUser() {
     console.log(data);
     if (confirmation === "success") {
       alert("Sign up was successful!");
-      window.location.href = `${clientBaseURL}/home`;
+      // window.location.href = `${clientBaseURL}/home`;
+      history.push("/home");
     } else {
       alert(message);
     }

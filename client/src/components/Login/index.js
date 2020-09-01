@@ -16,12 +16,14 @@ import "./index.scss";
 import { postCall } from "../../apiCalls/apiCalls";
 import GuestLoginDialog from "./GuestLoginDialog";
 
-function Login() {
+function Login(props) {
+  const { history } = props;
+  console.log("Login -> props", props);
   const [username, setUsername] = useState("");
   const [password, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const history = useHistory();
+  // const history = useHistory();
 
   const login = async () => {
     const url = `${baseURL}/login`;
@@ -33,7 +35,8 @@ function Login() {
     console.log(data);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
-      window.location.href = `${clientBaseURL}/home`;
+      // window.location.href = `${clientBaseURL}/home`;
+      history.push("/home");
     } else {
       alert("Username or Password Incorrect");
     }
@@ -49,7 +52,8 @@ function Login() {
     console.log(data);
     if (confirmation === "success") {
       localStorage.setItem("auth-token", "success");
-      window.location.href = `${clientBaseURL}/home`;
+      // window.location.href = `${clientBaseURL}/home`;
+      history.push("/home");
     } else {
       alert("Server error: please email ddkpham@gmail.com");
     }
